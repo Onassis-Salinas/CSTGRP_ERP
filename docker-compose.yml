@@ -2,16 +2,26 @@ version: '3.8'
 
 services:
   frontend:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
     image: cst_frontend:latest  
     ports:
       - "3000:3000"  
+    profiles:
+      - dev
 
   backend:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
     image: cst_backend:latest  
     ports:
-      - "5000:3000"  
+      - "5000:5000"  
     depends_on:
       - db  
+    profiles:
+      - dev
       
   db:
     image: cst_postgres:latest
