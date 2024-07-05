@@ -9,10 +9,10 @@ export function getWeekDays(dateString: any) {
   const dayOfWeek = date.getDay();
 
   const monday = new Date(date);
-  monday.setDate(date.getDate() - dayOfWeek - 1);
+  monday.setDate(date.getDate() - dayOfWeek + 1);
 
   const friday = new Date(date);
-  friday.setDate(date.getDate() - (dayOfWeek - 5));
+  friday.setDate(date.getDate() - (dayOfWeek - 3));
 
   return [
     monday.toISOString().split('T')[0],
@@ -22,7 +22,7 @@ export function getWeekDays(dateString: any) {
 
 export function getDayNumber(date: any) {
   const dateObject = new Date(date);
-  return dateObject.getDay();
+  return dateObject.getDay() - 1;
 }
 
 export function separateAreas(rows: any) {
