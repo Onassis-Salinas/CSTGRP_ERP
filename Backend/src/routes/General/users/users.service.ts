@@ -36,18 +36,20 @@ export class UsersService {
     const secret: Secret = process.env.JWT_SECRET || 'sin secreto';
     const token = jwt.sign(user, secret, { expiresIn: '200h' });
 
-    res
-      .setCookie('token', token, { ...cookieConfig, httpOnly: true })
-      .setCookie('perms', user, cookieConfig)
-      .setCookie('areas', user.perm_assistance_areas, cookieConfig)
-      .setCookie('username', user.username, cookieConfig)
-      .send();
+    console.log(user);
+    res.setCookie('token', token, { ...cookieConfig, httpOnly: true });
+
+    delete user.password;
+    Object.keys(user).forEach((key) => {
+      res.setCookie(key, user[key], cookieConfig);
+    });
+
+    res.send();
   }
 
   async logoutUser(res) {
     res
       .setCookie('token', '', { ...cookieConfig, httpOnly: true })
-      .setCookie('perms', '', cookieConfig)
       .setCookie('username', '', cookieConfig)
       .send();
   }

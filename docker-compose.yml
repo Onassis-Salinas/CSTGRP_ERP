@@ -24,7 +24,7 @@ services:
       - dev
       
   db:
-    image: cst_postgres:latest
+    image: postgres:latest
     environment:
       POSTGRES_DB: postgres
       POSTGRES_USER: postgres

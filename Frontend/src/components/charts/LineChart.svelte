@@ -2,7 +2,7 @@
     import type { ApexOptions } from "apexcharts";
     import { Chart } from "flowbite-svelte";
     export let name: string;
-    export let data: any[];
+    export let data: { value: number; name: string }[];
 
     let options: ApexOptions;
 
@@ -48,7 +48,7 @@
             {
                 name: name,
                 data: data.map((e) => e.value),
-                color: "#9998fe",
+                color: "#6e43c2",
             },
         ],
         xaxis: {

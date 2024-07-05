@@ -32,7 +32,7 @@
     async function handleSubmit() {
         await api.put("/productivity", {
             id: parseInt(selectedRow.id),
-            [`${dayNumber}code0`]: "",
+            [`${dayNumber}code0`]: formData["code0"],
             [`${dayNumber}code1`]: formData["code1"],
             [`${dayNumber}code2`]: formData["code2"],
 
@@ -46,7 +46,7 @@
             [`${dayNumber}comment`]: (formData["comment"] || "").toUpperCase() === "Anulado".toUpperCase() ? "" : formData["comment"],
         });
         showSuccess("Datos cambiados");
-        document.querySelector(".xxx")?.focus();
+        document.querySelector<HTMLInputElement>(".xxx")?.focus();
 
         await reload();
     }
@@ -72,7 +72,7 @@
         });
         showSuccess("Anulada");
 
-        document.querySelector(".xxx")?.focus();
+        document.querySelector<HTMLInputElement>(".xxx")?.focus();
         await reload();
     }
 

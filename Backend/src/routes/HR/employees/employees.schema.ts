@@ -170,3 +170,7 @@ export const quitSchema = z.object({
 export const templateSchema = z.object({
   template: z.number().min(1),
 });
+
+export const idSchema = z.object({
+  id: z.string().min(1),
+});

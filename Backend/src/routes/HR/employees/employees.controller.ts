@@ -7,6 +7,7 @@ import {
   UseGuards,
   Put,
   Header,
+  Param,
 } from '@nestjs/common';
 import { EmployeesService } from './employees.service';
 import { ApiTags } from '@nestjs/swagger';
@@ -15,11 +16,11 @@ import { ZodPiPe } from 'src/interceptors/validation/validation.pipe';
 import {
   createSchema,
   editSchema,
+  idSchema,
   quitSchema,
   reactivateSchema,
   templateSchema,
 } from './employees.schema';
-import { dateSchema } from '../stats/stats.schema';
 
 @ApiTags('Employees')
 @Controller('employees')
@@ -27,24 +28,24 @@ import { dateSchema } from '../stats/stats.schema';
 export class EmployeesController {
   constructor(private readonly employeesService: EmployeesService) {}
 
-  @Get('')
+  @Get()
   getActive() {
     return this.employeesService.getActiveEmployees();
+  }
+
+  @Get('assistance/:id')
+  getAssistance(@Param(new ZodPiPe(idSchema)) params) {
+    return this.employeesService.getAssistance(params);
+  }
+
+  @Get('productivity/:id')
+  getProductivity(@Param(new ZodPiPe(idSchema)) params) {
+    return this.employeesService.getProductivity(params);
   }
 
   @Get('inactive')
   getInactive() {
     return this.employeesService.getInactiveEmployees();
-  }
-
-  @Get('excel')
-  getExcel() {
-    return this.employeesService.getExcelTable();
-  }
-
-  @Get('model')
-  getModel() {
-    return this.employeesService.getEmployeeModel();
   }
 
   @Post()

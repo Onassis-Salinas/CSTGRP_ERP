@@ -44,10 +44,10 @@
             <Route path="/almacen/movimientos" component={Movimientos} />
             <Route path="/almacen/resumenes" component={Resumenes} />
 
-            <Route path="/hr/empleados"><Employees /></Route>
-            <Route path="/hr/asistencia"><Assistance /></Route>
-            <Route path="/hr/dashboard"><Dashboard /></Route>
-            <Route path="/hr/productivity"><Productivity /></Route>
+            <Route path="/rh/empleados"><Employees /></Route>
+            <Route path="/rh/asistencia"><Assistance /></Route>
+            <Route path="/rh/dashboard"><Dashboard /></Route>
+        <Route path="/rh/productividad"><Productivity /></Route>
 
             <Route path="/estructura"><Structure /></Route>
 

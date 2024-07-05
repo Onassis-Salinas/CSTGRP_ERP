@@ -13,6 +13,34 @@ import exceljs from 'exceljs';
 
 @Injectable()
 export class EmployeesService {
+  async getAssistance(params) {
+    const [firstDate] = getWeekDays(new Date());
+    const rows = await sql`SELECT "mondayDate",
+    (SELECT name FROM incidences WHERE id = assistance."incidenceId0") AS "incidence0",
+    (SELECT name FROM incidences WHERE id = assistance."incidenceId1") AS "incidence1",
+    (SELECT name FROM incidences WHERE id = assistance."incidenceId2") AS "incidence2",
+    (SELECT name FROM incidences WHERE id = assistance."incidenceId3") AS "incidence3",
+    (SELECT name FROM incidences WHERE id = assistance."incidenceId4") AS "incidence4"
+    FROM assistance
+    WHERE "mondayDate" > ${new Date(new Date(firstDate).setDate(new Date(firstDate).getDate() - 28))} AND "employeeId" = ${parseInt(params.id)}
+    ORDER BY "mondayDate" desc`;
+
+    return rows;
+  }
+
+  async getProductivity(params) {
+    const [firstDate] = getWeekDays(new Date());
+    const rows = await sql`select *
+    from employeeproductivity
+    JOIN assistance
+    On assistance.id = employeeproductivity."assistanceId"
+    where assistance."mondayDate" > ${new Date(new Date(firstDate).setDate(new Date(firstDate).getDate() - 60))}
+    And assistance."employeeId" = ${parseInt(params.id)}
+    order by "mondayDate" asc`;
+
+    return rows;
+  }
+
   async getActiveEmployees() {
     const employees = await sql`select * from employees where active`;
     return employees;
@@ -21,14 +49,6 @@ export class EmployeesService {
   async getInactiveEmployees() {
     const employees = await sql`select * from employees where active = false`;
     return employees;
-  }
-
-  async getExcelTable() {
-    return 'excel';
-  }
-
-  async getEmployeeModel() {
-    return { nombre: '', posicion: '' };
   }
 
   async registerEmployee(body: z.infer<typeof createSchema>) {

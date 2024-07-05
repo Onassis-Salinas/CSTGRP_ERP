@@ -38,9 +38,9 @@
             incidences[incidence.value] = incidence.name;
         });
         incidencesList = incidencesArray;
-        if (Cookies.get("areas") === "Todas") return (areasList = areasArray);
+        if (Cookies.get("perm_assistance_areas") === "Todas") return (areasList = areasArray);
 
-        const accessibleAreas = Cookies.get("areas")?.split(",");
+        const accessibleAreas = Cookies.get("perm_assistance_areas")?.split(",");
         areasList = areasArray.filter((area: any) => {
             return accessibleAreas?.includes(area.value);
         });
@@ -78,7 +78,7 @@
         <Input size="sm" type="date" bind:value={dateSelected} on:change={getAssistance} />
     </div>
     <div class="flex gap-2">
-        {#if Cookies.get("areas") === "Todas"}
+        {#if Cookies.get("perm_assistance_areas") === "Todas"}
             <ExportAssistance date={dateSelected} />
             <Button size="sm" on:click={createWeek}><PlusOutline class="mr-2" />Generar semana</Button>
         {/if}

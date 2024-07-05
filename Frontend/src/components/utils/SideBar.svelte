@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Button, Modal, Sidebar, SidebarGroup, SidebarItem, SidebarWrapper } from "flowbite-svelte";
+    import { Button, Modal, Sidebar, SidebarDropdownItem, SidebarDropdownWrapper, SidebarGroup, SidebarItem, SidebarWrapper } from "flowbite-svelte";
     import { ArrowRightToBracketOutline, AddressBookOutline, UsersGroupOutline, ArchiveOutline, UserCircleOutline, CodeBranchOutline, BarsOutline, ExclamationCircleOutline, FileCheckOutline } from "flowbite-svelte-icons";
     import { links } from "svelte-routing";
     import Cookies from "js-cookie";
@@ -8,66 +8,89 @@
     let activeUrl = "";
     let showModal = false;
 
-    $: {
-        const ubications = {
-            almacen: "/almacen/resumenes",
-            hr: "/hr/dashboard",
-            recursos: "/recursos/directorio",
-        };
-
-        activeUrl = ubications[$location.split("/")[1]] || $location;
-    }
+    $: activeUrl = $location;
 
     const username = Cookies.get("username");
     export let show: Boolean;
+
+    const hasAccess = (name: string) => {
+        return parseInt(Cookies.get("perm_" + name) || "0") > 0;
+    };
 </script>
 
 <span class="max-w-16 absolute"></span>
-<Sidebar asideClass="border-r border-gray-200 w-48 max-w-48 fixed top-0 bottom-0 z-40 bg-primary-900 transition-all duration-200 " class={`max-w-${show ? "48" : "16"}`} {activeUrl} activeClass="flex p-2 rounded-lg hover:bg-primary-700 bg-primary-600" nonActiveClass="flex p-2 rounded-lg hover:bg-primary-700">
-    <SidebarWrapper class="h-full pb-4 bg-primary-800 overflow-hidden">
+<Sidebar asideClass="border-r border-gray-200 w-48 max-w-48 fixed top-0 bottom-0 z-40 bg-white transition-all duration-200 " class={`max-w-${show ? "48" : "16"}`} {activeUrl}>
+    <SidebarWrapper class="h-full pb-4 overflow-hidden bg-white">
         <div use:links class="h-full flex justify-between flex-col">
             <SidebarGroup>
-                <div class="text-white font-semibold text-xl flex w-full items-center justify-between mb-10 whitespace-nowrap h-7">
+                <div class="font-semibold text-xl flex w-full items-center justify-between mb-10 whitespace-nowrap h-7">
                     <span class={show ? "block" : "hidden"}>BC PET</span>
-                    <button class={show ? "" : "mx-auto"} on:click={() => (show = !show)}><BarsOutline class="size-6 mx-2 text-white" /></button>
+                    <button class={show ? "" : "mx-auto"} on:click={() => (show = !show)}><BarsOutline class="size-6 mx-2" /></button>
                 </div>
-                <SidebarItem class="text-white" label={show ? "Inventarios" : ""} href="/almacen/resumenes">
+                {#if hasAccess("inventory") || hasAccess("materials")}
+                    <SidebarDropdownWrapper label="Almacen">
+                        <svelte:fragment slot="icon">
+                            <ArchiveOutline class="size-6 text-gray-500" />
+                        </svelte:fragment>
+                        <SidebarDropdownItem label="Resumenes" href="/almacen/resumenes" active={activeUrl === "/almacen/resumenes"} />
+                        {#if hasAccess("materials")}
+                            <SidebarDropdownItem label="Materiales" href="/almacen/materiales" active={activeUrl === "/almacen/materiales"} />
+                        {/if}
+                        {#if hasAccess("inventory")}
+                            <SidebarDropdownItem label="Inventario" href="/almacen/inventario" active={activeUrl === "/almacen/inventario"} />
+                            <SidebarDropdownItem label="Movimientos" href="/almacen/movimientos" active={activeUrl === "/almacen/movimientos"} />
+                        {/if}
+                    </SidebarDropdownWrapper>
+                {/if}
+                {#if hasAccess("employees") || hasAccess("assistance") || hasAccess("productivity")}
+                    <SidebarDropdownWrapper label="RRHH">
+                        <svelte:fragment slot="icon">
+                            <UsersGroupOutline class="size-6 text-gray-500" />
+                        </svelte:fragment>
+                        {#if hasAccess("employees")}
+                            <SidebarDropdownItem label="Dashboard" href="/rh/dashboard" active={activeUrl === "/rh/dashboard"} />
+                        {/if}
+                        {#if hasAccess("empleados")}
+                            <SidebarDropdownItem label="Empleados" href="/rh/empleados" active={activeUrl === "/rh/empleados"} />
+                        {/if}
+                        {#if hasAccess("productivity")}
+                            <SidebarDropdownItem label="Productividad" href="/rh/productividad" active={activeUrl === "/rh/productividad"} />
+                        {/if}
+                        {#if hasAccess("assistance")}
+                            <SidebarDropdownItem label="Asistencia" href="/rh/asistencia" active={activeUrl === "/rh/asistencia"} />
+                        {/if}
+                    </SidebarDropdownWrapper>
+                {/if}
+                {#if hasAccess("structure")}
+                    <SidebarItem label={show ? "Estructura" : ""} href="/estructura">
+                        <svelte:fragment slot="icon">
+                            <CodeBranchOutline class="size-6 text-gray-500" />
+                        </svelte:fragment>
+                    </SidebarItem>
+                {/if}
+                {#if hasAccess("users")}
+                    <SidebarItem label={show ? "Usuarios" : ""} href="/usuarios">
+                        <svelte:fragment slot="icon">
+                            <AddressBookOutline class="size-6 text-gray-500" />
+                        </svelte:fragment>
+                    </SidebarItem>
+                {/if}
+                <SidebarItem label={show ? "Recursos" : ""} href="/recursos/directorio">
                     <svelte:fragment slot="icon">
-                        <ArchiveOutline class="size-6 text-gray-200 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
-                    </svelte:fragment>
-                </SidebarItem>
-
-                <SidebarItem class="text-white" label={show ? "RRHH" : ""} href="/hr/dashboard">
-                    <svelte:fragment slot="icon">
-                        <UsersGroupOutline class="size-6 text-gray-200 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
-                    </svelte:fragment>
-                </SidebarItem>
-                <SidebarItem class="text-white" label={show ? "Estructura" : ""} href="/estructura">
-                    <svelte:fragment slot="icon">
-                        <CodeBranchOutline class="size-6 text-gray-200 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
-                    </svelte:fragment>
-                </SidebarItem>
-                <SidebarItem class="text-white" label={show ? "Usuarios" : ""} href="/usuarios">
-                    <svelte:fragment slot="icon">
-                        <AddressBookOutline class="size-6 text-gray-200 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
-                    </svelte:fragment>
-                </SidebarItem>
-                <SidebarItem class="text-white" label={show ? "Recursos" : ""} href="/recursos/directorio">
-                    <svelte:fragment slot="icon">
-                        <FileCheckOutline class="size-6 text-gray-200 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
+                        <FileCheckOutline class="size-6 text-gray-500" />
                     </svelte:fragment>
                 </SidebarItem>
             </SidebarGroup>
             <SidebarGroup border class="mt-0 pt-0">
-                <SidebarItem class="text-white" label={show ? username : ""}>
+                <SidebarItem label={show ? username : ""}>
                     <svelte:fragment slot="icon">
-                        <UserCircleOutline class="size-6 text-gray-200 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
+                        <UserCircleOutline class="size-6 text-gray-500" />
                     </svelte:fragment>
                 </SidebarItem>
 
-                <SidebarItem on:click={() => (showModal = true)} class="text-white" label={show ? "Salir" : ""} href="#">
+                <SidebarItem on:click={() => (showModal = true)} label={show ? "Salir" : ""} href="#">
                     <svelte:fragment slot="icon">
-                        <ArrowRightToBracketOutline class="size-6 text-gray-200 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
+                        <ArrowRightToBracketOutline class="size-6 text-gray-500" />
                     </svelte:fragment>
                 </SidebarItem>
             </SidebarGroup>
