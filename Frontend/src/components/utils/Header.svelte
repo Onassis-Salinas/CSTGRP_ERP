@@ -7,13 +7,17 @@
         if (string.length < 4) return string.toUpperCase();
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
+
+    $: console.log($location.split("/")[2]);
 </script>
 
 <header class="ml-48 p-5">
     <div class="flex flex-col gap-2">
         <Breadcrumb>
             <BreadcrumbItem home>Inicio</BreadcrumbItem>
-            <BreadcrumbItem>{capitalize($location.split("/")[1])}</BreadcrumbItem>
+            {#if $location.split("/")[1]}
+                <BreadcrumbItem>{capitalize($location.split("/")[1])}</BreadcrumbItem>
+            {/if}
             {#if $location.split("/")[2]}
                 <BreadcrumbItem>{capitalize($location.split("/")[2])}</BreadcrumbItem>
             {/if}
