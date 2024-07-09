@@ -166,6 +166,11 @@
             <InputAddon class=" min-w-36">Turno</InputAddon>
             <Input size="sm" readonly value={selectedEmployee.shift}></Input>
         </ButtonGroup>
+        <ButtonGroup>
+            <InputAddon class=" min-w-36">Dias de vacaciones</InputAddon>
+            <Input size="sm" readonly value={selectedEmployee.vacations}></Input>
+        </ButtonGroup>
+        
     </div>
 
     <Hr hrClass="my-2 w-full border-b border-primary-500">Contacto</Hr>

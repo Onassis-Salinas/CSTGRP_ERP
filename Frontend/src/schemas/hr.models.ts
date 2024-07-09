@@ -16,6 +16,7 @@ export interface employee {
     bornLocation?: string;
     genre?: string;
     sons?: string;
+    vacations?: string;
     clinicNo?: string;
     email?: string;
     number?: string;

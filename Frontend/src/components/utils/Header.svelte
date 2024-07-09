@@ -18,6 +18,6 @@
                 <BreadcrumbItem>{capitalize($location.split("/")[2])}</BreadcrumbItem>
             {/if}
         </Breadcrumb>
-        <h3 class="font-semibold text-xl">{capitalize($location.split("/")[2]) || capitalize($location.split("/")[1])}</h3>
+        <h3 class="font-semibold text-xl">{capitalize($location.split("/")[2]) || capitalize($location.split("/")[1]) || "Inicio"}</h3>
     </div>
 </header>

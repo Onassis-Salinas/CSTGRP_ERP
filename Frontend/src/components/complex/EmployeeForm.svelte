@@ -69,6 +69,7 @@
                 areaId: parseInt(formData.areaId || ""),
                 positionId: parseInt(formData.positionId || ""),
                 sons: parseInt(formData.sons || ""),
+                vacations: parseInt(formData.vacations || ""),
             });
             showSuccess("Informacion actualizada");
         } else {
@@ -79,6 +80,7 @@
                 areaId: parseInt(formData.areaId || ""),
                 positionId: parseInt(formData.positionId || ""),
                 sons: parseInt(formData.sons || ""),
+                vacations: parseInt(formData.vacations || ""),
             });
             showSuccess("Empleado registrado");
         }
@@ -235,6 +237,10 @@
                     <span>Turno</span>
                     <Input name="text" bind:value={formData.shift} />
                 </Label>
+                <Label class="space-y-2">
+                    <span>Vacaciones</span>
+                    <Input name="text" bind:value={formData.vacations} />
+                </Label>
             </div>
 
             <Hr hrClass="my-2 w-full border-b border-primary-500">Contacto</Hr>
@@ -265,5 +271,6 @@
                 </Label>
             </div>
         </div>
+        <Button class="w-full mt-8" on:click={handleSubmit}>Guardar</Button>
     </form>
 </Modal>

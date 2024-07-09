@@ -151,6 +151,7 @@
         <TableHeadCell>NSS</TableHeadCell>
         <TableHeadCell>CURP</TableHeadCell>
         <TableHeadCell>RFC</TableHeadCell>
+        <TableHeadCell>Vacaciones</TableHeadCell>
         <TableHeadCell>Tipo de Sangre</TableHeadCell>
         <TableHeadCell>Cuenta Bancaria</TableHeadCell>
         <TableHeadCell>Contacto de Emergencia</TableHeadCell>
@@ -208,6 +209,7 @@
                 <TableBodyCell>{employee.nss || ""}</TableBodyCell>
                 <TableBodyCell>{employee.curp || ""}</TableBodyCell>
                 <TableBodyCell>{employee.rfc || ""}</TableBodyCell>
+                <TableBodyCell>{employee.vacations || ""}</TableBodyCell>
                 <TableBodyCell>{employee.blood || ""}</TableBodyCell>
                 <TableBodyCell>{employee.account || ""}</TableBodyCell>
                 <TableBodyCell>{employee.emmergencyContact || ""}</TableBodyCell>
