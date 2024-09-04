@@ -50,8 +50,8 @@ export class MovementsController {
     return this.movementsService.activateMovement(body);
   }
 
-  @Put('realamount')
-  udpateRealAmount(@Body(new ZodPiPe(updateAmountSchema)) body) {
-    return this.movementsService.updateRealAmount(body);
-  }
+  // @Put('realamount')
+  // udpateRealAmount(@Body(new ZodPiPe(updateAmountSchema)) body) {
+  //   return this.movementsService.updateRealAmount(body);
+  // }
 }

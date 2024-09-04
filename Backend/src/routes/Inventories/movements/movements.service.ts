@@ -68,17 +68,23 @@ export class MovementsService {
     const [movement] =
       await sql`select active from materialmovements where id = ${body.id}`;
 
-    if (movement.active)
-      throw new HttpException('Este movimiento ya se surtio', 400);
+    if (movement.active) {
+      await sql.begin(async (sql) => {
+        const [movement] =
+          await sql`UPDATE materialmovements SET active = false, "activeDate" = NULL WHERE id = ${body.id} returning amount, "realAmount", "materialId"`;
 
-    await sql.begin(async (sql) => {
-      const [movement] =
-        await sql`UPDATE materialmovements SET active = true, "activeDate" = ${new Date()} WHERE id = ${body.id} returning amount, "realAmount", "materialId"`;
+        await sql`update materials set amount = amount - ${parseFloat(movement.realAmount)} where id = ${movement.materialId}`;
+      });
+    } else {
+      await sql.begin(async (sql) => {
+        const [movement] =
+          await sql`UPDATE materialmovements SET active = true, "activeDate" = ${new Date()} WHERE id = ${body.id} returning amount, "realAmount", "materialId"`;
 
-      await sql`update materials set amount = amount + ${parseFloat(movement.realAmount)}, "leftoverAmount" = "leftoverAmount" + ${movement.realAmount < 0 ? parseFloat(movement.amount) - parseFloat(movement.realAmount) : 0} where id = ${movement.materialId}`;
-    });
+        await sql`update materials set amount = amount + ${parseFloat(movement.realAmount)} where id = ${movement.materialId}`;
+      });
+    }
 
-    return;
+    return movement.active;
   }
 
   async postInput(body: z.infer<typeof importSchema>) {

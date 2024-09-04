@@ -51,8 +51,9 @@
 
     async function checkMovement() {
         try {
-            await api.put("/materialmovements/activate", { id: movements[movementI].id });
-            showSuccess("Material surtido");
+            const result = await api.put("/materialmovements/activate", { id: movements[movementI].id });
+            console.log(result.data);
+            showSuccess(result.data ? "Check eliminado" : "Material surtido");
             show2 = false;
             await getMovements();
         } catch (err: any) {
@@ -117,8 +118,7 @@
                     ><Checkbox
                         checked={movement.active}
                         on:change={() => {
-                            movement.active = movement.active;
-                            if (!movement.active) viewCheckModal(i);
+                            viewCheckModal(i);
                         }}
                     /></TableBodyCell
                 >
