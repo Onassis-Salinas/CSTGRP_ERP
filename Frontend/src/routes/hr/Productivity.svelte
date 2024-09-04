@@ -44,7 +44,7 @@
 
         const mondayDate = new Date(getWeekDays(dateSelected)[0]);
 
-        weekDays = []
+        weekDays = [];
         for (let i = 0; i < 5; i++) {
             mondayDate.setDate(mondayDate.getDate() + (i > 0 ? 1 : 0));
             weekDays.push(formatDate(mondayDate.toISOString().split("T")[0]));
@@ -88,7 +88,7 @@
     </div>
     <div class="flex gap-2">
         <Button size="sm" on:click={() => (show = true)}><EditOutline class="mr-2" />Capturar</Button>
-        <ExportProductivity productivity={separatedProductivity} {areas} {positions} {weekDays}/>
+        <ExportProductivity productivity={separatedProductivity} {areas} {positions} {weekDays} />
     </div>
 </div>
 
