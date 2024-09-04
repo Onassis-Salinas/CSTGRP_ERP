@@ -15,11 +15,12 @@
     let clients: any[];
 
     const measurements = [
-        { name: "YARDAS", value: "YARDAS" },
-        { name: "METROS", value: "METROS" },
-        { name: "PIEZAS", value: "PIEZAS" },
-        { name: "PIES", value: "PIES" },
+        { name: "YARDAS", value: "YD" },
+        { name: "METROS", value: "MT" },
+        { name: "PIEZAS", value: "PC" },
+        { name: "PIES", value: "FT" },
     ];
+
     async function getClients() {
         clients = (await api.get("/inventoryvarious/clients")).data;
     }
