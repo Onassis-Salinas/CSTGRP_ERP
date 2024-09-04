@@ -18,6 +18,9 @@
     import Productivity from "./routes/hr/Productivity.svelte";
     import Directory from "./routes/resources/Directory.svelte";
     import Formats from "./routes/resources/Formats.svelte";
+    import Computers from "./routes/it/Computers.svelte";
+    import Devices from "./routes/it/Devices.svelte";
+    import Emails from "./routes/it/Emails.svelte";
 
     $: inLogin = $location.includes("login");
 </script>
@@ -53,6 +56,10 @@
 
             <Route path="/recursos/directorio"><Directory /></Route>
             <Route path="/recursos/formatos"><Formats /></Route>
+
+            <Route path="/sistemas/computadoras"><Computers /></Route>
+            <Route path="/sistemas/dispositivos"><Devices /></Route>
+            <Route path="/sistemas/correos"><Emails /></Route>
         </Router>
     </div>
     <Toaster />

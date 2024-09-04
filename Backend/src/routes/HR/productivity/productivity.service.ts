@@ -27,7 +27,6 @@ export class ProductivityService {
   }
 
   async editSingle(body: z.infer<typeof editSchema>) {
-    console.log(body);
     await sql`update employeeproductivity set ${sql(body)} where id = ${body.id}`;
     return;
   }

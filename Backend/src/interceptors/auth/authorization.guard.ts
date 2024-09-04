@@ -16,6 +16,7 @@ type permissionType =
   | 'assistance'
   | 'structure'
   | 'materials'
+  | 'it'
   | 'inventory';
 
 @Injectable()

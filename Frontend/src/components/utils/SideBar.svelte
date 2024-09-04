@@ -1,6 +1,6 @@
 <script lang="ts">
     import { Button, Modal, Sidebar, SidebarDropdownItem, SidebarDropdownWrapper, SidebarGroup, SidebarItem, SidebarWrapper } from "flowbite-svelte";
-    import { ArrowRightToBracketOutline, AddressBookOutline, UsersGroupOutline, ArchiveOutline, UserCircleOutline, CodeBranchOutline, ExclamationCircleOutline, FileCheckOutline, ChevronUpOutline, ChevronDownOutline } from "flowbite-svelte-icons";
+    import { ArrowRightToBracketOutline, AddressBookOutline, UsersGroupOutline, ArchiveOutline, UserCircleOutline, CodeBranchOutline, ExclamationCircleOutline, FileCheckOutline, ChevronUpOutline, ChevronDownOutline, DesktopPcOutline } from "flowbite-svelte-icons";
     import { links } from "svelte-routing";
     import Cookies from "js-cookie";
     import { location } from "../../utils/location";
@@ -75,6 +75,22 @@
                         {#if hasAccess("assistance")}
                             <SidebarDropdownItem label="Asistencia" href="/rh/asistencia" active={activeUrl === "/rh/asistencia"} aClass={dropdownItemClass} activeClass={dropdownItemActiveClass} />
                         {/if}
+                    </SidebarDropdownWrapper>
+                {/if}
+                {#if hasAccess("it")}
+                    <SidebarDropdownWrapper label="Sistemas" btnClass={dropdownWrapperClass}>
+                        <svelte:fragment slot="icon">
+                            <DesktopPcOutline class="size-6 text-neutral-200" />
+                        </svelte:fragment>
+                        <svelte:fragment slot="arrowup">
+                            <ChevronUpOutline class="size-6" />
+                        </svelte:fragment>
+                        <svelte:fragment slot="arrowdown">
+                            <ChevronDownOutline class="size-6" />
+                        </svelte:fragment>
+                        <SidebarDropdownItem label="Dispositivos" href="/sistemas/dispositivos" active={activeUrl === "/sistemas/dispositivos"} aClass={dropdownItemClass} activeClass={dropdownItemActiveClass} />
+                        <SidebarDropdownItem label="Correos" href="/sistemas/correos" active={activeUrl === "/sistemas/correos"} aClass={dropdownItemClass} activeClass={dropdownItemActiveClass} />
+                        <SidebarDropdownItem label="Computadoras" href="/sistemas/computadoras" active={activeUrl === "/sistemas/computadoras"} aClass={dropdownItemClass} activeClass={dropdownItemActiveClass} />
                     </SidebarDropdownWrapper>
                 {/if}
                 {#if hasAccess("structure")}

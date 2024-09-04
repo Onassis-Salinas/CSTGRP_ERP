@@ -9,5 +9,6 @@ export interface user {
     perm_employees: number
     perm_inventory: number
     perm_structure: number
+    perm_it: number
     perm_materials: number
   }

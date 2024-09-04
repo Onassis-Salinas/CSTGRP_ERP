@@ -9,7 +9,7 @@
     let movements: any[] = [];
 
     async function fetchData() {
-        movements = (await api.get("materialmovements/material/" + selectedMaterial.id)).data;
+        movements = (await api.get("/materialmovements/material/" + selectedMaterial.id)).data;
         console.log(movements);
     }
     $: if (selectedMaterial.id) {
@@ -23,7 +23,7 @@
     <Table>
         <TableHead class="bg-gray-100 sticky top-0">
             <TableHeadCell>job</TableHeadCell>
-            <TableHeadCell>Exportacion</TableHeadCell>
+            <TableHeadCell>Programacion</TableHeadCell>
             <TableHeadCell>Importacion</TableHeadCell>
             <TableHeadCell>Cantidad Job</TableHeadCell>
             <TableHeadCell>Cantidad real</TableHeadCell>
@@ -33,8 +33,8 @@
         <TableBody tableBodyClass="divide-y">
             {#each movements as row}
                 <TableBodyRow>
-                    <TableBodyCell tdClass="px-4 py-4">{row.job || ""}</TableBodyCell>
-                    <TableBodyCell tdClass="px-4 py-4">{row.export || ""}</TableBodyCell>
+                    <TableBodyCell tdClass="px-4 py-4">{row.jobpo || ""}</TableBodyCell>
+                    <TableBodyCell tdClass="px-4 py-4">{row.programation || ""}</TableBodyCell>
                     <TableBodyCell tdClass="px-4 py-4">{row.import || ""}</TableBodyCell>
                     <TableBodyCell tdClass="px-4 py-4"><Badge color={parseInt(row.amount) > 0 ? "green" : "red"}>{row.amount}</Badge></TableBodyCell>
                     <TableBodyCell tdClass="px-4 py-4"><Badge color={parseInt(row.realAmount) > 0 ? "green" : "red"}>{row.realAmount}</Badge></TableBodyCell>

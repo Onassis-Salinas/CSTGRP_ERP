@@ -36,7 +36,6 @@ export class UsersService {
     const secret: Secret = process.env.JWT_SECRET || 'sin secreto';
     const token = jwt.sign(user, secret, { expiresIn: '200h' });
 
-    console.log(user);
     res.setCookie('token', token, { ...cookieConfig, httpOnly: true });
 
     delete user.password;
@@ -69,7 +68,6 @@ export class UsersService {
   async editUser(body: z.infer<typeof editSchema>) {
     if (body.password) body.password = await bcrypt.hash(body.password, 10);
 
-    console.log(body);
     await sql`update users set ${sql(body)} where id = ${body.id}`;
     return;
   }

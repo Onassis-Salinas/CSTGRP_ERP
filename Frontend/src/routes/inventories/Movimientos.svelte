@@ -107,8 +107,8 @@
                 <TableBodyCell>{movement.jobpo || ""}</TableBodyCell>
                 <TableBodyCell>{movement.code}</TableBodyCell>
                 <TableBodyCell tdClass="w-full">{movement.description}</TableBodyCell>
-                <TableBodyCell><Badge color={parseInt(movement.leftoverAmount) >= 0 ? "primary" : "red"}>{movement.leftoverAmount}</Badge></TableBodyCell>
-                <TableBodyCell><Badge color={parseInt(movement.amount) >= 0 ? "green" : "red"}>{movement.amount}</Badge></TableBodyCell>
+                <TableBodyCell><Badge color={parseFloat(movement.leftoverAmount) >= 0 ? "primary" : "red"}>{movement.leftoverAmount}</Badge></TableBodyCell>
+                <TableBodyCell><Badge color={parseFloat(movement.amount) >= 0 ? "green" : "red"}>{movement.amount}</Badge></TableBodyCell>
 
                 <TableBodyCell tdClass=""><Input class="w-24" type="number" size="sm" bind:value={movement.realAmount} on:blur={() => changeAmount(movement.id, movement.realAmount)} /></TableBodyCell>
                 <TableBodyCell>{movement.measurement}</TableBodyCell>

@@ -22,23 +22,26 @@ export class FunctionsService {
           code: row.getCell(1).value,
           description: row.getCell(2).value,
           amount: row.getCell(3).value,
-          clientId: '3',
-          measurement: row.getCell(5).value || 'PZ',
+          measurement: row.getCell(4).value,
+          clientId: 3,
         };
       })
-      .filter((item) => item.code);
+      .filter((item) => item.code)
+      .map((e) => ({ ...e, code: 'CSI-' + e.code }));
 
-    await sql`delete from materialmovements`;
-    await sql`delete from materials`;
-    await sql`delete from materialie`;
+    await sql.begin(async () => {
+      await sql`delete from materialmovements`;
+      await sql`delete from materials`;
+      await sql`delete from materialie`;
 
-    const [{ id }] =
-      await sql`insert into materialie (import, due) values (1, '2024-01-01') returning id`;
+      const [{ id }] =
+        await sql`insert into materialie (import, due) values (1, '2024-01-01') returning id`;
 
-    await sql`insert into materials ${sql(rows)}`;
-    await sql`INSERT INTO materialmovements ("materialId", "movementId", amount, "realAmount", active)
-      SELECT id, ${id}, amount, amount, true
-      FROM materials;`;
+      await sql`insert into materials ${sql(rows)}`;
+      await sql`INSERT INTO materialmovements ("materialId", "movementId", amount, "realAmount", active)
+        SELECT id, ${id}, amount, amount, true
+        FROM materials;`;
+    });
 
     return rows;
   }

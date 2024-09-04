@@ -37,7 +37,6 @@ export class StatsService {
 
     materials = materials.filter((material) => material.amount <= 0);
 
-    console.log(materials);
     return materials;
   }
 

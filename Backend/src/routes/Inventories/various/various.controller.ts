@@ -43,6 +43,6 @@ export class VariousController {
   @Post('importpdf')
   @UseInterceptors(FileInterceptor('file'))
   convertImport(@UploadedFile() file: File) {
-    return this.variousService.ConvertImportPdf(file);
+    return this.variousService.convertImportPdf(file);
   }
 }

@@ -104,6 +104,10 @@
                 <Select items={permissions} bind:value={formData.perm_structure} />
             </Label>
             <Label class="space-y-2">
+                <span>Perm. Sistemas</span>
+                <Select items={permissions} bind:value={formData.perm_it} />
+            </Label>
+            <Label class="space-y-2">
                 <span>Perm. Materiales</span>
                 <Select items={permissions} bind:value={formData.perm_materials} />
             </Label>

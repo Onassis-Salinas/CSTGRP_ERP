@@ -23,7 +23,7 @@ export class MovementsService {
       ${query.programation ? sql`materialie.programation = ${query.programation}` : sql`TRUE`} AND
       ${query.code ? sql`materials.code LIKE ${'%' + query.code + '%'}` : sql`TRUE`}
       ORDER BY materialie.due DESC, materialie.jobpo DESC, materials.code DESC, materialmovements.amount DESC, materialmovements.id DESC
-      LIMIT 150`;
+      LIMIT 500`;
     return movements;
   }
 
@@ -48,14 +48,13 @@ export class MovementsService {
         ORDER BY
             materialie.due DESC,
             materialmovements.id DESC
-        LIMIT 100`;
+        LIMIT 500`;
     return movements;
   }
 
   async updateRealAmount(body: z.infer<typeof updateAmountSchema>) {
     const [movement] =
       await sql`select active, id, amount from materialmovements where id = ${body.id}`;
-    console.log(movement);
 
     if (movement.active)
       throw new HttpException('Este movimiento ya se surtio', 400);
@@ -87,6 +86,8 @@ export class MovementsService {
     await sql.begin(async (sql) => {
       const materialRows =
         await sql`SELECT code FROM materials WHERE code in ${sql(materials)}`;
+      console.log(materialRows);
+      console.log(materials);
       if (materialRows.length !== materials.length)
         throw new HttpException(
           'Uno o varios de los materiales incorrectos',

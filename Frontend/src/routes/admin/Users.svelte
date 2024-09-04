@@ -11,7 +11,7 @@
     setLocation();
     let show: boolean;
     let show1: boolean;
-    let selectedUser: user = { id: "", username: "", password: "", perm_assistance_areas: undefined, perm_users: 0, perm_materials: 0, perm_assistance: 0, perm_productivity: 0, perm_employees: 0, perm_inventory: 0, perm_structure: 0 };
+    let selectedUser: user = { id: "", username: "", password: "", perm_assistance_areas: undefined, perm_users: 0, perm_materials: 0, perm_assistance: 0, perm_productivity: 0, perm_employees: 0, perm_inventory: 0, perm_structure: 0, perm_it: 0 };
     let users: user[] = [];
     let areas: any = {};
 
@@ -29,7 +29,7 @@
         show = true;
     }
     function createUser() {
-        selectedUser = { id: "", username: "", password: "", perm_assistance_areas: undefined, perm_users: 0, perm_materials: 0, perm_assistance: 0, perm_productivity: 0, perm_employees: 0, perm_inventory: 0, perm_structure: 0 };
+        selectedUser = { id: "", username: "", password: "", perm_assistance_areas: undefined, perm_users: 0, perm_materials: 0, perm_assistance: 0, perm_productivity: 0, perm_employees: 0, perm_inventory: 0, perm_structure: 0, perm_it: 0 };
         show = true;
     }
 
@@ -40,7 +40,7 @@
 
     async function handleDelete() {
         await api.delete("/users", { data: { id: parseInt(selectedUser.id) } });
-        selectedUser = { id: "", username: "", password: "", perm_assistance_areas: undefined, perm_users: 0, perm_materials: 0, perm_assistance: 0, perm_productivity: 0, perm_employees: 0, perm_inventory: 0, perm_structure: 0 };
+        selectedUser = { id: "", username: "", password: "", perm_assistance_areas: undefined, perm_users: 0, perm_materials: 0, perm_assistance: 0, perm_productivity: 0, perm_employees: 0, perm_inventory: 0, perm_structure: 0, perm_it: 0 };
         showSuccess("Usuario eliminado");
         await getUsers();
         show1 = false;
@@ -74,6 +74,7 @@
         <TableHeadCell class="w-[12.5%]">Perm. Productividad</TableHeadCell>
         <TableHeadCell class="w-[12.5%]">Perm. Usuarios</TableHeadCell>
         <TableHeadCell class="w-[12.5%]">Perm. Estructura</TableHeadCell>
+        <TableHeadCell class="w-[12.5%]">Perm. Sistemas</TableHeadCell>
         <TableHeadCell class="w-[12.5%]">Perm. Materiales</TableHeadCell>
         <TableHeadCell class="w-[12.5%]">Areas</TableHeadCell>
     </TableHead>
@@ -97,6 +98,7 @@
                 <TableBodyCell><Badge color={getBadgeColor(user.perm_productivity)}>{badgeTexts[user.perm_productivity]}</Badge></TableBodyCell>
                 <TableBodyCell><Badge color={getBadgeColor(user.perm_users)}>{badgeTexts[user.perm_users]}</Badge></TableBodyCell>
                 <TableBodyCell><Badge color={getBadgeColor(user.perm_structure)}>{badgeTexts[user.perm_structure]}</Badge></TableBodyCell>
+                <TableBodyCell><Badge color={getBadgeColor(user.perm_it)}>{badgeTexts[user.perm_it]}</Badge></TableBodyCell>
                 <TableBodyCell><Badge color={getBadgeColor(user.perm_materials)}>{badgeTexts[user.perm_materials]}</Badge></TableBodyCell>
                 <TableBodyCell tdClass="py-0 px-2">
                     <Button class="py-1" color="alternative" size="sm">Areas<ChevronDownOutline class="w-6 h-6 ms-2 text-black dark:text-white" /></Button>
