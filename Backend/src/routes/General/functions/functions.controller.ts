@@ -1,5 +1,6 @@
 import {
   Controller,
+  Get,
   Post,
   UploadedFile,
   UseGuards,
@@ -21,5 +22,11 @@ export class FunctionsController {
   @UseInterceptors(FileInterceptor('file'))
   importInventory(@UploadedFile() file: File) {
     return this.functionsService.importInventory(file);
+  }
+
+  @Get('checkall')
+  @UseInterceptors()
+  checkAll() {
+    return this.functionsService.checkAll();
   }
 }

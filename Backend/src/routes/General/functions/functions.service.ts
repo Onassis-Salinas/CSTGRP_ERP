@@ -45,4 +45,44 @@ export class FunctionsService {
 
     return rows;
   }
+
+  async checkAll() {
+    const movements = await sql`
+      SELECT materialmovements.id, active
+      FROM materialmovements
+      JOIN materialie ON materialie.id = materialmovements."movementId"
+      WHERE materialie.jobpo IS NOT NULL`;
+
+    console.log(movements);
+
+    for (const body of movements) {
+      const [movement] = await sql`
+        SELECT active
+        FROM materialmovements
+        WHERE id = ${body.id}`;
+
+      if (movement.active) continue;
+
+      await sql.begin(async (sql) => {
+        const [movement] = await sql`
+          UPDATE materialmovements
+          SET active = true, "activeDate" = ${new Date()}
+          WHERE id = ${body.id}
+          RETURNING amount, "realAmount", "materialId"`;
+
+        await sql`
+          UPDATE materials
+          SET amount = amount + ${parseFloat(movement.realAmount)}
+          WHERE id = ${movement.materialId}`;
+      });
+    }
+
+    const newMovements = await sql`
+      SELECT materialmovements.id, active
+      FROM materialmovements
+      JOIN materialie ON materialie.id = materialmovements."movementId"
+      WHERE materialmovements.active <> true`;
+
+    return newMovements;
+  }
 }

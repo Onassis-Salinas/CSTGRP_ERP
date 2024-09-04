@@ -113,5 +113,12 @@
     </TableBody>
 </CusTable>
 
+<button
+    on:click={async () => {
+        const result = await api.get("/functions/checkall");
+        console.log(result);
+    }}>CheckAlllllllllll</button
+>
+
 <UserForm bind:show bind:selectedUser reload={getUsers} />
 <DeletePopUp bind:show={show1} text="Eliminar usuario" deleteFunc={handleDelete} />
