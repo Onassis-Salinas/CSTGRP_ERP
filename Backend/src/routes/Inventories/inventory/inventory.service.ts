@@ -27,9 +27,9 @@ export class InventoryService {
           AND materialie.jobpo IS NOT NULL
           AND materialmovements."materialId" = ${row.id}
           ORDER BY materialmovements."activeDate" DESC, materialie.id DESC
-          LIMIT 12`;
+          LIMIT 25`;
 
-        for (let i = 0; i < 12; i++) {
+        for (let i = 0; i < 25; i++) {
           row['job' + i] = movements[i]?.jobpo;
         }
 
@@ -55,6 +55,19 @@ export class InventoryService {
       { header: 'Job 10', key: 'job9', width: 12 },
       { header: 'Job 11', key: 'job10', width: 12 },
       { header: 'Job 12', key: 'job11', width: 12 },
+      { header: 'Job 13', key: 'job12', width: 12 },
+      { header: 'Job 14', key: 'job13', width: 12 },
+      { header: 'Job 15', key: 'job14', width: 12 },
+      { header: 'Job 16', key: 'job15', width: 12 },
+      { header: 'Job 17', key: 'job16', width: 12 },
+      { header: 'Job 18', key: 'job17', width: 12 },
+      { header: 'Job 19', key: 'job18', width: 12 },
+      { header: 'Job 20', key: 'job19', width: 12 },
+      { header: 'Job 21', key: 'job20', width: 12 },
+      { header: 'Job 22', key: 'job21', width: 12 },
+      { header: 'Job 23', key: 'job22', width: 12 },
+      { header: 'Job 24', key: 'job23', width: 12 },
+      { header: 'Job 25', key: 'job24', width: 12 },
     ];
 
     worksheet.addRows(results);

@@ -1,6 +1,5 @@
 import {
   Controller,
-  Get,
   Post,
   UploadedFile,
   UseGuards,
@@ -24,9 +23,9 @@ export class FunctionsController {
     return this.functionsService.importInventory(file);
   }
 
-  @Get('checkall')
-  @UseInterceptors()
-  checkAll() {
-    return this.functionsService.checkAll();
-  }
+  // @Get('checkall')
+  // @UseInterceptors()
+  // checkAll() {
+  //   return this.functionsService.checkAll();
+  // }
 }
