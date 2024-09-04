@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Button, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, Badge, Input, Checkbox } from "flowbite-svelte";
+    import { Button, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, Badge, Input, Checkbox, Select } from "flowbite-svelte";
     import { EditOutline, SearchOutline } from "flowbite-svelte-icons";
     import CusTable from "../../components/basic/CusTable.svelte";
     import { setLocation } from "../../utils/location";
@@ -24,7 +24,14 @@
         import: "",
         jobpo: "",
         code: "",
+        checked: "",
     };
+
+    let checkStatus = [
+        { value: "", name: "Sin filtro" },
+        { value: "true", name: "Surtido" },
+        { value: "false", name: "No surtido" },
+    ];
 
     let movements: movement[] = [];
 
@@ -77,6 +84,7 @@
             <Input size="sm" bind:value={filters.programation} placeholder="Programacion" />
             <Input size="sm" bind:value={filters.jobpo} placeholder="Job" />
             <Input size="sm" bind:value={filters.code} placeholder="Material" />
+            <Select items={checkStatus} bind:value={filters.checked} />
             <Button type="submit" size="sm"><SearchOutline class="mr-2" />Buscar</Button>
         </form>
         <div class="flex gap-2">

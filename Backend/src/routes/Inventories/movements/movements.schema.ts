@@ -9,6 +9,7 @@ export const movementsFilterSchema = z.object({
   import: z.string().nullable(),
   programation: z.string().nullable(),
   jobpo: z.string().nullable(),
+  checked: z.string().nullable(),
 });
 
 export const updateAmountSchema = z.object({

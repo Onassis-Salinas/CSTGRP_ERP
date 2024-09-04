@@ -21,7 +21,8 @@ export class MovementsService {
       ${query.jobpo ? sql`materialie.jobpo = ${query.jobpo}` : sql`TRUE`} AND
       ${query.import ? sql`materialie.import = ${query.import}` : sql`TRUE`} AND
       ${query.programation ? sql`materialie.programation = ${query.programation}` : sql`TRUE`} AND
-      ${query.code ? sql`materials.code LIKE ${'%' + query.code + '%'}` : sql`TRUE`}
+      ${query.code ? sql`materials.code LIKE ${'%' + query.code + '%'}` : sql`TRUE`} AND
+      ${query.checked !== null ? sql`materialmovements.active = ${query.checked === 'true'}` : sql`TRUE`}
       ORDER BY materialie.due DESC, materialie.jobpo DESC, materials.code DESC, materialmovements.amount DESC, materialmovements.id DESC
       LIMIT 500`;
     return movements;
