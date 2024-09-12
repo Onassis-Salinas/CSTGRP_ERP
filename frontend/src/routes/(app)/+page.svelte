@@ -5,6 +5,4 @@
 	<title>Home</title>
 </svelte:head>
 
-<section>
-	Bienvenido al sistema de gestion cst
-</section>
+<section>Bienvenido al sistema de gestion cst</section>
