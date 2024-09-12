@@ -8,5 +8,5 @@ export const dateSchema = z.object({
 
 export const areaAssistanceInfoSchema = z.object({
   date: z.string().refine((value) => dateRegex.test(value)),
-  areaId: z.string(),
+  areaId: z.string().nullable(),
 });
