@@ -57,7 +57,7 @@
 </div>
 
 <div class="grid grid-cols-3 place-items-stretch gap-4">
-	<Card class="col-span-2 h-[30rem] w-full max-w-full flex flex-col">
+	<Card class="col-span-2 flex h-[30rem] w-full max-w-full flex-col">
 		<CardHeader>
 			<CardTitle>En minimos</CardTitle>
 		</CardHeader>
@@ -84,7 +84,7 @@
 			</Table>
 		</CardContent>
 	</Card>
-	<Card class="col-span-2 h-[30rem] w-full max-w-full flex flex-col">
+	<Card class="col-span-2 flex h-[30rem] w-full max-w-full flex-col">
 		<CardHeader>
 			<CardTitle>Stocks negativos despues de completar ordenes</CardTitle>
 		</CardHeader>

@@ -108,8 +108,7 @@
 
 <div class="mb-6 flex justify-between">
 	<div>
-		<Button  on:click={createUser}><PlusCircle class="mr-2 size-4" />Añadir Usuario</Button
-		>
+		<Button on:click={createUser}><PlusCircle class="mr-2 size-4" />Añadir Usuario</Button>
 	</div>
 </div>
 

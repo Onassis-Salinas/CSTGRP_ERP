@@ -1,5 +1,4 @@
 <script lang="ts">
-	import CusTable from '$lib/components/basic/CusTable.svelte';
 	import { Badge } from '$lib/components/ui/badge';
 	import {
 		Dialog,

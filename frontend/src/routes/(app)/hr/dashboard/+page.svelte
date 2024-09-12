@@ -134,14 +134,14 @@
 				<TableHeader class="sticky top-0 bg-gray-100">
 					<TableHead>Nombre</TableHead>
 					<TableHead>Incidencia</TableHead>
-					<!-- <TableHeadCell>Area</TableHeadCell> -->
+					<!-- <TableHead>Area</TableHead> -->
 				</TableHeader>
 				<TableBody>
 					{#each dailyIncidencesList as row}
 						<TableRow>
 							<TableCell>{row.name}</TableCell>
 							<TableCell><Badge color="outline">{row.incidence}</Badge></TableCell>
-							<!-- <TableBodyCell class="px-4 py-4">{row.areaId}</TableBodyCell> -->
+							<!-- <TableCell class="px-4 py-4">{row.areaId}</TableCell> -->
 						</TableRow>
 					{/each}
 				</TableBody>
@@ -169,7 +169,6 @@
 			{#if employeeTemplate && activeEmployees}
 				<PieChart
 					label="empleados"
-					color="blue"
 					data={[
 						{ value: activeEmployees, name: 'Cumplido' },
 						{ value: parseInt(employeeTemplate) - activeEmployees, name: 'Faltante' }
