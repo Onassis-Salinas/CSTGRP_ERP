@@ -12,16 +12,10 @@ import { Secret } from 'jsonwebtoken';
 import jwt from 'jsonwebtoken';
 import { sendError } from 'src/utils/errors';
 import dotenv from 'dotenv';
+import { cookieConfig, httpCookieConfig } from 'src/utils/cookies';
 
 dotenv.config();
 
-const cookieConfig = {
-  sameSite: false,
-  path: '/',
-  domain: process.env.COOKIES_DOMAIN,
-  secure: false,
-  maxAge: 315360000,
-};
 
 @Injectable()
 export class UsersService {
@@ -36,7 +30,7 @@ export class UsersService {
     const secret: Secret = process.env.JWT_SECRET || 'sin secreto';
     const token = jwt.sign(user, secret, { expiresIn: '200h' });
 
-    res.setCookie('token', token, { ...cookieConfig, httpOnly: true });
+    res.setCookie('token', token, httpCookieConfig);
 
     delete user.password;
     Object.keys(user).forEach((key) => {
@@ -48,7 +42,7 @@ export class UsersService {
 
   async logoutUser(res) {
     res
-      .setCookie('token', '', { ...cookieConfig, httpOnly: true })
+      .setCookie('token', '', httpCookieConfig)
       .setCookie('username', '', cookieConfig)
       .send();
   }

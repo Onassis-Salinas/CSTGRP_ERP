@@ -8,6 +8,7 @@ import jwt from 'jsonwebtoken';
 import sql from 'src/utils/db';
 import { FastifyRequest } from 'fastify';
 import { sendError } from 'src/utils/errors';
+import { cookieConfig } from 'src/utils/cookies';
 
 type permissionType =
   | 'users'
@@ -21,7 +22,7 @@ type permissionType =
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private readonly requiredPermission: permissionType) {}
+  constructor(private readonly requiredPermission: permissionType) { }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const httpContext = context.switchToHttp();
@@ -41,13 +42,7 @@ export class AuthGuard implements CanActivate {
       DELETE: 2,
     };
 
-    const cookieConfig = {
-      sameSite: false,
-      path: '/',
-      domain: '127.0.0.1',
-      secure: false,
-      maxAge: 315360000,
-    };
+
 
     try {
       const user: any = await jwt.verify(token, process.env.JWT_SECRET);
