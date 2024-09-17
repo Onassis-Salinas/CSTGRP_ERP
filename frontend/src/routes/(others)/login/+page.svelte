@@ -5,6 +5,7 @@
 	import { Input } from '$lib/components/ui/input';
 	import api from '$lib/utils/server';
 	import { showSuccess } from '$lib/utils/showToast';
+	import { onMount } from 'svelte';
 
 	let credentials = {
 		username: '',
@@ -14,13 +15,15 @@
 	async function logout() {
 		await api.get('/users/logout');
 	}
-	logout();
 
 	async function login() {
 		await api.post('/users/login', credentials);
 		showSuccess('sesion iniciada');
 		goto('/');
 	}
+	onMount(() => {
+		logout();
+	});
 </script>
 
 <section class="flex min-h-screen w-full flex-col items-center justify-center">
