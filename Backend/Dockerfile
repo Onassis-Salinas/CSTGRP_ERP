@@ -1,8 +1,8 @@
-FROM node:18
+FROM node:20.17-alpine3.20
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y \
+RUN apk add --no-cache \
     python3 \
     make \
     g++
