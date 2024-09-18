@@ -1,18 +1,18 @@
 <script lang="ts">
 	import Cookies from 'js-cookie';
-	import { location } from '../../../utils/location';
-	import AccordionItem from '../../ui/accordion/accordion-item.svelte';
-	import { Accordion } from '../../ui/accordion';
-	import AccordionTrigger from '../../ui/accordion/accordion-trigger.svelte';
-	import AccordionContent from '../../ui/accordion/accordion-content.svelte';
-	import { Card } from '../../ui/card';
+	import { location } from '../../utils/location';
+	import AccordionItem from '../ui/accordion/accordion-item.svelte';
+	import { Accordion } from '../ui/accordion';
+	import AccordionTrigger from '../ui/accordion/accordion-trigger.svelte';
+	import AccordionContent from '../ui/accordion/accordion-content.svelte';
+	import { Card } from '../ui/card';
 	import Package from 'lucide-svelte/icons/package';
 	import {
 		Dot,
 		File,
 		GitMerge,
 		LogOut,
-		MailWarningIcon,
+		CircleAlert,
 		Monitor,
 		SquareUser,
 		UserCircle,
@@ -207,15 +207,14 @@
 
 <Dialog bind:open={showModal}>
 	<DialogContent>
-		<DialogBody>
+		<DialogBody class="space-y-4">
 			<div class="text-center">
-				<MailWarningIcon class="mx-auto mb-2 h-16 w-16 text-gray-400 dark:text-gray-200" />
+				<CircleAlert class="mx-auto mb-2 h-16 w-16 text-gray-400 dark:text-gray-200 mb-4" />
 				<h3 class=" text-lg font-normal text-gray-500 dark:text-gray-400">Deseas cerrar sesion?</h3>
 			</div>
 			<div class="text-center">
 				<Button
-					
-					color="red"
+					variant="destructive"
 					class="me-2"
 					on:click={() => {
 						showModal = false;
@@ -223,7 +222,7 @@
 					}}>Salir</Button
 				>
 
-				<Button  on:click={() => (showModal = false)} color="alternative">Cancelar</Button>
+				<Button on:click={() => (showModal = false)} variant="outline">Cancelar</Button>
 			</div>
 		</DialogBody>
 	</DialogContent>

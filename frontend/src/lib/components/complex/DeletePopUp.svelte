@@ -10,14 +10,14 @@
 
 <Dialog bind:open={show}>
 	<DialogContent>
-		<DialogBody>
+		<DialogBody class="space-y-4">
 			<div class="text-center">
-				<CircleAlert class="mx-auto mb-2 h-16 w-16 text-gray-400 dark:text-gray-200" />
+				<CircleAlert class="mx-auto mb-2 mb-4 h-16 w-16 text-gray-400 dark:text-gray-200" />
 				<h3 class=" text-lg font-normal text-gray-500 dark:text-gray-400">{text}</h3>
 			</div>
 			<div class="text-center">
-				<Button on:click={deleteFunc} color="red" class="me-2">Eliminar</Button>
-				<Button on:click={() => (show = false)} color="alternative">Cancelar</Button>
+				<Button on:click={deleteFunc} variant="destructive" class="me-2">Eliminar</Button>
+				<Button on:click={() => (show = false)} variant="outline">Cancelar</Button>
 			</div>
 		</DialogBody>
 	</DialogContent>

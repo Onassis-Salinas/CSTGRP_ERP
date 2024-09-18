@@ -123,9 +123,11 @@
 						</DropdownMenuTrigger>
 
 						<DropdownMenuContent>
-							<DropdownMenuItem on:click={() => editMaterial(i)}><Pen />Editar</DropdownMenuItem>
+							<DropdownMenuItem on:click={() => editMaterial(i)}
+								><Pen class="size-4" />Editar</DropdownMenuItem
+							>
 							<DropdownMenuItem on:click={() => deleteMaterial(i)} color="red"
-								><Trash />Eliminar</DropdownMenuItem
+								><Trash class="size-4" />Eliminar</DropdownMenuItem
 							>
 						</DropdownMenuContent>
 					</DropdownMenu>

@@ -68,14 +68,16 @@
 				<TableCell class="sticky left-0 bg-inherit px-0">
 					<DropdownMenu>
 						<DropdownMenuTrigger>
-							<Button color="none" class="h-full w-10 p-0">
+							<Button variant="ghost" class="h-full w-10 p-0">
 								<EllipsisVertical class="size-4" />
 							</Button>
 						</DropdownMenuTrigger>
 						<DropdownMenuContent>
-							<DropdownMenuItem on:click={() => editDevice(i)}><Pen />Editar</DropdownMenuItem>
+							<DropdownMenuItem on:click={() => editDevice(i)}
+								><Pen class="size-4" />Editar</DropdownMenuItem
+							>
 							<DropdownMenuItem on:click={() => deleteDevice(i)} color="red"
-								><Trash />Eliminar</DropdownMenuItem
+								><Trash class="size-4" />Eliminar</DropdownMenuItem
 							>
 						</DropdownMenuContent>
 					</DropdownMenu>
@@ -93,7 +95,7 @@
 <DevicesForm bind:show bind:selectedDevice reload={getDevices} />
 <DeletePopUp
 	bind:show={show1}
-	text="Borrar posicion"
+	text="Borrar Dispositivo"
 	deleteFunc={async () => {
 		await api.delete('devices', { data: { id: parseInt(selectedDevice.id || '') } });
 		showSuccess('Posicion eliminada');
