@@ -2,10 +2,7 @@ FROM node:20.17-alpine3.20
 
 WORKDIR /app
 
-RUN apk add --no-cache --virtual .gyp \
-        python \
-        make \
-        g++ 
+RUN apk update && apk add --no-cache python3 make g++
 
 COPY package*.json ./
 
