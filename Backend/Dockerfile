@@ -1,8 +1,11 @@
-FROM node:20.17-alpine3.20
+FROM node:20
 
 WORKDIR /app
 
-RUN apk update && apk add --no-cache python3 make g++ build-base
+RUN apt-get update && apt-get install -y \
+    python3 \
+    make \
+    g++
 
 COPY package*.json ./
 
