@@ -28,10 +28,10 @@
 				...formData,
 				id: parseInt(formData.id || '')
 			});
-			showSuccess('Posicion editada');
+			showSuccess('Dispositivo editado');
 		} else {
 			await api.post('/devices', formData);
-			showSuccess('Posicion registrada');
+			showSuccess('Dispositivo registrado');
 		}
 		await reload();
 		show = false;

@@ -15,6 +15,7 @@
 		DropdownMenuTrigger
 	} from '$lib/components/ui/dropdown-menu';
 	import { showSuccess } from '$lib/utils/showToast';
+	import PwCell from '$lib/components/ui/table/pw-cell.svelte';
 
 	let show: boolean;
 	let show1: boolean;
@@ -83,8 +84,8 @@
 				<TableCell>{device.name || ''}</TableCell>
 				<TableCell>{device.ip || ''}</TableCell>
 				<TableCell>{device.user || ''}</TableCell>
-				<TableCell>{device.password || ''}</TableCell>
-				<TableCell>{device.wifipw || ''}</TableCell>
+				<PwCell password={device.password || ''}></PwCell>
+				<PwCell password={device.wifipw || ''}></PwCell>
 			</TableRow>
 		{/each}
 	</TableBody>

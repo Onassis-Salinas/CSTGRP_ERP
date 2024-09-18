@@ -16,6 +16,7 @@
 	import { showSuccess } from '$lib/utils/showToast';
 	import { formatDate } from '$lib/utils/functions';
 	import EmailsForm from './EmailsForm.svelte';
+	import PwCell from '$lib/components/ui/table/pw-cell.svelte';
 
 	let show: boolean;
 	let show1: boolean;
@@ -79,7 +80,7 @@
 					</DropdownMenu>
 				</TableCell>
 				<TableCell class="w-full">{device.email || ''}</TableCell>
-				<TableCell>{device.password || ''}</TableCell>
+				<PwCell password={device.password || ''}></PwCell>
 			</TableRow>
 		{/each}
 	</TableBody>

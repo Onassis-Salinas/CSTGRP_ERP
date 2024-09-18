@@ -180,11 +180,11 @@
 					class="hover:bg-muted flex items-center gap-2 rounded-md p-2 text-[16px]"
 					><Dot />Directorio</a
 				>
-				<a
+				<!-- <a
 					href="/resources/formats"
 					class="hover:bg-muted flex items-center gap-2 rounded-md p-2 text-[16px]"
 					><Dot />Formatos</a
-				>
+				> -->
 			</AccordionContent>
 		</AccordionItem>
 	</Accordion>

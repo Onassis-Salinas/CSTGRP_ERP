@@ -45,16 +45,18 @@
 	});
 </script>
 
-<div class="mb-6 flex justify-between">
-	<div>
-		<Button on:click={createDevice}><PlusCircle class="mr-2 size-4" />Añadir dispositivo</Button>
+{#if parseInt(Cookies.get('perm_it') || '0') == 2}
+	<div class="mb-6 flex justify-between">
+		<Button on:click={createDevice}><PlusCircle class="mr-2 size-4" />Añadir fila</Button>
 	</div>
-</div>
+{/if}
 
 <CusTable>
 	<TableHeader>
-		<TableHead class="fixed left-0 z-30 bg-inherit p-1"></TableHead>
-		<TableHead class="w-[25%]">Nombre</TableHead>
+		{#if parseInt(Cookies.get('perm_it') || '0') == 2}
+			<TableHead class="fixed left-0 z-30 bg-inherit p-1"></TableHead>
+		{/if}
+		<TableHead class="w-[50%]">Nombre</TableHead>
 		<TableHead class="w-[25%]">Posicion</TableHead>
 		<TableHead class="w-[25%]">Correo</TableHead>
 		<TableHead class="w-[25%]">Extension</TableHead>
@@ -62,31 +64,34 @@
 	<TableBody>
 		{#each devices as device, i}
 			<TableRow>
-				<TableCell class="sticky left-0 bg-inherit px-0">
-					<DropdownMenu>
-						<DropdownMenuTrigger>
-							<Button variant="ghost" class="h-full w-10 p-0">
-								<EllipsisVertical class="size-4" />
-							</Button>
-						</DropdownMenuTrigger>
-						<DropdownMenuContent>
-							<DropdownMenuItem on:click={() => editDevice(i)}
-								><Pen class="size-4" />Editar</DropdownMenuItem
-							>
-							<DropdownMenuItem on:click={() => deleteDevice(i)} color="red"
-								><Trash class="size-4" />Eliminar</DropdownMenuItem
-							>
-						</DropdownMenuContent>
-					</DropdownMenu>
-				</TableCell>
+				{#if parseInt(Cookies.get('perm_it') || '0') == 2}
+					<TableCell class="sticky left-0 bg-inherit px-0">
+						<DropdownMenu>
+							<DropdownMenuTrigger>
+								<Button variant="ghost" class="h-full w-10 p-0">
+									<EllipsisVertical class="size-4" />
+								</Button>
+							</DropdownMenuTrigger>
+							<DropdownMenuContent>
+								<DropdownMenuItem on:click={() => editDevice(i)}
+									><Pen class="size-4" />Editar</DropdownMenuItem
+								>
+								<DropdownMenuItem on:click={() => deleteDevice(i)} color="red"
+									><Trash class="size-4" />Eliminar</DropdownMenuItem
+								>
+							</DropdownMenuContent>
+						</DropdownMenu>
+					</TableCell>
+				{/if}
 				<TableCell>{device.name || ''}</TableCell>
 				<TableCell>{device.position || ''}</TableCell>
-				<TableCell>{device.email || ''}</TableCell>
+				<TableCell><a href="mailto:{device.email || ''}">{device.email || ''}</a></TableCell>
 				<TableCell>{device.extension || ''}</TableCell>
 			</TableRow>
 		{/each}
 	</TableBody>
 </CusTable>
+
 {#if parseInt(Cookies.get('perm_it') || '0') == 2}
 	<DirectoryForm bind:show bind:selectedDevice reload={getDevices} />
 	<DeletePopUp

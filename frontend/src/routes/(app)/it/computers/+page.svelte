@@ -16,6 +16,8 @@
 	import { showSuccess } from '$lib/utils/showToast';
 	import ComputersForm from './ComputersForm.svelte';
 	import { formatDate } from '$lib/utils/functions';
+	import Badge from '$lib/components/ui/badge/badge.svelte';
+	import PwCell from '$lib/components/ui/table/pw-cell.svelte';
 
 	let show: boolean;
 	let show1: boolean;
@@ -87,11 +89,25 @@
 				<TableCell>{device.name || ''}</TableCell>
 				<TableCell>{device.owner || ''}</TableCell>
 				<TableCell>{device.anydesk || ''}</TableCell>
-				<TableCell>{device.anydeskPW || ''}</TableCell>
-				<TableCell>{device.password || ''}</TableCell>
-				<TableCell>{device.active || ''}</TableCell>
+				<PwCell password={device.anydeskPW || ''}></PwCell>
+				<PwCell password={device.password || ''}></PwCell>
+				<TableCell
+					><Badge color={device.active ? 'green' : 'gray'}
+						>{device.active ? 'Activo' : 'Inactivo'}</Badge
+					></TableCell
+				>
 				<TableCell>{formatDate(device.lastMaintance) || ''}</TableCell>
-				<TableCell>{formatDate(device.lastMaintance) || ''}</TableCell>
+				<TableCell>
+					{#if device.lastMaintance}
+						{formatDate(
+							new Date(
+								new Date(device.lastMaintance).setMonth(
+									new Date(device.lastMaintance).getMonth() + 6
+								)
+							).toISOString()
+						)}
+					{/if}
+				</TableCell>
 			</TableRow>
 		{/each}
 	</TableBody>
