@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Select from '$lib/components/basic/Select.svelte';
 	import { Button } from '$lib/components/ui/button';
 	import { Dialog, DialogBody } from '$lib/components/ui/dialog';
 	import DialogContent from '$lib/components/ui/dialog/dialog-content.svelte';
@@ -33,7 +34,8 @@
 			areaId: parseInt(formData.areaId || '0')
 		});
 
-		showSuccess('Empleado dado de baja');
+		show = false;
+		showSuccess('Empleado dado de alta');
 		formData = {
 			id: '',
 			admissionDate: '',
@@ -66,15 +68,19 @@
 				</b>
 				<b class="space-y-2">
 					<span>Area</span>
-					<!-- <Select items={areas} bind:value={formData.areaId} placeholder="Elige una opcion" /> -->
+					<Select items={areas} bind:value={formData.areaId} placeholder="Elige una opcion" />
 				</b>
 				<b class="space-y-2">
 					<span>Posicion</span>
-					<!-- <Select items={positions} bind:value={formData.positionId} placeholder="Elige una opcion" /> -->
+					<Select
+						items={positions}
+						bind:value={formData.positionId}
+						placeholder="Elige una opcion"
+					/>
 				</b>
 				<div class="text-center">
 					<Button on:click={handleSubmmit} class="me-2">Recontratar</Button>
-					<Button on:click={() => (show = false)}>Cancelar</Button>
+					<Button on:click={() => (show = false)} variant="outline">Cancelar</Button>
 				</div>
 			</form>
 		</DialogBody>
