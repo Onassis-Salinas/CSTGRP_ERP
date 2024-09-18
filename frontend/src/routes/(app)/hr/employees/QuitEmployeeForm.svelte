@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Select from '$lib/components/basic/Select.svelte';
 	import { Button } from '$lib/components/ui/button';
 	import { Dialog, DialogBody } from '$lib/components/ui/dialog';
 	import DialogContent from '$lib/components/ui/dialog/dialog-content.svelte';
@@ -31,6 +32,7 @@
 			data: { ...formData, id: parseInt(selectedEmployee.id || '0') }
 		});
 
+		show = false;
 		showSuccess('Empleado dado de baja');
 		formData = {
 			id: '',
@@ -68,15 +70,15 @@
 				</b>
 				<b class="space-y-2">
 					<span>Status</span>
-					<!-- <Select class="mt-2" items={status} bind:value={formData.quitStatus} /> -->
+					<Select class="mt-2" items={status} bind:value={formData.quitStatus} />
 				</b>
 				<b class="space-y-2">
 					<span>Notas</span>
 					<Input bind:value={formData.quitNotes} />
 				</b>
 				<div class="text-center">
-					<Button on:click={handleSubmmit} class="me-2">Dar de baja</Button>
-					<Button on:click={() => (show = false)}>Cancelar</Button>
+					<Button on:click={handleSubmmit} class="me-2" variant="destructive">Dar de baja</Button>
+					<Button on:click={() => (show = false)} variant="outline">Cancelar</Button>
 				</div>
 			</form>
 		</DialogBody>
