@@ -92,7 +92,7 @@
 
 <CusTable>
 	<TableHeader
-		class="sticky top-0 z-20 bg-gray-100 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400"
+		
 	>
 		<TableHead class="w-[1%]">No. Empleado</TableHead>
 		<TableHead class="w-[20%]">Nombre</TableHead>

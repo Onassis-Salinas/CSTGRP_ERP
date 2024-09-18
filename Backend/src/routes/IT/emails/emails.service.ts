@@ -6,7 +6,7 @@ import sql from 'src/utils/db';
 @Injectable()
 export class EmailsService {
   async findAllEmails() {
-    const emails = await sql`Select * from emails order by name asc`;
+    const emails = await sql`Select * from emails order by email asc`;
     return emails;
   }
 

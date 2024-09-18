@@ -52,6 +52,9 @@ export const valueTraduccion = {
   import: 'Importacion',
   date: 'Fecha',
   due: 'Fecha',
+  anydeskPW: "Anydesk PW",
+  lastMaintance: "Ultimo mantenimiento",
+  owner: "Usuario",
 };
 
 export const getTraducction = (value: string) => {

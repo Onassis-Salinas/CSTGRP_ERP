@@ -4,7 +4,7 @@
 
 	let className = '';
 	export { className as class };
-	export let items: { value: String | number; name: string; label?: string }[];
+	export let items: { value: String | number | boolean; name: string; label?: string }[];
 	export let placeholder = 'Seleccione una opcion';
 	export let value: string | number;
 	export let onSelectedChange = () => {};

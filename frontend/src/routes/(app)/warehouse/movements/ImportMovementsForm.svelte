@@ -99,7 +99,7 @@
 
 			<Table>
 				<TableHeader
-					class="sticky top-0 z-20 w-full bg-gray-100 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400"
+					
 				>
 					<TableHead class="">Codigo</TableHead>
 					<TableHead class="">Cantidad</TableHead>

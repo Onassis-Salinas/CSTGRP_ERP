@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import dotenv from 'dotenv';
 import PromiseFTP from 'promise-ftp';
+import sql from 'src/utils/db';
 dotenv.config();
 
 const ftpConfig = {
@@ -31,5 +32,13 @@ export class ResourcesService {
     );
     await ftp.end();
     return list;
+  }
+
+  async getDirectory() {
+    return (await sql`select directory.id, employees.name, positions.name as position, emails.email, extension
+      from directory
+      join employees on employees.id = directory."employeeId"
+      join emails on emails.id = directory."emailId"
+      join positions on positions.id = employees."positionId"`);
   }
 }

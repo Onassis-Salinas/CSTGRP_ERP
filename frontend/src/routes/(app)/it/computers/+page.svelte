@@ -1,0 +1,110 @@
+<script lang="ts">
+	import CusTable from '$lib/components/basic/CusTable.svelte';
+	import { Button } from '$lib/components/ui/button';
+	import { TableBody, TableCell, TableHeader, TableRow } from '$lib/components/ui/table';
+	import TableHead from '$lib/components/ui/table/table-head.svelte';
+	import api from '$lib/utils/server';
+	import { EllipsisVertical, Pen, PlusCircle, Trash } from 'lucide-svelte';
+	import DeletePopUp from '$lib/components/complex/DeletePopUp.svelte';
+	import { onMount } from 'svelte';
+	import {
+		DropdownMenu,
+		DropdownMenuContent,
+		DropdownMenuItem,
+		DropdownMenuTrigger
+	} from '$lib/components/ui/dropdown-menu';
+	import { showSuccess } from '$lib/utils/showToast';
+	import ComputersForm from './ComputersForm.svelte';
+	import { formatDate } from '$lib/utils/functions';
+
+	let show: boolean;
+	let show1: boolean;
+	let selectedDevice: device = {};
+
+	let devices: device[] = [];
+
+	async function getComputers() {
+		const result = await api.get('/computers');
+		devices = result.data;
+	}
+
+	function editDevice(i: number) {
+		selectedDevice = devices[i];
+		show = true;
+	}
+	function createDevice() {
+		selectedDevice = {};
+		show = true;
+	}
+	function deleteDevice(i: number) {
+		selectedDevice = devices[i];
+		show1 = true;
+	}
+
+	onMount(() => {
+		getComputers();
+	});
+</script>
+
+<div class="mb-6 flex justify-between">
+	<div>
+		<Button on:click={createDevice}><PlusCircle class="mr-2 size-4" />Añadir computadora</Button>
+	</div>
+</div>
+
+<CusTable>
+	<TableHeader>
+		<TableHead class="fixed left-0 z-30 bg-inherit p-1"></TableHead>
+		<TableHead class="w-[12%]">Nombre</TableHead>
+		<TableHead class="w-[12%]">Usuario</TableHead>
+		<TableHead class="w-[12%]">Anydesk</TableHead>
+		<TableHead class="w-[12%]">Anydesk PW</TableHead>
+		<TableHead class="w-[12%]">PW</TableHead>
+		<TableHead class="w-[12%]">Activa</TableHead>
+		<TableHead class="w-[12%]">Ultimo mantenimiento</TableHead>
+		<TableHead class="w-[12%]">Proximo mantenimiento</TableHead>
+	</TableHeader>
+	<TableBody>
+		{#each devices as device, i}
+			<TableRow>
+				<TableCell class="sticky left-0 bg-inherit px-0">
+					<DropdownMenu>
+						<DropdownMenuTrigger>
+							<Button variant="ghost" class="h-full w-10 p-0">
+								<EllipsisVertical class="size-4" />
+							</Button>
+						</DropdownMenuTrigger>
+						<DropdownMenuContent>
+							<DropdownMenuItem on:click={() => editDevice(i)}
+								><Pen class="size-4" />Editar</DropdownMenuItem
+							>
+							<DropdownMenuItem on:click={() => deleteDevice(i)} color="red"
+								><Trash class="size-4" />Eliminar</DropdownMenuItem
+							>
+						</DropdownMenuContent>
+					</DropdownMenu>
+				</TableCell>
+				<TableCell>{device.name || ''}</TableCell>
+				<TableCell>{device.owner || ''}</TableCell>
+				<TableCell>{device.anydesk || ''}</TableCell>
+				<TableCell>{device.anydeskPW || ''}</TableCell>
+				<TableCell>{device.password || ''}</TableCell>
+				<TableCell>{device.active || ''}</TableCell>
+				<TableCell>{formatDate(device.lastMaintance) || ''}</TableCell>
+				<TableCell>{formatDate(device.lastMaintance) || ''}</TableCell>
+			</TableRow>
+		{/each}
+	</TableBody>
+</CusTable>
+
+<ComputersForm bind:show bind:selectedDevice reload={getComputers} />
+<DeletePopUp
+	bind:show={show1}
+	text="Borrar computadora"
+	deleteFunc={async () => {
+		await api.delete('/computers', { data: { id: parseInt(selectedDevice.id || '') } });
+		showSuccess('Computadora eliminada');
+		await getComputers();
+		show1 = false;
+	}}
+/>
