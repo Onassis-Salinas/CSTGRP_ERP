@@ -7,7 +7,7 @@ import sql from 'src/utils/db';
 export class DevicesService {
   async findAllDevices() {
     const devices =
-      await sql`Select * from devices order by wifipw desc, ip desc, name desc, id desc `;
+      await sql`Select * from devices order by wifipw asc, name desc, id desc `;
     return devices;
   }
 

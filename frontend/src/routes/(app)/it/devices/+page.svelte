@@ -97,7 +97,7 @@
 	text="Borrar Dispositivo"
 	deleteFunc={async () => {
 		await api.delete('devices', { data: { id: parseInt(selectedDevice.id || '') } });
-		showSuccess('Posicion eliminada');
+		showSuccess('Dispositivo eliminado');
 		show1 = false;
 	}}
 />

@@ -56,8 +56,8 @@
 <CusTable>
 	<TableHeader>
 		<TableHead class="fixed left-0 z-30 bg-inherit p-1"></TableHead>
-		<TableHead>Correo</TableHead>
-		<TableHead>PW</TableHead>
+		<TableHead class="w-[80%]">Correo</TableHead>
+		<TableHead class="w-[30%]">Contraseña</TableHead>
 	</TableHeader>
 	<TableBody>
 		{#each devices as device, i}
