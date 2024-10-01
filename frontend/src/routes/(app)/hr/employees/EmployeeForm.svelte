@@ -12,6 +12,7 @@
 	import api from '$lib/utils/server';
 	import { showSuccess } from '$lib/utils/showToast';
 	import { onMount } from 'svelte';
+	import Label from '$lib/components/basic/Label.svelte';
 
 	export let show = false;
 	export let selectedEmployee: employee;
@@ -120,163 +121,128 @@
 					{#if !selectedEmployee.active}
 						<div class="border-primary-500 my-2 w-full border-b">Informacion de baja</div>
 						<div class="grid w-full grid-cols-2 gap-2">
-							<div class="space-y-2">
-								<p class="text-xs font-semibold">Razón de Salida</p>
+							<Label name="Razón de Salida">
 								<Input name="text" bind:value={formData.quitReason} />
-							</div>
-							<div class="space-y-2">
-								<p class="text-xs font-semibold">Estatus</p>
+							</Label>
+							<Label name="Estatus">
 								<Select class="mt-2" items={status} bind:value={formData.quitStatus} />
-							</div>
-							<div class="space-y-2">
-								<p class="text-xs font-semibold">Notas de Salida</p>
+							</Label>
+							<Label name="Notas de Salida">
 								<Input name="text" bind:value={formData.quitNotes} />
-							</div>
-							<div class="space-y-2">
-								<p class="text-xs font-semibold">Fecha de Salida</p>
+							</Label>
+							<Label name="Fecha de Salida">
 								<Input type="date" name="text" bind:value={formData.quitDate} />
-							</div>
+							</Label>
 						</div>
 					{/if}
 
 					<div class="border-primary-500 my-2 w-full border-b">Informacion personal</div>
 					<div class="grid w-full grid-cols-2 gap-2">
-						<div class="space-y-2">
-							<p class="text-xs font-semibold">No. Empleado</p>
+						<Label name="No. Empleado">
 							<Input name="text" bind:value={formData.noEmpleado} />
-						</div>
-						<div class="space-y-2">
-							<p class="text-xs font-semibold">Nombre *</p>
+						</Label>
+						<Label name="Nombre *">
 							<Input name="text" bind:value={formData.name} />
-						</div>
-						<div class="space-y-2">
-							<p class="text-xs font-semibold">Apellido Paterno</p>
+						</Label>
+						<Label name="Apellido Paterno">
 							<Input name="text" bind:value={formData.paternalLastName} />
-						</div>
-						<div class="space-y-2">
-							<p class="text-xs font-semibold">Apellido Materno</p>
+						</Label>
+						<Label name="Apellido Materno">
 							<Input name="text" bind:value={formData.maternalLastName} />
-						</div>
-						<div class="space-y-2">
-							<p class="text-xs font-semibold">Nacionalidad</p>
+						</Label>
+						<Label name="Nacionalidad">
 							<Input name="text" bind:value={formData.nationality} />
-						</div>
-						<div class="space-y-2">
-							<p class="text-xs font-semibold">Estado Civil</p>
+						</Label>
+						<Label name="Estado Civil">
 							<Select items={civilStatus} bind:value={formData.civilStatus} />
-						</div>
-						<div class="space-y-2">
-							<p class="text-xs font-semibold">Fecha de Nacimiento</p>
+						</Label>
+						<Label name="Fecha de Nacimiento">
 							<Input type="date" name="text" bind:value={formData.bornDate} />
-						</div>
-						<div class="space-y-2">
-							<p class="text-xs font-semibold">Estudios</p>
+						</Label>
+						<Label name="Estudios">
 							<Input name="text" bind:value={formData.studies} />
-						</div>
-						<div class="space-y-2">
-							<p class="text-xs font-semibold">Género</p>
+						</Label>
+						<Label name="Género">
 							<Select items={genres} bind:value={formData.genre} />
-						</div>
-						<div class="space-y-2">
-							<p class="text-xs font-semibold">Número de Hijos</p>
+						</Label>
+						<Label name="Número de Hijos">
 							<Input type="number" name="text" bind:value={formData.sons} />
-						</div>
-						<div class="space-y-2">
-							<p class="text-xs font-semibold">Tipo de Sangre</p>
+						</Label>
+						<Label name="Tipo de Sangre">
 							<Input name="text" bind:value={formData.blood} />
-						</div>
-						<div class="space-y-2">
-							<p class="text-xs font-semibold">Lugar de Nacimiento</p>
+						</Label>
+						<Label name="Lugar de Nacimiento">
 							<Input name="text" bind:value={formData.bornLocation} />
-						</div>
+						</Label>
 					</div>
 
 					<div class="border-primary-500 my-2 w-full border-b">Informacion Legal</div>
 					<div class="grid w-full grid-cols-2 gap-2">
-						<div class="space-y-2">
-							<p class="text-xs font-semibold">NSS</p>
+						<Label name="NSS">
 							<Input name="text" bind:value={formData.nss} />
-						</div>
-						<div class="space-y-2">
-							<p class="text-xs font-semibold">CURP</p>
+						</Label>
+						<Label name="CURP">
 							<Input name="text" bind:value={formData.curp} />
-						</div>
-						<div class="space-y-2">
-							<p class="text-xs font-semibold">RFC</p>
+						</Label>
+						<Label name="RFC">
 							<Input name="text" bind:value={formData.rfc} />
-						</div>
-						<div class="space-y-2">
-							<p class="text-xs font-semibold">Cuenta Bancaria</p>
+						</Label>
+						<Label name="Cuenta Bancaria">
 							<Input type="number" name="text" bind:value={formData.account} />
-						</div>
-						<div class="space-y-2">
-							<p class="text-xs font-semibold">Banco</p>
+						</Label>
+						<Label name="Banco">
 							<Select items={banks} bind:value={formData.bank} />
-						</div>
-						<div class="space-y-2">
-							<p class="text-xs font-semibold">Número de Infonavit</p>
+						</Label>
+						<Label name="Número de Infonavit">
 							<Input name="text" bind:value={formData.infonavitNo} />
-						</div>
-						<div class="space-y-2">
-							<p class="text-xs font-semibold">Descuento de Infonavit</p>
+						</Label>
+						<Label name="Descuento de Infonavit">
 							<Input name="text" bind:value={formData.infonavitDiscount} />
-						</div>
-						<div class="space-y-2">
-							<p class="text-xs font-semibold">Salario de Nómina</p>
+						</Label>
+						<Label name="Salario de Nómina">
 							<Input name="text" bind:value={formData.nominaSalary} />
-						</div>
-						<div class="space-y-2">
-							<p class="text-xs font-semibold">Número de Clínica</p>
+						</Label>
+						<Label name="Número de Clínica">
 							<Input name="text" bind:value={formData.clinicNo} />
-						</div>
-						<div class="space-y-2">
-							<p class="text-xs font-semibold">Salario de IMSS</p>
+						</Label>
+						<Label name="Salario de IMSS">
 							<Input name="text" bind:value={formData.immsSalary} />
-						</div>
+						</Label>
 					</div>
 
 					<div class="border-primary-500 my-2 w-full border-b">Empresa</div>
 					<div class="grid w-full grid-cols-2 gap-2">
-						<div class="space-y-2">
-							<p class="text-xs font-semibold">Posición</p>
+						<Label name="Posición">
 							<Select items={positions} bind:value={formData.positionId} />
-						</div>
-						<div class="space-y-2">
-							<p class="text-xs font-semibold">Fecha de Admisión</p>
+						</Label>
+						<Label name="Fecha de Admisión">
 							<Input type="date" name="text" bind:value={formData.admissionDate} />
-						</div>
-						<div class="space-y-2">
-							<p class="text-xs font-semibold">Área</p>
+						</Label>
+						<Label name="Área">
 							<Select items={areas} bind:value={formData.areaId} />
-						</div>
-						<div class="space-y-2">
-							<p class="text-xs font-semibold">Fecha de CIM</p>
+						</Label>
+						<Label name="Fecha de CIM">
 							<Input type="date" name="text" bind:value={formData.cim} />
-						</div>
-						<div class="space-y-2">
-							<p class="text-xs font-semibold">Tipo de Posición</p>
+						</Label>
+						<Label name="Tipo de Posición">
 							<Input name="text" bind:value={formData.positionType} />
-						</div>
-						<div class="space-y-2">
-							<p class="text-xs font-semibold">Turno</p>
+						</Label>
+						<Label name="Turno">
 							<Input name="text" bind:value={formData.shift} />
-						</div>
-						<div class="space-y-2">
-							<p class="text-xs font-semibold">Vacaciones</p>
+						</Label>
+						<Label name="Vacaciones">
 							<Input name="text" bind:value={formData.vacations} />
-						</div>
+						</Label>
 					</div>
 
 					<div class="border-primary-500 my-2 w-full border-b">Contacto</div>
 					<div class="grid w-full grid-cols-2 gap-2">
-						<div class="space-y-2">
-							<p class="text-xs font-semibold">Correo Electrónico</p>
+						<Label name="Correo Electrónico">
 							<Input name="text" bind:value={formData.email} />
-						</div>
-						<div class="space-y-2">
-							<p class="text-xs font-semibold">Número de Teléfono</p>
+						</Label>
+						<Label name="Número de Teléfono">
 							<Input name="text" bind:value={formData.number} />
-						</div>
+						</Label>
 						<div class="col-span-2 w-full space-y-2">
 							<p class="text-xs font-semibold">Dirección</p>
 							<Input name="text" bind:value={formData.direction} />
@@ -285,14 +251,12 @@
 
 					<div class="border-primary-500 my-2 w-full border-b">Contacto de Emergencia</div>
 					<div class="grid w-full grid-cols-2 gap-2">
-						<div class="space-y-2">
-							<p class="text-xs font-semibold">Contacto de Emergencia</p>
+						<Label name="Contacto de Emergencia">
 							<Input name="text" bind:value={formData.emmergencyContact} />
-						</div>
-						<div class="space-y-2">
-							<p class="text-xs font-semibold">Número de Emergencia</p>
+						</Label>
+						<Label name="Número de Emergencia">
 							<Input name="text" bind:value={formData.emmergencyNumber} />
-						</div>
+						</Label>
 					</div>
 				</div>
 				<Button class="mt-8 w-full" on:click={handleSubmit}>Guardar</Button>

@@ -34,23 +34,8 @@
 	};
 </script>
 
-<header class="py-8">
-	<div class="flex flex-col gap-2">
-		<Breadcrumb.Root>
-			<Breadcrumb.List>
-				<Breadcrumb.Item>Inicio</Breadcrumb.Item>
-				{#if $location.split('/')[1]}
-					<Breadcrumb.Separator></Breadcrumb.Separator>
-					<Breadcrumb.Item>{traductions[$location.split('/')[1]]}</Breadcrumb.Item>
-				{/if}
-				{#if $location.split('/')[2]}
-					<Breadcrumb.Separator></Breadcrumb.Separator>
-					<Breadcrumb.Item>{traductions[$location.split('/')[2]]}</Breadcrumb.Item>
-				{/if}
-			</Breadcrumb.List>
-		</Breadcrumb.Root>
-		<h3 class="text-xl font-semibold">
-			{traductions[$location.split('/')[2]] || traductions[$location.split('/')[1]] || 'Inicio'}
-		</h3>
-	</div>
+<header class="flex h-[49px] w-full items-center border-b px-4 sticky">
+	<h3 class="text font-semibold">
+		{traductions[$location.split('/')[2]] || traductions[$location.split('/')[1]] || 'Inicio'}
+	</h3>
 </header>

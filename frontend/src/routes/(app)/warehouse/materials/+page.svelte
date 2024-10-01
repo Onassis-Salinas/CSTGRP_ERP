@@ -16,6 +16,7 @@
 	import MaterialsForm from './MaterialsForm.svelte';
 	import DeletePopUp from '$lib/components/complex/DeletePopUp.svelte';
 	import { onMount } from 'svelte';
+	import MenuBar from '$lib/components/basic/MenuBar.svelte';
 
 	let show: boolean;
 	let show1: boolean;
@@ -92,16 +93,14 @@
 	});
 </script>
 
-<div class="mb-4 flex justify-between">
-	<div class="flex w-full justify-between">
-		<div>
-			<Input bind:value={filters.code} placeholder="Codigo" />
-		</div>
-		<div>
-			<Button on:click={createMaterial}><PlusCircle class="mr-2 size-4" />Añadir Material</Button>
-		</div>
+<MenuBar>
+	<div>
+		<Input bind:value={filters.code} placeholder="Codigo" />
 	</div>
-</div>
+	<div>
+		<Button on:click={createMaterial}><PlusCircle class="mr-1.5 size-3.5" />Añadir Material</Button>
+	</div>
+</MenuBar>
 
 <CusTable>
 	<TableHeader>
@@ -114,26 +113,26 @@
 	<TableBody class="divide-y">
 		{#each filteredMaterials as material, i}
 			<TableRow>
-				<TableCell class="sticky left-0 bg-inherit px-0">
+				<TableCell class="sticky left-0 bg-background px-0">
 					<DropdownMenu>
 						<DropdownMenuTrigger>
 							<Button variant="ghost">
-								<EllipsisVertical class="size-4" />
+								<EllipsisVertical class="size-3.5" />
 							</Button>
 						</DropdownMenuTrigger>
 
 						<DropdownMenuContent>
 							<DropdownMenuItem on:click={() => editMaterial(i)}
-								><Pen class="size-4" />Editar</DropdownMenuItem
+								><Pen class="size-3.5" />Editar</DropdownMenuItem
 							>
 							<DropdownMenuItem on:click={() => deleteMaterial(i)} color="red"
-								><Trash class="size-4" />Eliminar</DropdownMenuItem
+								><Trash class="size-3.5" />Eliminar</DropdownMenuItem
 							>
 						</DropdownMenuContent>
 					</DropdownMenu>
 				</TableCell>
 
-				<TableCell>{material.code}</TableCell>
+				<TableCell class="whitespace-nowrap">{material.code}</TableCell>
 				<TableCell>{material.description}</TableCell>
 				<TableCell>{material.measurement}</TableCell>
 				<TableCell><Badge color="blue">{clients[material.clientId]}</Badge></TableCell>

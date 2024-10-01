@@ -15,6 +15,7 @@
 	import UsersForm from './UsersForm.svelte';
 	import { ChevronDown, EllipsisVertical, Pen, PlusCircle, Trash } from 'lucide-svelte';
 	import { onMount } from 'svelte';
+	import MenuBar from '$lib/components/basic/MenuBar.svelte';
 
 	let show: boolean;
 	let show1: boolean;
@@ -106,43 +107,43 @@
 	});
 </script>
 
-<div class="mb-6 flex justify-between">
-	<div>
-		<Button on:click={createUser}><PlusCircle class="mr-2 size-4" />Añadir Usuario</Button>
-	</div>
-</div>
+<MenuBar>
+	<span></span>
+	<Button on:click={createUser}><PlusCircle class="ml-auto mr-1.5 size-3.5" />Añadir Usuario</Button
+	>
+</MenuBar>
 
 <CusTable>
 	<TableHeader>
 		<TableHead class="fixed left-3 z-30 bg-inherit p-1"></TableHead>
 		<TableHead class="w-[12.5%]">Usuario</TableHead>
-		<TableHead class="w-[12.5%]">Perm. Asistencia</TableHead>
-		<TableHead class="w-[12.5%]">Perm. Empleados</TableHead>
-		<TableHead class="w-[12.5%]">Perm. Inventario</TableHead>
-		<TableHead class="w-[12.5%]">Perm. Productividad</TableHead>
-		<TableHead class="w-[12.5%]">Perm. Usuarios</TableHead>
-		<TableHead class="w-[12.5%]">Perm. Estructura</TableHead>
-		<TableHead class="w-[12.5%]">Perm. Sistemas</TableHead>
-		<TableHead class="w-[12.5%]">Perm. Materiales</TableHead>
+		<TableHead class="w-[12.5%]">Asistencia</TableHead>
+		<TableHead class="w-[12.5%]">Empleados</TableHead>
+		<TableHead class="w-[12.5%]">Inventario</TableHead>
+		<TableHead class="w-[12.5%]">Productividad</TableHead>
+		<TableHead class="w-[12.5%]">Usuarios</TableHead>
+		<TableHead class="w-[12.5%]">Estructura</TableHead>
+		<TableHead class="w-[12.5%]">Sistemas</TableHead>
+		<TableHead class="w-[12.5%]">Materiales</TableHead>
 		<TableHead class="w-[12.5%]">Areas</TableHead>
 	</TableHeader>
 	<TableBody>
 		{#each users as user, i}
 			<TableRow>
-				<TableCell class="sticky left-0 bg-inherit px-0">
+				<TableCell class="sticky left-0 bg-background px-0">
 					<DropdownMenu>
 						<DropdownMenuTrigger>
 							<Button variant="ghost">
-								<EllipsisVertical class="size-4" />
+								<EllipsisVertical class="size-3.5" />
 							</Button>
 						</DropdownMenuTrigger>
 
 						<DropdownMenuContent>
 							<DropdownMenuItem on:click={() => editUser(i)}
-								><Pen class="size-4" />Editar</DropdownMenuItem
+								><Pen class="size-3.5" />Editar</DropdownMenuItem
 							>
 							<DropdownMenuItem on:click={() => deleteUser(i)} color="red">
-								<Trash class="size-4" />Eliminar
+								<Trash class="size-3.5" />Eliminar
 							</DropdownMenuItem>
 						</DropdownMenuContent>
 					</DropdownMenu>
@@ -188,8 +189,8 @@
 				>
 				<TableCell class="px-2 py-0">
 					<DropdownMenu>
-						<DropdownMenuTrigger>
-							<Button class="py-1" variant="outline"
+						<DropdownMenuTrigger class="h-full w-full">
+							<Button class="border-none" variant="outline"
 								>Areas<ChevronDown class="ms-2 size-4" /></Button
 							>
 						</DropdownMenuTrigger>

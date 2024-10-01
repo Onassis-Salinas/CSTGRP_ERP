@@ -19,6 +19,7 @@
 	import { formatDate } from '$lib/utils/functions';
 	import { browser } from '$app/environment';
 	import DropdownMenuItem from '$lib/components/ui/dropdown-menu/dropdown-menu-item.svelte';
+	import MenuBar from '$lib/components/basic/MenuBar.svelte';
 
 	let show: boolean;
 	let show1: boolean;
@@ -136,7 +137,7 @@
 	});
 </script>
 
-<div class="mb-4 flex justify-between">
+<MenuBar>
 	<div class="flex gap-2">
 		<Input bind:value={searchParams.noEmpleado} placeholder="No. Empleado" />
 		<Input bind:value={searchParams.name} placeholder="Nombre" />
@@ -145,10 +146,10 @@
 		<Button on:click={() => (searchActive = false)} value={'inactive'}>Inactivos</Button>
 	</div>
 	<div>
-		<Button on:click={exportList}><FileDown class="mr-2 size-4" />Exportar</Button>
-		<Button on:click={createEmployee}><PlusCircle class="mr-2 size-4" />Añadir empleado</Button>
+		<Button on:click={exportList}><FileDown class="mr-1.5 size-3.5" />Exportar</Button>
+		<Button on:click={createEmployee}><PlusCircle class="mr-1.5 size-3.5" />Añadir empleado</Button>
 	</div>
-</div>
+</MenuBar>
 
 <CusTable>
 	<TableHeader>
@@ -199,28 +200,28 @@
 	<TableBody>
 		{#each filteredEmployees as employee, i}
 			<TableRow>
-				<TableCell class="sticky left-0 bg-inherit p-0">
+				<TableCell class="sticky left-0 bg-background p-0">
 					<DropdownMenu>
 						<DropdownMenuTrigger>
 							<Button variant="ghost">
-								<EllipsisVertical class="size-4" />
+								<EllipsisVertical class="size-3.5" />
 							</Button>
 						</DropdownMenuTrigger>
 
 						<DropdownMenuContent>
 							<DropdownMenuItem on:click={() => previewEmployee(i)} color="primary"
-								><User class="size-4" />Ver</DropdownMenuItem
+								><User class="size-3.5" />Ver</DropdownMenuItem
 							>
 							<DropdownMenuItem on:click={() => editEmployee(i)} color="green"
-								><Pen class="size-4" />Editar</DropdownMenuItem
+								><Pen class="size-3.5" />Editar</DropdownMenuItem
 							>
 							{#if employee.active}
 								<DropdownMenuItem on:click={() => deleteEmployee(i)} color="red"
-									><UserMinus class="size-4" />Baja</DropdownMenuItem
+									><UserMinus class="size-3.5" />Baja</DropdownMenuItem
 								>
 							{:else}
 								<DropdownMenuItem on:click={() => reactivateEmployee(i)} color="purple"
-									><PlusCircle class="size-4" />Recontratar</DropdownMenuItem
+									><PlusCircle class="size-3.5" />Recontratar</DropdownMenuItem
 								>
 							{/if}
 						</DropdownMenuContent>

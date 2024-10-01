@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Label from '$lib/components/basic/Label.svelte';
 	import Select from '$lib/components/basic/Select.svelte';
 	import { Button } from '$lib/components/ui/button';
 	import { Checkbox } from '$lib/components/ui/checkbox';
@@ -15,7 +16,7 @@
 		DropdownMenuContent
 	} from '$lib/components/ui/dropdown-menu';
 	import { Input } from '$lib/components/ui/input';
-	import { Label } from '$lib/components/ui/label';
+	import { LabelBase } from '$lib/components/ui/label';
 	import api from '$lib/utils/server';
 	import { showSuccess } from '$lib/utils/showToast';
 	import { ChevronDown } from 'lucide-svelte';
@@ -101,48 +102,37 @@
 		<DialogBody>
 			<form on:submit|preventDefault={handleSubmit}>
 				<div class="grid w-full grid-cols-2 gap-4">
-					<div class="space-y-2">
-						<span>Nombre</span>
+					<Label name="Nombre">
 						<Input name="text" bind:value={formData.username} />
-					</div>
-					<div class="space-y-2">
-						<span>Contraseña</span>
+					</Label>
+					<Label name="Contraseña">
 						<Input name="text" bind:value={formData.password} />
-					</div>
-					<div class="space-y-2">
-						<span>Perm. Usuarios</span>
+					</Label>
+					<Label name="Perm. Usuarios">
 						<Select items={permissions} bind:value={formData.perm_users} />
-					</div>
-					<div class="space-y-2">
-						<span>Perm. Asistencia</span>
+					</Label>
+					<Label name="Perm. Asistencia">
 						<Select items={permissions} bind:value={formData.perm_assistance} />
-					</div>
-					<div class="space-y-2">
-						<span>Perm. Empleados</span>
+					</Label>
+					<Label name="Perm. Empleados">
 						<Select items={permissions} bind:value={formData.perm_employees} />
-					</div>
-					<div class="space-y-2">
-						<span>Perm. Productividad</span>
+					</Label>
+					<Label name="Perm. Productividad">
 						<Select items={permissions} bind:value={formData.perm_productivity} />
-					</div>
-					<div class="space-y-2">
-						<span>Perm. Inventario</span>
+					</Label>
+					<Label name="Perm. Inventario">
 						<Select items={permissions} bind:value={formData.perm_inventory} />
-					</div>
-					<div class="space-y-2">
-						<span>Perm. Estructura</span>
+					</Label>
+					<Label name="Perm. Estructura">
 						<Select items={permissions} bind:value={formData.perm_structure} />
-					</div>
-					<div class="space-y-2">
-						<span>Perm. Sistemas</span>
+					</Label>
+					<Label name="Perm. Sistemas">
 						<Select items={permissions} bind:value={formData.perm_it} />
-					</div>
-					<div class="space-y-2">
-						<span>Perm. Materiales</span>
+					</Label>
+					<Label name="Perm. Materiales">
 						<Select items={permissions} bind:value={formData.perm_materials} />
-					</div>
-					<div class="space-y-2">
-						<span>Areas</span>
+					</Label>
+					<Label name="Areas">
 						<DropdownMenu>
 							<DropdownMenuTrigger>
 								<Button variant="outline" class="w-full"
@@ -159,7 +149,7 @@
 												handleCheck(v, i);
 											}}
 										/>
-										<Label for={'c-' + area.name}>{area.name}</Label>
+										<LabelBase for={'c-' + area.name}>{area.name}</LabelBase>
 									</li>
 								{/each}
 								<li class="list-none">
@@ -171,11 +161,11 @@
 											checkAll(v);
 										}}
 									/>
-									<Label for="c-todas" class="font-semibold">Todas</Label>
+									<LabelBase for="c-todas" class="font-semibold">Todas</LabelBase>
 								</li>
 							</DropdownMenuContent>
 						</DropdownMenu>
-					</div>
+					</Label>
 				</div>
 
 				<Button type="submit" class="mt-4 w-full">Guardar cambios</Button>

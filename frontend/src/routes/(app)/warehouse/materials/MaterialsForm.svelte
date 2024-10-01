@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Label from '$lib/components/basic/Label.svelte';
 	import Select from '$lib/components/basic/Select.svelte';
 	import { Button } from '$lib/components/ui/button';
 	import {
@@ -72,26 +73,21 @@
 		<DialogBody>
 			<form on:submit|preventDefault={handleSubmit}>
 				<div class="grid w-full grid-cols-2 gap-4">
-					<div class="space-y-2">
-						<span>Codigo</span>
+					<Label name="Codigo">
 						<Input name="text" bind:value={formData.code} />
-					</div>
-					<div class="space-y-2">
-						<span>Cliente</span>
+					</Label>
+					<Label name="Cliente">
 						<Select items={clients} bind:value={formData.clientId} />
-					</div>
-					<div class="col-span-2 space-y-2">
-						<span>Descripcion</span>
+					</Label>
+					<Label name="Descripcion" class="col-span-2">
 						<Input name="text" bind:value={formData.description} />
-					</div>
-					<div class="space-y-2">
-						<span>Medida</span>
+					</Label>
+					<Label name="Medida">
 						<Select items={measurements} bind:value={formData.measurement} />
-					</div>
-					<div class="space-y-2">
-						<span>Cantidad minima</span>
+					</Label>
+					<Label name="Cantidad minima">
 						<Input name="" type="number" bind:value={formData.minAmount} />
-					</div>
+					</Label>
 				</div>
 
 				<Button type="submit" class="mt-4 w-full">Guardar cambios</Button>

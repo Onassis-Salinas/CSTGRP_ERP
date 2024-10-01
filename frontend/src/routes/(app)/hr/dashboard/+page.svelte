@@ -20,6 +20,7 @@
 	import { Image } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 	import Select from '$lib/components/basic/Select.svelte';
+	import MenuBar from '$lib/components/basic/MenuBar.svelte';
 
 	let employeeTemplate: any;
 	let activeEmployees: any;
@@ -104,14 +105,10 @@
 	});
 </script>
 
-<div class="flex justify-between">
-	<div class="mb-4 flex w-fit items-center gap-4">
-		<h5 class="text-lg font-semibold leading-none text-gray-900 dark:text-white">Fecha:</h5>
-		<Input class="w-fit shadow-sm" type="date" bind:value={selectedDate} on:change={getDailyData}
-		></Input>
-	</div>
-	<Input class="h-fit w-fit font-semibold" value={textDate}></Input>
-</div>
+<MenuBar>
+	<h5 class="text-lg font-semibold leading-none text-gray-900 dark:text-white">Fecha:</h5>
+	<Input class="w-fit shadow-sm" type="date" bind:value={selectedDate} on:change={getDailyData} />
+</MenuBar>
 
 <div class="grid grid-cols-3 place-items-stretch gap-4">
 	<Card class="col-span-2 min-h-96 w-full max-w-full">

@@ -46,7 +46,7 @@
 
 <div class="mb-6 flex justify-between">
 	<div>
-		<Button on:click={createPosition}><PlusCircle class="mr-2 size-4" />Añadir posicion</Button>
+		<Button on:click={createPosition}><PlusCircle class="mr-1.5 size-3.5" />Añadir posicion</Button>
 	</div>
 </div>
 
@@ -58,20 +58,20 @@
 	<TableBody>
 		{#each positions as position, i}
 			<TableRow>
-				<TableCell class="sticky left-0 bg-inherit px-0">
+				<TableCell class="sticky left-0 bg-background px-0">
 					<DropdownMenu>
 						<DropdownMenuTrigger>
 							<Button variant="ghost">
-								<EllipsisVertical class="size-4" />
+								<EllipsisVertical class="size-3.5" />
 							</Button>
 						</DropdownMenuTrigger>
 
 						<DropdownMenuContent>
 							<DropdownMenuItem on:click={() => editPosition(i)}
-								><Pen class="size-4" />Editar</DropdownMenuItem
+								><Pen class="size-3.5" />Editar</DropdownMenuItem
 							>
 							<DropdownMenuItem on:click={() => deletePosition(i)} color="red"
-								><Trash class="size-4" />Eliminar</DropdownMenuItem
+								><Trash class="size-3.5" />Eliminar</DropdownMenuItem
 							>
 						</DropdownMenuContent>
 					</DropdownMenu>

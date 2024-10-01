@@ -37,41 +37,44 @@
 </script>
 
 <span class="absolute max-w-16"></span>
-<Card class="fixed bottom-0 top-0 flex w-64 flex-col rounded-none p-4">
-	<a href="/" class="mb-3 block w-full border-b p-2 pt-0 text-xl font-semibold">CST</a>
+<Card class="fixed bottom-0 top-0 flex w-64 flex-col rounded-[9px] bg-[#fbfafa] shadow-none">
+	<a href="/" class="mb-3 h-12 w-full border-b pt-0 font-semibold flex gap-2 items-center px-4">
+		<img src="/logo.png" alt="logo" class="h-6 w-6" />
+		CST Group
+	</a>
 
-	<Accordion class="space-y-1">
+	<Accordion class="space-y-1 px-2">
 		{#if hasAccess('inventory') || hasAccess('materials')}
 			<AccordionItem value="1" class="border-none">
-				<AccordionTrigger class="hover:bg-muted rounded-md p-2 hover:no-underline">
-					<span class="flex items-center gap-3">
-						<Package class="size-5" />
+				<AccordionTrigger class="hover:bg-muted rounded-md p-2 text-sm hover:no-underline">
+					<span class="flex items-center gap-2">
+						<Package class="size-4 text-[#5c5e63]" />
 						Almacen
 					</span>
 				</AccordionTrigger>
 				<AccordionContent>
 					<a
 						href="/warehouse/dashboard"
-						class="hover:bg-muted flex items-center gap-2 rounded-md p-2 text-[16px]"
-						><Dot />Resumenes</a
+						class="hover:bg-muted flex items-center gap-2 rounded-md p-2 text-sm"
+						><Dot  class="text=[#5c5e63]"/>Resumenes</a
 					>
 					{#if hasAccess('materials')}
 						<a
 							href="/warehouse/materials"
-							class="hover:bg-muted flex items-center gap-2 rounded-md p-2 text-[16px]"
-							><Dot />Materiales</a
+							class="hover:bg-muted flex items-center gap-2 rounded-md p-2 text-sm"
+							><Dot  class="text=[#5c5e63]"/>Materiales</a
 						>
 					{/if}
 					{#if hasAccess('inventory')}
 						<a
 							href="/warehouse/inventory"
-							class="hover:bg-muted flex items-center gap-2 rounded-md p-2 text-[16px]"
-							><Dot />Inventario</a
+							class="hover:bg-muted flex items-center gap-2 rounded-md p-2 text-sm"
+							><Dot  class="text=[#5c5e63]"/>Inventario</a
 						>
 						<a
 							href="/warehouse/movements"
-							class="hover:bg-muted flex items-center gap-2 rounded-md p-2 text-[16px]"
-							><Dot />Movimientos</a
+							class="hover:bg-muted flex items-center gap-2 rounded-md p-2 text-sm"
+							><Dot  class="text=[#5c5e63]"/>Movimientos</a
 						>
 					{/if}
 				</AccordionContent>
@@ -79,9 +82,9 @@
 		{/if}
 		{#if hasAccess('employees') || hasAccess('assistance') || hasAccess('productivity')}
 			<AccordionItem value="2" class="border-none">
-				<AccordionTrigger class="hover:bg-muted rounded-md p-2 hover:no-underline">
-					<span class="flex items-center gap-3">
-						<Users class="size-5" />
+				<AccordionTrigger class="hover:bg-muted rounded-md p-2 text-sm hover:no-underline">
+					<span class="flex items-center gap-2">
+						<Users class="size-4 text-[#5c5e63]" />
 						RRHH
 					</span>
 				</AccordionTrigger>
@@ -89,29 +92,29 @@
 					{#if hasAccess('employees')}
 						<a
 							href="/hr/dashboard"
-							class="hover:bg-muted flex items-center gap-2 rounded-md p-2 text-[16px]"
-							><Dot />Dashboard</a
+							class="hover:bg-muted flex items-center gap-2 rounded-md p-2 text-sm"
+							><Dot  class="text=[#5c5e63]"/>Dashboard</a
 						>
 					{/if}
 					{#if hasAccess('employees')}
 						<a
 							href="/hr/employees"
-							class="hover:bg-muted flex items-center gap-2 rounded-md p-2 text-[16px]"
-							><Dot />Empleados</a
+							class="hover:bg-muted flex items-center gap-2 rounded-md p-2 text-sm"
+							><Dot  class="text=[#5c5e63]"/>Empleados</a
 						>
 					{/if}
 					{#if hasAccess('productivity')}
 						<a
 							href="/hr/productivity"
-							class="hover:bg-muted flex items-center gap-2 rounded-md p-2 text-[16px]"
-							><Dot />Productividad</a
+							class="hover:bg-muted flex items-center gap-2 rounded-md p-2 text-sm"
+							><Dot  class="text=[#5c5e63]"/>Productividad</a
 						>
 					{/if}
 					{#if hasAccess('assistance')}
 						<a
 							href="/hr/assistance"
-							class="hover:bg-muted flex items-center gap-2 rounded-md p-2 text-[16px]"
-							><Dot />Asistencia</a
+							class="hover:bg-muted flex items-center gap-2 rounded-md p-2 text-sm"
+							><Dot  class="text=[#5c5e63]"/>Asistencia</a
 						>
 					{/if}
 				</AccordionContent>
@@ -119,9 +122,9 @@
 		{/if}
 		{#if hasAccess('it')}
 			<AccordionItem value="3" class="border-none">
-				<AccordionTrigger class="hover:bg-muted rounded-md p-2 hover:no-underline">
-					<span class="flex items-center gap-3">
-						<Monitor class="size-5" />
+				<AccordionTrigger class="hover:bg-muted rounded-md p-2 text-sm hover:no-underline">
+					<span class="flex items-center gap-2">
+						<Monitor class="size-4 text-[#5c5e63]" />
 						Sistemas
 					</span>
 				</AccordionTrigger>
@@ -129,27 +132,25 @@
 				<AccordionContent>
 					<a
 						href="/it/devices"
-						class="hover:bg-muted flex items-center gap-2 rounded-md p-2 text-[16px]"
-						><Dot />Dispositivos</a
+						class="hover:bg-muted flex items-center gap-2 rounded-md p-2 text-sm"
+						><Dot  class="text=[#5c5e63]"/>Dispositivos</a
 					>
-					<a
-						href="/it/emails"
-						class="hover:bg-muted flex items-center gap-2 rounded-md p-2 text-[16px]"
-						><Dot />Correos</a
+					<a href="/it/emails" class="hover:bg-muted flex items-center gap-2 rounded-md p-2 text-sm"
+						><Dot  class="text=[#5c5e63]"/>Correos</a
 					>
 					<a
 						href="/it/computers"
-						class="hover:bg-muted flex items-center gap-2 rounded-md p-2 text-[16px]"
-						><Dot />Computadoras</a
+						class="hover:bg-muted flex items-center gap-2 rounded-md p-2 text-sm"
+						><Dot  class="text=[#5c5e63]"/>Computadoras</a
 					>
 				</AccordionContent>
 			</AccordionItem>
 		{/if}
 		{#if hasAccess('structure')}
 			<div>
-				<a class="hover:bg-muted block rounded-md p-2" href="/structure">
-					<span class="flex items-center gap-3">
-						<GitMerge class="size-5" />
+				<a class="hover:bg-muted block rounded-md p-2 text-sm hover:no-underline" href="/structure">
+					<span class="flex items-center gap-2">
+						<GitMerge class="size-4 text-[#5c5e63]" />
 						Estructura
 					</span>
 				</a>
@@ -157,9 +158,12 @@
 		{/if}
 		{#if hasAccess('users')}
 			<div>
-				<a class="hover:bg-muted block rounded-md p-2" href="/admin/users">
-					<span class="flex items-center gap-3">
-						<SquareUser class="size-5" />
+				<a
+					class="hover:bg-muted block rounded-md p-2 text-sm hover:no-underline"
+					href="/admin/users"
+				>
+					<span class="flex items-center gap-2">
+						<SquareUser class="size-4 text-[#5c5e63]" />
 						Usuarios
 					</span>
 				</a>
@@ -167,9 +171,9 @@
 		{/if}
 
 		<AccordionItem value="4" class="border-none">
-			<AccordionTrigger class="hover:bg-muted rounded-md p-2 hover:no-underline">
-				<span class="flex items-center gap-3">
-					<File class="size-5" />
+			<AccordionTrigger class="hover:bg-muted rounded-md p-2 text-sm hover:no-underline">
+				<span class="flex items-center gap-2">
+					<File class="size-4 text-[#5c5e63]" />
 					Recursos
 				</span>
 			</AccordionTrigger>
@@ -177,28 +181,27 @@
 			<AccordionContent>
 				<a
 					href="/resources/directory"
-					class="hover:bg-muted flex items-center gap-2 rounded-md p-2 text-[16px]"
-					><Dot />Directorio</a
+					class="hover:bg-muted flex items-center gap-2 rounded-md p-2 text-sm"><Dot  class="text=[#5c5e63]"/>Directorio</a
 				>
 				<!-- <a
 					href="/resources/formats"
-					class="hover:bg-muted flex items-center gap-2 rounded-md p-2 text-[16px]"
-					><Dot />Formatos</a
+					class="hover:bg-muted flex items-center gap-2 rounded-md p-2 text-sm"
+					><Dot  class="text=[#5c5e63]"/>Formatos</a
 				> -->
 			</AccordionContent>
 		</AccordionItem>
 	</Accordion>
 
-	<div class="mt-auto space-y-2">
+	<div class="mt-auto space-y-2 px-2">
 		<p class="hover:bg-muted block rounded-md p-2">
-			<span class="flex items-center gap-3">
-				<UserCircle class="size-5" />
+			<span class="flex items-center gap-2">
+				<UserCircle class="size-4 text-[#5c5e63]" />
 				{username}
 			</span>
 		</p>
 		<button class="hover:bg-muted block w-full rounded-md p-2" on:click={() => (showModal = true)}>
-			<span class="flex items-center gap-3">
-				<LogOut class="size-5" />
+			<span class="flex items-center gap-2">
+				<LogOut class="size-4 text-[#5c5e63]" />
 				Salir
 			</span>
 		</button>
@@ -209,7 +212,7 @@
 	<DialogContent>
 		<DialogBody class="space-y-4">
 			<div class="text-center">
-				<CircleAlert class="mx-auto mb-2 mb-4 h-16 w-16 text-gray-400 dark:text-gray-200" />
+				<CircleAlert class="mx-auto mb-4 h-16 w-16 text-gray-400 dark:text-gray-200" />
 				<h3 class=" text-lg font-normal text-gray-500 dark:text-gray-400">Deseas cerrar sesion?</h3>
 			</div>
 			<div class="text-center">

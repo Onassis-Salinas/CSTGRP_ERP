@@ -18,6 +18,7 @@
 	import { formatDate } from '$lib/utils/functions';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import PwCell from '$lib/components/ui/table/pw-cell.svelte';
+	import MenuBar from '$lib/components/basic/MenuBar.svelte';
 
 	let show: boolean;
 	let show1: boolean;
@@ -48,11 +49,10 @@
 	});
 </script>
 
-<div class="mb-6 flex justify-between">
-	<div>
-		<Button on:click={createDevice}><PlusCircle class="mr-2 size-4" />Añadir computadora</Button>
-	</div>
-</div>
+<MenuBar>
+	<span></span>
+	<Button on:click={createDevice}><PlusCircle class="mr-1.5 size-3.5" />Añadir computadora</Button>
+</MenuBar>
 
 <CusTable>
 	<TableHeader>
@@ -69,19 +69,19 @@
 	<TableBody>
 		{#each devices as device, i}
 			<TableRow>
-				<TableCell class="sticky left-0 bg-inherit px-0">
+				<TableCell class="sticky left-0 bg-background px-0">
 					<DropdownMenu>
 						<DropdownMenuTrigger>
 							<Button variant="ghost" class="h-full w-10 p-0">
-								<EllipsisVertical class="size-4" />
+								<EllipsisVertical class="size-3.5" />
 							</Button>
 						</DropdownMenuTrigger>
 						<DropdownMenuContent>
 							<DropdownMenuItem on:click={() => editDevice(i)}
-								><Pen class="size-4" />Editar</DropdownMenuItem
+								><Pen class="size-3.5" />Editar</DropdownMenuItem
 							>
 							<DropdownMenuItem on:click={() => deleteDevice(i)} color="red"
-								><Trash class="size-4" />Eliminar</DropdownMenuItem
+								><Trash class="size-3.5" />Eliminar</DropdownMenuItem
 							>
 						</DropdownMenuContent>
 					</DropdownMenu>

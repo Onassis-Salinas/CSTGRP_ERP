@@ -8,6 +8,7 @@
 	import { Expand, FileDown } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 	import MaterialCard from './MaterialCard.svelte';
+	import MenuBar from '$lib/components/basic/MenuBar.svelte';
 
 	let show = false;
 	let selectedMaterial: material = {
@@ -74,21 +75,17 @@
 	});
 </script>
 
-<div class="mb-4 flex justify-between">
-	<div class="flex w-full justify-between">
-		<div>
-			<Input bind:value={filters.code} placeholder="Codigo" />
-		</div>
-		<div>
-			<Button on:click={exportInventory}><FileDown class="mr-2 size-4" /> Exportar</Button>
-		</div>
+<MenuBar>
+	<div>
+		<Input bind:value={filters.code} placeholder="Codigo" />
 	</div>
-</div>
+	<div>
+		<Button on:click={exportInventory}><FileDown class="mr-1.5 size-3.5" /> Exportar</Button>
+	</div>
+</MenuBar>
 
 <CusTable>
-	<TableHeader
-		
-	>
+	<TableHeader>
 		<TableHead class="fixed left-3 z-30 bg-inherit p-1"></TableHead>
 		<TableHead class="">Codigo</TableHead>
 		<TableHead class="w-full">Descripcion</TableHead>
@@ -101,13 +98,13 @@
 	<TableBody>
 		{#each filteredInventory as material, i}
 			<TableRow>
-				<TableCell class="sticky left-0 bg-inherit px-0">
+				<TableCell class="sticky left-0 bg-background px-0">
 					<Button on:click={() => viewMaterial(i)} variant="ghost" class="h-full w-10 p-0">
-						<Expand class="size-4" />
+						<Expand class="size-3.5" />
 					</Button>
 				</TableCell>
 
-				<TableCell>{material.code}</TableCell>
+				<TableCell class="whitespace-nowrap">{material.code}</TableCell>
 				<TableCell>{material.description}</TableCell>
 				<TableCell>{material.leftoverAmount}</TableCell>
 				<TableCell>{material.amount}</TableCell>

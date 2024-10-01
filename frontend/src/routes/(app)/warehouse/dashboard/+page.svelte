@@ -13,6 +13,7 @@
 	} from '$lib/components/ui/table';
 	import { Badge } from '$lib/components/ui/badge';
 	import { onMount } from 'svelte';
+	import MenuBar from '$lib/components/basic/MenuBar.svelte';
 
 	let warnings: any[] = [];
 	let outOfStock: any[] = [];
@@ -48,13 +49,10 @@
 	});
 </script>
 
-<div class="flex justify-between">
-	<div class="mb-4 flex w-fit items-center gap-4">
-		<h5 class="text-lg font-semibold leading-none text-gray-900 dark:text-white">Fecha:</h5>
-		<Input class="w-fit shadow-sm" type="date" bind:value={selectedDate}></Input>
-	</div>
+<MenuBar>
+	<Input class="w-fit shadow-sm" type="date" bind:value={selectedDate}></Input>
 	<Input class="h-fit w-fit font-semibold" value={textDate}></Input>
-</div>
+</MenuBar>
 
 <div class="grid grid-cols-3 place-items-stretch gap-4">
 	<Card class="col-span-2 flex h-[30rem] w-full max-w-full flex-col">

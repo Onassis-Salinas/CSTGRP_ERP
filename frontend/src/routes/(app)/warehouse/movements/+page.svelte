@@ -13,6 +13,7 @@
 	import { onMount } from 'svelte';
 	import ImportMovementsForm from './ImportMovementsForm.svelte';
 	import ExportMovementsForm from './ExportMovementsForm.svelte';
+	import MenuBar from '$lib/components/basic/MenuBar.svelte';
 
 	let show = false;
 	let show1 = false;
@@ -82,27 +83,23 @@
 	});
 </script>
 
-<div class="mb-4 flex justify-between">
-	<div class="flex w-full justify-between">
-		<form class="flex gap-2" on:submit|preventDefault={getMovements} action={''}>
-			<Input bind:value={filters.import} placeholder="Importacion" />
-			<Input bind:value={filters.programation} placeholder="Programacion" />
-			<Input bind:value={filters.jobpo} placeholder="Job" />
-			<Input bind:value={filters.code} placeholder="Material" />
-			<Select items={checkStatus} bind:value={filters.checked} />
-			<Button type="submit" ><Search class="mr-2 size-4" />Buscar</Button>
-		</form>
-		<div class="flex gap-2">
-			<Button on:click={() => (show = true)}><Pen class="mr-2 size-4" />Entrada</Button>
-			<Button on:click={() => (show1 = true)}><Pen class="mr-2 size-4" />Salida</Button>
-		</div>
+<MenuBar>
+	<form class="flex gap-2" on:submit|preventDefault={getMovements} action={''}>
+		<Input bind:value={filters.import} placeholder="Importacion" />
+		<Input bind:value={filters.programation} placeholder="Programacion" />
+		<Input bind:value={filters.jobpo} placeholder="Job" />
+		<Input bind:value={filters.code} placeholder="Material" />
+		<Select items={checkStatus} bind:value={filters.checked} />
+		<Button type="submit"><Search class="mr-1.5 size-3.5" />Buscar</Button>
+	</form>
+	<div class="flex gap-2">
+		<Button on:click={() => (show = true)}><Pen class="mr-1.5 size-3.5" />Entrada</Button>
+		<Button on:click={() => (show1 = true)}><Pen class="mr-1.5 size-3.5" />Salida</Button>
 	</div>
-</div>
+</MenuBar>
 
 <CusTable>
-	<TableHeader
-		
-	>
+	<TableHeader>
 		<TableHead class="">Importacion</TableHead>
 		<TableHead class="">Programacion</TableHead>
 		<TableHead class="">Job-PO</TableHead>

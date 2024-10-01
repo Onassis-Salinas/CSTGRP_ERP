@@ -91,16 +91,14 @@
 				</div>
 				<div class="space-y-2">
 					<span>Archivo</span>
-					<!-- <Fileupload bind:files /> -->
+					<Input type="file" bind:Value={files} />
 				</div>
 			</div>
 
 			<hr />
 
 			<Table>
-				<TableHeader
-					
-				>
+				<TableHeader>
 					<TableHead class="">Codigo</TableHead>
 					<TableHead class="">Cantidad</TableHead>
 					<TableHead class="">Medida</TableHead>

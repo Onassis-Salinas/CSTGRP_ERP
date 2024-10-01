@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Label from '$lib/components/basic/Label.svelte';
 	import { Button } from '$lib/components/ui/button';
 	import {
 		Dialog,
@@ -49,14 +50,12 @@
 		<DialogBody>
 			<form on:submit|preventDefault={handleSubmit}>
 				<div class="grid w-full grid-cols-2 gap-4">
-					<div class="space-y-2">
-						<span>Correo</span>
+					<Label name="Correo">
 						<Input name="text" bind:value={formData.email} />
-					</div>
-					<div class="space-y-2">
-						<span>Contrasena</span>
+					</Label>
+					<Label name="Contrasena">
 						<Input name="text" bind:value={formData.password} />
-					</div>
+					</Label>
 				</div>
 
 				<Button type="submit" class="mt-4 w-full">Guardar cambios</Button>

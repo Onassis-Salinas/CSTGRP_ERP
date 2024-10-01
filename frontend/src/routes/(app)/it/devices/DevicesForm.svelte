@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Label from '$lib/components/basic/Label.svelte';
 	import { Button } from '$lib/components/ui/button';
 	import {
 		Dialog,
@@ -42,33 +43,28 @@
 	<DialogContent>
 		<DialogHeader>
 			<DialogTitle>
-				{selectedDevice.id ? `Editar ${selectedDevice.name}` : 'Registrar posicion'}
+				{selectedDevice.id ? `Editar ${selectedDevice.name}` : 'Registrar dispositivo'}
 			</DialogTitle>
 		</DialogHeader>
 
 		<DialogBody>
 			<form on:submit|preventDefault={handleSubmit}>
 				<div class="grid w-full grid-cols-2 gap-4">
-					<div class="space-y-2">
-						<span>Nombre</span>
+					<Label name="Nombre">
 						<Input name="text" bind:value={formData.name} />
-					</div>
-					<div class="space-y-2">
-						<span>IP</span>
+					</Label>
+					<Label name="IP">
 						<Input name="text" bind:value={formData.ip} />
-					</div>
-					<div class="space-y-2">
-						<span>Usuario</span>
+					</Label>
+					<Label name="Usuario">
 						<Input name="text" bind:value={formData.user} />
-					</div>
-					<div class="space-y-2">
-						<span>Contrasena</span>
+					</Label>
+					<Label name="Contrasena">
 						<Input name="text" bind:value={formData.password} />
-					</div>
-					<div class="space-y-2">
-						<span>Wifi</span>
+					</Label>
+					<Label name="Wifi">
 						<Input name="text" bind:value={formData.wifipw} />
-					</div>
+					</Label>
 				</div>
 
 				<Button type="submit" class="mt-4 w-full">Guardar cambios</Button>

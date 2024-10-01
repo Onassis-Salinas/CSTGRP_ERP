@@ -11,6 +11,7 @@
 	import { TableBody, TableCell, TableHead, TableHeader, TableRow } from '$lib/components/ui/table';
 	import { Badge } from '$lib/components/ui/badge';
 	import { onMount } from 'svelte';
+	import MenuBar from '$lib/components/basic/MenuBar.svelte';
 
 	let assistances: assistance[] = [];
 	let areas: any = {};
@@ -77,7 +78,7 @@
 	});
 </script>
 
-<div class="mb-4 flex justify-between">
+<MenuBar>
 	<div class=" flex gap-2">
 		<Select class="w-72" placeholder="Eligir Area" items={areasList} bind:value={areaSelected} />
 		<Input type="date" bind:value={dateSelected} on:change={getAssistance} />
@@ -85,15 +86,13 @@
 	<div class="flex gap-2">
 		{#if Cookies.get('perm_assistance_areas') === 'Todas'}
 			<!-- <ExportAssistance date={dateSelected} /> -->
-			<Button on:click={createWeek}><PlusCircle class="mr-2 size-4" />Generar semana</Button>
+			<Button on:click={createWeek}><PlusCircle class="mr-1.5 size-3.5" />Generar semana</Button>
 		{/if}
 	</div>
-</div>
+</MenuBar>
 
 <CusTable>
-	<TableHeader
-		
-	>
+	<TableHeader>
 		<TableHead class="w-[1%]">No. Empleado</TableHead>
 		<TableHead class="w-[20%]">Nombre</TableHead>
 		<TableHead class="w-[1%]">Area</TableHead>
@@ -119,6 +118,7 @@
 				>
 				<TableCell class="px-1">
 					<Select
+						cell={true}
 						items={incidencesList}
 						bind:value={filteredAssistances[i].incidenceId0}
 						onSelectedChange={() => editAssistance(i)}
@@ -126,6 +126,7 @@
 				</TableCell>
 				<TableCell class="px-1">
 					<Select
+						cell={true}
 						items={incidencesList}
 						bind:value={filteredAssistances[i].incidenceId1}
 						onSelectedChange={() => editAssistance(i)}
@@ -133,6 +134,7 @@
 				</TableCell>
 				<TableCell class="px-1">
 					<Select
+						cell={true}
 						items={incidencesList}
 						bind:value={filteredAssistances[i].incidenceId2}
 						onSelectedChange={() => editAssistance(i)}
@@ -140,6 +142,7 @@
 				</TableCell>
 				<TableCell class="px-1">
 					<Select
+						cell={true}
 						items={incidencesList}
 						bind:value={filteredAssistances[i].incidenceId3}
 						onSelectedChange={() => editAssistance(i)}
@@ -147,6 +150,7 @@
 				</TableCell>
 				<TableCell class="px-1">
 					<Select
+						cell={true}
 						items={incidencesList}
 						bind:value={filteredAssistances[i].incidenceId4}
 						onSelectedChange={() => editAssistance(i)}

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Label from '$lib/components/basic/Label.svelte';
 	import Select from '$lib/components/basic/Select.svelte';
 	import { Button } from '$lib/components/ui/button';
 	import {
@@ -55,34 +56,27 @@
 		<DialogBody>
 			<form on:submit|preventDefault={handleSubmit}>
 				<div class="grid w-full grid-cols-2 gap-4">
-					<div class="space-y-2">
-						<span>Nombre</span>
+					<Label name="Nombre">
 						<Input name="text" bind:value={formData.name} />
-					</div>
-					<div class="space-y-2">
-						<span>Usuario</span>
+					</Label>
+					<Label name="Usuario">
 						<Input name="text" bind:value={formData.owner} />
-					</div>
-					<div class="space-y-2">
-						<span>Anydesk</span>
+					</Label>
+					<Label name="Anydesk">
 						<Input name="text" bind:value={formData.anydesk} />
-					</div>
-					<div class="space-y-2">
-						<span>Anydesk PW</span>
+					</Label>
+					<Label name="Anydesk PW">
 						<Input name="text" bind:value={formData.anydeskPW} />
-					</div>
-					<div class="space-y-2">
-						<span>PW</span>
+					</Label>
+					<Label name="PW">
 						<Input name="text" bind:value={formData.password} />
-					</div>
-					<div class="space-y-2">
-						<span>Activa</span>
+					</Label>
+					<Label name="Activa">
 						<Select items={activeValues} bind:value={formData.active} />
-					</div>
-					<div class="space-y-2">
-						<span>Último Mantenimiento</span>
+					</Label>
+					<Label name="Último Mantenimiento">
 						<Input name="text" bind:value={formData.lastMaintance} />
-					</div>
+					</Label>
 				</div>
 
 				<Button type="submit" class="mt-4 w-full">Guardar cambios</Button>

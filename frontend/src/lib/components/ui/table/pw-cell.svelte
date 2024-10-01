@@ -14,7 +14,7 @@
 </script>
 
 <td
-	class={cn('h-12 p-3 align-middle [&:has([role=checkbox])]:pr-0', className)}
+	class={cn('h-9 px-3 align-middle [&:has([role=checkbox])]:pr-0 border-r', className)}
 	{...$$restProps}
 	on:click={() => (show = !show)}
 >
@@ -22,7 +22,7 @@
 		{#if show}
 			{password}
 		{:else}
-			<span class="text-sm">********</span>
+			<span class="text-sm">●●●●●●●●●●</span>
 		{/if}
 	{/if}
 </td>

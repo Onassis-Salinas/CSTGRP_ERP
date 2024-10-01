@@ -9,6 +9,7 @@
 	import { Book, BookOpen, Pen } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 	import ProductivityForm from './ProductivityForm.svelte';
+	import MenuBar from '$lib/components/basic/MenuBar.svelte';
 
 	let productivity: productivity[] = [];
 	let separatedProductivity: any = {};
@@ -116,39 +117,34 @@
 	});
 </script>
 
-<div class="mb-4 flex justify-between">
+<MenuBar>
 	<div class="flex gap-2">
 		<Input type="date" bind:value={dateSelected} on:change={getProductivity} />
 		{#if viewComplete}
 			<Button class="flex-none" on:click={() => (viewComplete = !viewComplete)}
-				><Book class="mr-2 size-4" />Ver resumen</Button
+				><Book class="mr-1.5 size-3.5" />Ver resumen</Button
 			>
 		{:else}
 			<Button class="flex-none" on:click={() => (viewComplete = !viewComplete)}
-				><BookOpen class="mr-2 size-4" />Ver todo</Button
+				><BookOpen class="mr-1.5 size-3.5" />Ver todo</Button
 			>
 		{/if}
 	</div>
 	<div class="flex gap-2">
-		<Button on:click={() => (show = true)}><Pen class="mr-2 size-4" />Capturar</Button>
+		<Button on:click={() => (show = true)}><Pen class="mr-1.5 size-3.5" />Capturar</Button>
 		<!-- <ExportProductivity productivity={separatedProductivity} {areas} {positions} {weekDays} /> -->
 	</div>
-</div>
+</MenuBar>
 
 <div class="flex flex-col gap-8">
 	<CusTable>
 		{#each Object.keys(separatedProductivity) as areaId, i}
-			{#if i > 0}
-				<TableHeader class="h-10 w-full border-t "></TableHeader>
-			{/if}
-			<TableHeader
-				class=" text-md bg-primary-700 sticky top-0 z-30 text-left uppercase text-gray-100"
-			>
-				<TableHead colspan={100} class="rounded-t-lg bg-foreground text-background font-semibold">{areas[areaId]}</TableHead>
+			<TableHeader class=" text-md sticky top-0 z-30 text-left uppercase ">
+				<TableHead colspan={100} class="bg-foreground text-background font-semibold"
+					>{areas[areaId]}</TableHead
+				>
 			</TableHeader>
-			<TableHeader
-				class="relative z-20 bg-gray-100 text-center text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400"
-			>
+			<TableHeader class="relative z-20  text-center text-xs uppercase ">
 				<TableHead colspan={4}>Semana</TableHead>
 
 				{#each weekDays as day}
@@ -156,28 +152,27 @@
 				{/each}
 			</TableHeader>
 
-			<TableHeader
-				class="z-20 bg-gray-100 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400"
-			>
-				<TableHead>Promedio</TableHead>
-				<TableHead>No. Empleado</TableHead>
-				<TableHead class="w-full">Nombre</TableHead>
-				<TableHead>Posicion</TableHead>
+			{#if viewComplete}
+				<TableHeader class="z-20  text-xs uppercase ">
+					<TableHead colspan={4}></TableHead>
 
-				{#each weekDays as day}
-					{#if viewComplete}
-						<TableHead></TableHead>
-						<TableHead colspan={3}>Operacion 1</TableHead>
-						<TableHead colspan={3}>Operacion 2</TableHead>
-						<TableHead colspan={3}>Operacion 3</TableHead>
-					{/if}
-					<TableHead colspan={viewComplete ? 2 : 1}></TableHead>
-				{/each}
-			</TableHeader>
-			<TableHeader
-				class="z-20 bg-gray-100 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400"
-			>
-				<TableHead colspan={4}></TableHead>
+					{#each weekDays as day}
+						{#if viewComplete}
+							<TableHead></TableHead>
+							<TableHead colspan={3}>Operacion 1</TableHead>
+							<TableHead colspan={3}>Operacion 2</TableHead>
+							<TableHead colspan={3}>Operacion 3</TableHead>
+						{/if}
+						<TableHead colspan={viewComplete ? 2 : 1}></TableHead>
+					{/each}
+				</TableHeader>
+			{/if}
+
+			<TableHeader class="z-20  text-xs uppercase ">
+				<TableHead rowspan={3}>Promedio</TableHead>
+				<TableHead rowspan={2}>No. Empleado</TableHead>
+				<TableHead rowspan={2} class="w-full">Nombre</TableHead>
+				<TableHead rowspan={2}>Posicion</TableHead>
 
 				{#each weekDays as day}
 					{#if viewComplete}
