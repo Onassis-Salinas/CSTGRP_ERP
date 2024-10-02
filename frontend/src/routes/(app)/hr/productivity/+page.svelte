@@ -136,115 +136,112 @@
 	</div>
 </MenuBar>
 
-<div class="flex flex-col gap-8">
-	<CusTable>
-		{#each Object.keys(separatedProductivity) as areaId, i}
-			<TableHeader class=" text-md sticky top-0 z-30 text-left uppercase ">
-				<TableHead colspan={100} class="bg-foreground text-background font-semibold"
-					>{areas[areaId]}</TableHead
-				>
-			</TableHeader>
-			<TableHeader class="relative z-20  text-center text-xs uppercase ">
-				<TableHead colspan={4}>Semana</TableHead>
+<CusTable>
+	{#each Object.keys(separatedProductivity) as areaId, i}
+		<TableHeader class=" text-md sticky top-0 z-30 text-left uppercase ">
+			<TableHead colspan={100} class="bg-foreground text-background font-semibold"
+				>{areas[areaId]}</TableHead
+			>
+		</TableHeader>
+		<TableHeader class="relative z-20  text-center text-xs uppercase ">
+			<TableHead colspan={4}>Semana</TableHead>
 
-				{#each weekDays as day}
-					<TableHead colspan={viewComplete ? 12 : 1}>{day}</TableHead>
-				{/each}
-			</TableHeader>
+			{#each weekDays as day}
+				<TableHead colspan={viewComplete ? 12 : 1}>{day}</TableHead>
+			{/each}
+		</TableHeader>
 
-			{#if viewComplete}
-				<TableHeader class="z-20  text-xs uppercase ">
-					<TableHead colspan={4}></TableHead>
-
-					{#each weekDays as day}
-						{#if viewComplete}
-							<TableHead></TableHead>
-							<TableHead colspan={3}>Operacion 1</TableHead>
-							<TableHead colspan={3}>Operacion 2</TableHead>
-							<TableHead colspan={3}>Operacion 3</TableHead>
-						{/if}
-						<TableHead colspan={viewComplete ? 2 : 1}></TableHead>
-					{/each}
-				</TableHeader>
-			{/if}
-
+		{#if viewComplete}
 			<TableHeader class="z-20  text-xs uppercase ">
-				<TableHead rowspan={3}>Promedio</TableHead>
-				<TableHead rowspan={2}>No. Empleado</TableHead>
-				<TableHead rowspan={2} class="w-full">Nombre</TableHead>
-				<TableHead rowspan={2}>Posicion</TableHead>
+				<TableHead colspan={4}></TableHead>
 
 				{#each weekDays as day}
 					{#if viewComplete}
-						<TableHead>Incidencia</TableHead>
-						<TableHead>Codigo</TableHead>
-						<TableHead>Meta</TableHead>
-						<TableHead>Producido</TableHead>
-						<TableHead>Codigo</TableHead>
-						<TableHead>Meta</TableHead>
-						<TableHead>Producido</TableHead>
-						<TableHead>Codigo</TableHead>
-						<TableHead>Meta</TableHead>
-						<TableHead>Producido</TableHead>
-						<TableHead>Comentario</TableHead>
+						<TableHead></TableHead>
+						<TableHead colspan={3}>Operacion 1</TableHead>
+						<TableHead colspan={3}>Operacion 2</TableHead>
+						<TableHead colspan={3}>Operacion 3</TableHead>
 					{/if}
-					<TableHead>Promedio</TableHead>
+					<TableHead colspan={viewComplete ? 2 : 1}></TableHead>
 				{/each}
 			</TableHeader>
-			<TableBody>
-				{#each separatedProductivity[areaId] as row}
-					<TableRow>
-						<TableCell
-							><Badge
-								color={getColors(
-									(row['0average'] +
-										row['1average'] +
-										row['2average'] +
-										row['3average'] +
-										row['4average']) /
-										5
-								)}
-								>{(row['0average'] +
+		{/if}
+
+		<TableHeader class="z-20  text-xs uppercase ">
+			<TableHead rowspan={3}>Promedio</TableHead>
+			<TableHead rowspan={2}>No. Empleado</TableHead>
+			<TableHead rowspan={2} class="w-full">Nombre</TableHead>
+			<TableHead rowspan={2}>Posicion</TableHead>
+
+			{#each weekDays as day}
+				{#if viewComplete}
+					<TableHead>Incidencia</TableHead>
+					<TableHead>Codigo</TableHead>
+					<TableHead>Meta</TableHead>
+					<TableHead>Producido</TableHead>
+					<TableHead>Codigo</TableHead>
+					<TableHead>Meta</TableHead>
+					<TableHead>Producido</TableHead>
+					<TableHead>Codigo</TableHead>
+					<TableHead>Meta</TableHead>
+					<TableHead>Producido</TableHead>
+					<TableHead>Comentario</TableHead>
+				{/if}
+				<TableHead>Promedio</TableHead>
+			{/each}
+		</TableHeader>
+		<TableBody>
+			{#each separatedProductivity[areaId] as row}
+				<TableRow>
+					<TableCell
+						><Badge
+							color={getColors(
+								(row['0average'] +
 									row['1average'] +
 									row['2average'] +
 									row['3average'] +
 									row['4average']) /
-									5}%</Badge
-							></TableCell
-						>
-						<TableCell>{row.noEmpleado}</TableCell>
-						<TableCell>{row.name}</TableCell>
+									5
+							)}
+							>{(row['0average'] +
+								row['1average'] +
+								row['2average'] +
+								row['3average'] +
+								row['4average']) /
+								5}%</Badge
+						></TableCell
+					>
+					<TableCell>{row.noEmpleado}</TableCell>
+					<TableCell>{row.name}</TableCell>
+					<TableCell
+						><Badge color="purple">{positions[row.positionId || ''] || ''}</Badge></TableCell
+					>
+
+					{#each weekDays as day, j}
+						{#if viewComplete}
+							<TableCell>{incidences[row['incidenceId' + j] || '']}</TableCell>
+							<TableCell>{row[j + 'code0'] || ''}</TableCell>
+							<TableCell>{row[j + 'goal0'] || ''}</TableCell>
+							<TableCell>{row[j + 'produced0'] || ''}</TableCell>
+
+							<TableCell>{row[j + 'code1'] || ''}</TableCell>
+							<TableCell>{row[j + 'goal1'] || ''}</TableCell>
+							<TableCell>{row[j + 'produced1'] || ''}</TableCell>
+
+							<TableCell>{row[j + 'code2'] || ''}</TableCell>
+							<TableCell>{row[j + 'goal2'] || ''}</TableCell>
+							<TableCell>{row[j + 'produced2'] || ''}</TableCell>
+
+							<TableCell>{row[j + 'comment'] || ''}</TableCell>
+						{/if}
 						<TableCell
-							><Badge color="purple">{positions[row.positionId || ''] || ''}</Badge></TableCell
+							><Badge color={getColors(row[j + 'average'])}>{row[j + 'average']}%</Badge></TableCell
 						>
-
-						{#each weekDays as day, j}
-							{#if viewComplete}
-								<TableCell>{incidences[row['incidenceId' + j] || '']}</TableCell>
-								<TableCell>{row[j + 'code0'] || ''}</TableCell>
-								<TableCell>{row[j + 'goal0'] || ''}</TableCell>
-								<TableCell>{row[j + 'produced0'] || ''}</TableCell>
-
-								<TableCell>{row[j + 'code1'] || ''}</TableCell>
-								<TableCell>{row[j + 'goal1'] || ''}</TableCell>
-								<TableCell>{row[j + 'produced1'] || ''}</TableCell>
-
-								<TableCell>{row[j + 'code2'] || ''}</TableCell>
-								<TableCell>{row[j + 'goal2'] || ''}</TableCell>
-								<TableCell>{row[j + 'produced2'] || ''}</TableCell>
-
-								<TableCell>{row[j + 'comment'] || ''}</TableCell>
-							{/if}
-							<TableCell
-								><Badge color={getColors(row[j + 'average'])}>{row[j + 'average']}%</Badge
-								></TableCell
-							>
-						{/each}
-					</TableRow>
-				{/each}
-			</TableBody>
-		{/each}
-	</CusTable>
-</div>
+					{/each}
+				</TableRow>
+			{/each}
+		</TableBody>
+	{/each}
+</CusTable>
 
 <ProductivityForm bind:show productivity={separatedProductivity} {areas} reload={getProductivity} />

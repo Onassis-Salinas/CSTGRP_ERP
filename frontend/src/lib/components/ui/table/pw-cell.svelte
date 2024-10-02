@@ -14,7 +14,7 @@
 </script>
 
 <td
-	class={cn('h-9 px-3 align-middle [&:has([role=checkbox])]:pr-0 border-r', className)}
+	class={cn('h-9 px-3 align-middle border-r', className)}
 	{...$$restProps}
 	on:click={() => (show = !show)}
 >

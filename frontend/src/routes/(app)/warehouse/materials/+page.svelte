@@ -17,6 +17,7 @@
 	import DeletePopUp from '$lib/components/complex/DeletePopUp.svelte';
 	import { onMount } from 'svelte';
 	import MenuBar from '$lib/components/basic/MenuBar.svelte';
+	import OptionsCell from '$lib/components/basic/OptionsCell.svelte';
 
 	let show: boolean;
 	let show1: boolean;
@@ -113,25 +114,7 @@
 	<TableBody class="divide-y">
 		{#each filteredMaterials as material, i}
 			<TableRow>
-				<TableCell class="sticky left-0 bg-background px-0">
-					<DropdownMenu>
-						<DropdownMenuTrigger>
-							<Button variant="ghost">
-								<EllipsisVertical class="size-3.5" />
-							</Button>
-						</DropdownMenuTrigger>
-
-						<DropdownMenuContent>
-							<DropdownMenuItem on:click={() => editMaterial(i)}
-								><Pen class="size-3.5" />Editar</DropdownMenuItem
-							>
-							<DropdownMenuItem on:click={() => deleteMaterial(i)} color="red"
-								><Trash class="size-3.5" />Eliminar</DropdownMenuItem
-							>
-						</DropdownMenuContent>
-					</DropdownMenu>
-				</TableCell>
-
+				<OptionsCell editFunc={() => editMaterial(i)} deleteFunc={() => deleteMaterial(i)} />
 				<TableCell class="whitespace-nowrap">{material.code}</TableCell>
 				<TableCell>{material.description}</TableCell>
 				<TableCell>{material.measurement}</TableCell>

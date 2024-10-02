@@ -30,7 +30,9 @@
 		productivity: 'Productividad',
 		employees: 'Empleados',
 		warehouse: 'Inventario',
-		it: 'Sistemas'
+		it: 'Sistemas',
+		positions: 'Posiciones',
+		areas: 'Areas'
 	};
 </script>
 

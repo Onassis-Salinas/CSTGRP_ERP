@@ -5,18 +5,13 @@
 	import { TableBody, TableCell, TableHeader, TableRow } from '$lib/components/ui/table';
 	import TableHead from '$lib/components/ui/table/table-head.svelte';
 	import api from '$lib/utils/server';
-	import { EllipsisVertical, Pen, PlusCircle, Trash } from 'lucide-svelte';
+	import { PlusCircle } from 'lucide-svelte';
 	import DeletePopUp from '$lib/components/complex/DeletePopUp.svelte';
 	import { onMount } from 'svelte';
-	import {
-		DropdownMenu,
-		DropdownMenuContent,
-		DropdownMenuItem,
-		DropdownMenuTrigger
-	} from '$lib/components/ui/dropdown-menu';
 	import { showSuccess } from '$lib/utils/showToast';
 	import DirectoryForm from './DirectoryForm.svelte';
 	import MenuBar from '$lib/components/basic/MenuBar.svelte';
+	import OptionsCell from '$lib/components/basic/OptionsCell.svelte';
 
 	let show: boolean;
 	let show1: boolean;
@@ -67,23 +62,7 @@
 		{#each devices as device, i}
 			<TableRow>
 				{#if parseInt(Cookies.get('perm_it') || '0') == 2}
-					<TableCell class="sticky left-0 bg-background px-0">
-						<DropdownMenu>
-							<DropdownMenuTrigger>
-								<Button variant="ghost" class="h-full w-10 p-0">
-									<EllipsisVertical class="size-3.5" />
-								</Button>
-							</DropdownMenuTrigger>
-							<DropdownMenuContent>
-								<DropdownMenuItem on:click={() => editDevice(i)}
-									><Pen class="size-3.5" />Editar</DropdownMenuItem
-								>
-								<DropdownMenuItem on:click={() => deleteDevice(i)} color="red"
-									><Trash class="size-3.5" />Eliminar</DropdownMenuItem
-								>
-							</DropdownMenuContent>
-						</DropdownMenu>
-					</TableCell>
+					<OptionsCell editFunc={() => editDevice(i)} deleteFunc={() => deleteDevice(i)} />
 				{/if}
 				<TableCell>{device.name || ''}</TableCell>
 				<TableCell>{device.position || ''}</TableCell>

@@ -109,7 +109,7 @@
 	<Input class="w-fit shadow-sm" type="date" bind:value={selectedDate} on:change={getDailyData} />
 </MenuBar>
 
-<div class="grid grid-cols-3 place-items-stretch gap-4 p-4">
+<div class="grid grid-cols-3 place-items-stretch gap-4 p-4 flex-1 overflow-auto">
 	<Card class="col-span-2 min-h-96 w-full max-w-full">
 		<CardHeader>
 			<CardTitle>Asistencia</CardTitle>

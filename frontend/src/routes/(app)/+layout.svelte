@@ -22,7 +22,7 @@
 
 <div class="app flex">
 	<SideBar></SideBar>
-	<main class="flex min-h-lvh flex-col bg-[#fffefe]">
+	<main class="flex h-screen flex-col bg-[#fffefe]">
 		<Header></Header>
 		<slot></slot>
 	</main>

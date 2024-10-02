@@ -99,7 +99,7 @@
 		{#each filteredInventory as material, i}
 			<TableRow>
 				<TableCell class="sticky left-0 bg-background px-0">
-					<Button on:click={() => viewMaterial(i)} variant="ghost" class="h-full w-10 p-0">
+					<Button on:click={() => viewMaterial(i)} variant="ghost" class="h-full aspect-square hover:bg-muted/50 ">
 						<Expand class="size-3.5" />
 					</Button>
 				</TableCell>

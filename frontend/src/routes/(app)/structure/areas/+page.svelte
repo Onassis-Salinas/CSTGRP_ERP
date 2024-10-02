@@ -16,6 +16,7 @@
 	} from '$lib/components/ui/dropdown-menu';
 	import { onMount } from 'svelte';
 	import MenuBar from '$lib/components/basic/MenuBar.svelte';
+	import OptionsCell from '$lib/components/basic/OptionsCell.svelte';
 
 	let show: boolean;
 	let show1: boolean;
@@ -60,24 +61,7 @@
 	<TableBody>
 		{#each areas as area, i}
 			<TableRow>
-				<TableCell class="bg-background sticky left-0 px-0">
-					<DropdownMenu>
-						<DropdownMenuTrigger>
-							<Button variant="ghost">
-								<EllipsisVertical class="size-3.5" />
-							</Button>
-						</DropdownMenuTrigger>
-
-						<DropdownMenuContent>
-							<DropdownMenuItem on:click={() => editArea(i)}
-								><Pen class="size-3.5" />Editar</DropdownMenuItem
-							>
-							<DropdownMenuItem on:click={() => deleteArea(i)} color="red"
-								><Trash class="size-3.5" />Eliminar</DropdownMenuItem
-							>
-						</DropdownMenuContent>
-					</DropdownMenu>
-				</TableCell>
+				<OptionsCell editFunc={() => editArea(i)} deleteFunc={() => deleteArea(i)} />
 				<TableCell>{area.name}</TableCell>
 				<TableCell>
 					{#if area.captured}

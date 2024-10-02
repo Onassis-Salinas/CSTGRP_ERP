@@ -17,6 +17,7 @@
 	import { showSuccess } from '$lib/utils/showToast';
 	import PwCell from '$lib/components/ui/table/pw-cell.svelte';
 	import MenuBar from '$lib/components/basic/MenuBar.svelte';
+	import OptionsCell from '$lib/components/basic/OptionsCell.svelte';
 
 	let show: boolean;
 	let show1: boolean;
@@ -64,23 +65,7 @@
 	<TableBody>
 		{#each devices as device, i}
 			<TableRow>
-				<TableCell class="sticky left-0 bg-background px-0">
-					<DropdownMenu>
-						<DropdownMenuTrigger>
-							<Button variant="ghost" class="h-full w-10 p-0">
-								<EllipsisVertical class="size-3.5" />
-							</Button>
-						</DropdownMenuTrigger>
-						<DropdownMenuContent>
-							<DropdownMenuItem on:click={() => editDevice(i)}
-								><Pen class="size-3.5" />Editar</DropdownMenuItem
-							>
-							<DropdownMenuItem on:click={() => deleteDevice(i)} color="red"
-								><Trash class="size-3.5" />Eliminar</DropdownMenuItem
-							>
-						</DropdownMenuContent>
-					</DropdownMenu>
-				</TableCell>
+				<OptionsCell editFunc={() => editDevice(i)} deleteFunc={() => deleteDevice(i)} />
 				<TableCell>{device.name || ''}</TableCell>
 				<TableCell>{device.ip || ''}</TableCell>
 				<TableCell>{device.user || ''}</TableCell>

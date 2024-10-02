@@ -7,19 +7,15 @@
 	import QuitEmployeeForm from './QuitEmployeeForm.svelte';
 	import ReactivateForm from './ReactivateForm.svelte';
 	import { Button } from '$lib/components/ui/button';
-	import {
-		DropdownMenu,
-		DropdownMenuContent,
-		DropdownMenuTrigger
-	} from '$lib/components/ui/dropdown-menu';
 	import CusTable from '$lib/components/basic/CusTable.svelte';
-	import { EllipsisVertical, FileDown, Pen, User, UserMinus, PlusCircle } from 'lucide-svelte';
+	import { RotateCcw, FileDown, PlusCircle } from 'lucide-svelte';
 	import { TableBody, TableCell, TableHead, TableHeader, TableRow } from '$lib/components/ui/table';
 	import { Badge } from '$lib/components/ui/badge';
 	import { formatDate } from '$lib/utils/functions';
 	import { browser } from '$app/environment';
 	import DropdownMenuItem from '$lib/components/ui/dropdown-menu/dropdown-menu-item.svelte';
 	import MenuBar from '$lib/components/basic/MenuBar.svelte';
+	import OptionsCell from '$lib/components/basic/OptionsCell.svelte';
 
 	let show: boolean;
 	let show1: boolean;
@@ -200,33 +196,17 @@
 	<TableBody>
 		{#each filteredEmployees as employee, i}
 			<TableRow>
-				<TableCell class="sticky left-0 bg-background p-0">
-					<DropdownMenu>
-						<DropdownMenuTrigger>
-							<Button variant="ghost">
-								<EllipsisVertical class="size-3.5" />
-							</Button>
-						</DropdownMenuTrigger>
-
-						<DropdownMenuContent>
-							<DropdownMenuItem on:click={() => previewEmployee(i)} color="primary"
-								><User class="size-3.5" />Ver</DropdownMenuItem
-							>
-							<DropdownMenuItem on:click={() => editEmployee(i)} color="green"
-								><Pen class="size-3.5" />Editar</DropdownMenuItem
-							>
-							{#if employee.active}
-								<DropdownMenuItem on:click={() => deleteEmployee(i)} color="red"
-									><UserMinus class="size-3.5" />Baja</DropdownMenuItem
-								>
-							{:else}
-								<DropdownMenuItem on:click={() => reactivateEmployee(i)} color="purple"
-									><PlusCircle class="size-3.5" />Recontratar</DropdownMenuItem
-								>
-							{/if}
-						</DropdownMenuContent>
-					</DropdownMenu>
-				</TableCell>
+				<OptionsCell
+					viewFunc={() => previewEmployee(i)}
+					editFunc={() => editEmployee(i)}
+					deleteFunc={employee.active ? () => deleteEmployee(i) : undefined}
+				>
+					{#if !employee.active}
+						<DropdownMenuItem on:click={() => reactivateEmployee(i)}>
+							<RotateCcw class="size-3.5" /> Recontratar
+						</DropdownMenuItem>
+					{/if}
+				</OptionsCell>
 				<TableCell>{employee.noEmpleado || ''}</TableCell>
 				<TableCell class="whitespace-nowrap">{employee.name || ''}</TableCell>
 				<TableCell>{employee.paternalLastName || ''}</TableCell>

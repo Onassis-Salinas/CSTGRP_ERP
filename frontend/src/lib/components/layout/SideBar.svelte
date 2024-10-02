@@ -37,12 +37,12 @@
 
 <span class="absolute max-w-16"></span>
 <Card class="fixed bottom-0 top-0 flex w-64 flex-col rounded-[9px] bg-[#fbfafa] shadow-none">
-	<a href="/" class="mb-3 flex h-12 w-full items-center gap-2 border-b px-4 pt-0 font-semibold">
+	<a href="/" class="flex h-12 w-full items-center gap-2 border-b px-4 pt-0 font-semibold">
 		<img src="/logo.png" alt="logo" class="h-6 w-6" />
 		CST Group
 	</a>
 
-	<Accordion class="space-y-1 px-2">
+	<Accordion class="space-y-1 px-2 pt-2">
 		{#if hasAccess('inventory') || hasAccess('materials')}
 			<AccordionItem value="1" class="border-none">
 				<AccordionTrigger class="hover:bg-muted rounded-md p-2 text-sm hover:no-underline">
@@ -152,7 +152,7 @@
 		</AccordionItem>
 	</Accordion>
 
-	<div class="mt-auto space-y-1 px-2">
+	<div class="mt-auto space-y-1 px-2 pb-2">
 		<p class="hover:bg-muted block rounded-md p-2">
 			<span class="flex items-center gap-2 text-sm">
 				<UserCircle class="size-4 text-[#5c5e63]" />

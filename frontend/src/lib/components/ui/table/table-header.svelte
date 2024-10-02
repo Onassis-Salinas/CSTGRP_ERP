@@ -11,7 +11,7 @@
 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 <thead
 	class={cn(
-		'sticky top-0 z-20 w-full bg-[#fbfafa] text-sm ',
+		'sticky top-0 z-20 w-full bg-[#fbfafa] text-sm border-b',
 		className
 	)}
 	{...$$restProps}

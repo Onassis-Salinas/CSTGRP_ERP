@@ -16,6 +16,7 @@
 	import { ChevronDown, EllipsisVertical, Pen, PlusCircle, Trash } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 	import MenuBar from '$lib/components/basic/MenuBar.svelte';
+	import OptionsCell from '$lib/components/basic/OptionsCell.svelte';
 
 	let show: boolean;
 	let show1: boolean;
@@ -130,24 +131,7 @@
 	<TableBody>
 		{#each users as user, i}
 			<TableRow>
-				<TableCell class="sticky left-0 bg-background px-0">
-					<DropdownMenu>
-						<DropdownMenuTrigger>
-							<Button variant="ghost">
-								<EllipsisVertical class="size-3.5" />
-							</Button>
-						</DropdownMenuTrigger>
-
-						<DropdownMenuContent>
-							<DropdownMenuItem on:click={() => editUser(i)}
-								><Pen class="size-3.5" />Editar</DropdownMenuItem
-							>
-							<DropdownMenuItem on:click={() => deleteUser(i)} color="red">
-								<Trash class="size-3.5" />Eliminar
-							</DropdownMenuItem>
-						</DropdownMenuContent>
-					</DropdownMenu>
-				</TableCell>
+				<OptionsCell editFunc={() => editUser(i)} deleteFunc={() => deleteUser(i)} />
 
 				<TableCell class="font-semibold">{user.username}</TableCell>
 				<TableCell

@@ -15,6 +15,7 @@
 	import { showSuccess } from '$lib/utils/showToast';
 	import { onMount } from 'svelte';
 	import MenuBar from '$lib/components/basic/MenuBar.svelte';
+	import OptionsCell from '$lib/components/basic/OptionsCell.svelte';
 
 	let show: boolean;
 	let show1: boolean;
@@ -58,24 +59,7 @@
 	<TableBody>
 		{#each positions as position, i}
 			<TableRow>
-				<TableCell class="bg-background sticky left-0 px-0">
-					<DropdownMenu>
-						<DropdownMenuTrigger>
-							<Button variant="ghost">
-								<EllipsisVertical class="size-3.5" />
-							</Button>
-						</DropdownMenuTrigger>
-
-						<DropdownMenuContent>
-							<DropdownMenuItem on:click={() => editPosition(i)}
-								><Pen class="size-3.5" />Editar</DropdownMenuItem
-							>
-							<DropdownMenuItem on:click={() => deletePosition(i)} color="red"
-								><Trash class="size-3.5" />Eliminar</DropdownMenuItem
-							>
-						</DropdownMenuContent>
-					</DropdownMenu>
-				</TableCell>
+				<OptionsCell editFunc={() => editPosition(i)} deleteFunc={() => deletePosition(i)} />
 				<TableCell>{position.name}</TableCell>
 			</TableRow>
 		{/each}
