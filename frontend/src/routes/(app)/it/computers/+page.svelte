@@ -57,14 +57,14 @@
 <CusTable>
 	<TableHeader>
 		<TableHead class="fixed left-0 z-30 bg-inherit p-1"></TableHead>
-		<TableHead class="w-[12%]">Nombre</TableHead>
-		<TableHead class="w-[12%]">Usuario</TableHead>
-		<TableHead class="w-[12%]">Anydesk</TableHead>
-		<TableHead class="w-[12%]">Anydesk PW</TableHead>
-		<TableHead class="w-[12%]">PW</TableHead>
-		<TableHead class="w-[12%]">Activa</TableHead>
-		<TableHead class="w-[12%]">Ultimo mantenimiento</TableHead>
-		<TableHead class="w-[12%]">Proximo mantenimiento</TableHead>
+		<TableHead class="w-[13%]">Nombre</TableHead>
+		<TableHead class="w-[12.5%]">Usuario</TableHead>
+		<TableHead class="w-[12.5%]">Anydesk</TableHead>
+		<TableHead class="w-[12.5%]">Anydesk PW</TableHead>
+		<TableHead class="w-[12.5%]">PW</TableHead>
+		<TableHead class="w-[12.5%]">Activa</TableHead>
+		<TableHead class="w-[12.5%]">Ultimo mantenimiento</TableHead>
+		<TableHead class="w-[12.5%]">Proximo mantenimiento</TableHead>
 	</TableHeader>
 	<TableBody>
 		{#each devices as device, i}

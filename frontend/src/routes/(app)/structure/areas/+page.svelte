@@ -15,6 +15,7 @@
 		DropdownMenuTrigger
 	} from '$lib/components/ui/dropdown-menu';
 	import { onMount } from 'svelte';
+	import MenuBar from '$lib/components/basic/MenuBar.svelte';
 
 	let show: boolean;
 	let show1: boolean;
@@ -45,11 +46,10 @@
 	});
 </script>
 
-<div class="mb-6 flex justify-between">
-	<div>
-		<Button on:click={createArea}><PlusCircle class="mr-1.5 size-3.5" />Añadir area</Button>
-	</div>
-</div>
+<MenuBar>
+	<span></span>
+	<Button on:click={createArea}><PlusCircle class="mr-1.5 size-3.5" />Añadir area</Button>
+</MenuBar>
 
 <CusTable>
 	<TableHeader>
@@ -60,7 +60,7 @@
 	<TableBody>
 		{#each areas as area, i}
 			<TableRow>
-				<TableCell class="sticky left-0 bg-background px-0">
+				<TableCell class="bg-background sticky left-0 px-0">
 					<DropdownMenu>
 						<DropdownMenuTrigger>
 							<Button variant="ghost">

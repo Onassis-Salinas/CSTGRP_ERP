@@ -14,6 +14,7 @@
 	import api from '$lib/utils/server';
 	import { showSuccess } from '$lib/utils/showToast';
 	import { onMount } from 'svelte';
+	import MenuBar from '$lib/components/basic/MenuBar.svelte';
 
 	let show: boolean;
 	let show1: boolean;
@@ -44,11 +45,10 @@
 	});
 </script>
 
-<div class="mb-6 flex justify-between">
-	<div>
-		<Button on:click={createPosition}><PlusCircle class="mr-1.5 size-3.5" />Añadir posicion</Button>
-	</div>
-</div>
+<MenuBar>
+	<span></span>
+	<Button on:click={createPosition}><PlusCircle class="mr-1.5 size-3.5" />Añadir posicion</Button>
+</MenuBar>
 
 <CusTable>
 	<TableHeader>
@@ -58,7 +58,7 @@
 	<TableBody>
 		{#each positions as position, i}
 			<TableRow>
-				<TableCell class="sticky left-0 bg-background px-0">
+				<TableCell class="bg-background sticky left-0 px-0">
 					<DropdownMenu>
 						<DropdownMenuTrigger>
 							<Button variant="ghost">

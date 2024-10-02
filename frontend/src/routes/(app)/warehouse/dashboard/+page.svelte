@@ -54,7 +54,7 @@
 	<Input class="h-fit w-fit font-semibold" value={textDate}></Input>
 </MenuBar>
 
-<div class="grid grid-cols-3 place-items-stretch gap-4">
+<div class="grid grid-cols-3 place-items-stretch gap-4 p-4">
 	<Card class="col-span-2 flex h-[30rem] w-full max-w-full flex-col">
 		<CardHeader>
 			<CardTitle>En minimos</CardTitle>

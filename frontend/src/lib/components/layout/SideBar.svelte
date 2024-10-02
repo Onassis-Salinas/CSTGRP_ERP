@@ -2,19 +2,18 @@
 	import Cookies from 'js-cookie';
 	import { location } from '../../utils/location';
 	import AccordionItem from '../ui/accordion/accordion-item.svelte';
-	import { Accordion } from '../ui/accordion';
+	import { Accordion, AccordionOption } from '../ui/accordion';
 	import AccordionTrigger from '../ui/accordion/accordion-trigger.svelte';
 	import AccordionContent from '../ui/accordion/accordion-content.svelte';
 	import { Card } from '../ui/card';
 	import Package from 'lucide-svelte/icons/package';
 	import {
-		Dot,
 		File,
 		GitMerge,
 		LogOut,
 		CircleAlert,
 		Monitor,
-		SquareUser,
+		Shield,
 		UserCircle,
 		Users
 	} from 'lucide-svelte';
@@ -38,7 +37,7 @@
 
 <span class="absolute max-w-16"></span>
 <Card class="fixed bottom-0 top-0 flex w-64 flex-col rounded-[9px] bg-[#fbfafa] shadow-none">
-	<a href="/" class="mb-3 h-12 w-full border-b pt-0 font-semibold flex gap-2 items-center px-4">
+	<a href="/" class="mb-3 flex h-12 w-full items-center gap-2 border-b px-4 pt-0 font-semibold">
 		<img src="/logo.png" alt="logo" class="h-6 w-6" />
 		CST Group
 	</a>
@@ -53,29 +52,13 @@
 					</span>
 				</AccordionTrigger>
 				<AccordionContent>
-					<a
-						href="/warehouse/dashboard"
-						class="hover:bg-muted flex items-center gap-2 rounded-md p-2 text-sm"
-						><Dot  class="text=[#5c5e63]"/>Resumenes</a
-					>
+					<AccordionOption href="/warehouse/dashboard">Resumenes</AccordionOption>
 					{#if hasAccess('materials')}
-						<a
-							href="/warehouse/materials"
-							class="hover:bg-muted flex items-center gap-2 rounded-md p-2 text-sm"
-							><Dot  class="text=[#5c5e63]"/>Materiales</a
-						>
+						<AccordionOption href="/warehouse/materials">Materiales</AccordionOption>
 					{/if}
 					{#if hasAccess('inventory')}
-						<a
-							href="/warehouse/inventory"
-							class="hover:bg-muted flex items-center gap-2 rounded-md p-2 text-sm"
-							><Dot  class="text=[#5c5e63]"/>Inventario</a
-						>
-						<a
-							href="/warehouse/movements"
-							class="hover:bg-muted flex items-center gap-2 rounded-md p-2 text-sm"
-							><Dot  class="text=[#5c5e63]"/>Movimientos</a
-						>
+						<AccordionOption href="/warehouse/inventory">Inventario</AccordionOption>
+						<AccordionOption href="/warehouse/movements">Movimientos</AccordionOption>
 					{/if}
 				</AccordionContent>
 			</AccordionItem>
@@ -90,32 +73,16 @@
 				</AccordionTrigger>
 				<AccordionContent>
 					{#if hasAccess('employees')}
-						<a
-							href="/hr/dashboard"
-							class="hover:bg-muted flex items-center gap-2 rounded-md p-2 text-sm"
-							><Dot  class="text=[#5c5e63]"/>Dashboard</a
-						>
+						<AccordionOption href="/hr/dashboard">Dashboard</AccordionOption>
 					{/if}
 					{#if hasAccess('employees')}
-						<a
-							href="/hr/employees"
-							class="hover:bg-muted flex items-center gap-2 rounded-md p-2 text-sm"
-							><Dot  class="text=[#5c5e63]"/>Empleados</a
-						>
+						<AccordionOption href="/hr/employees">Empleados</AccordionOption>
 					{/if}
 					{#if hasAccess('productivity')}
-						<a
-							href="/hr/productivity"
-							class="hover:bg-muted flex items-center gap-2 rounded-md p-2 text-sm"
-							><Dot  class="text=[#5c5e63]"/>Productividad</a
-						>
+						<AccordionOption href="/hr/productivity">Productividad</AccordionOption>
 					{/if}
 					{#if hasAccess('assistance')}
-						<a
-							href="/hr/assistance"
-							class="hover:bg-muted flex items-center gap-2 rounded-md p-2 text-sm"
-							><Dot  class="text=[#5c5e63]"/>Asistencia</a
-						>
+						<AccordionOption href="/hr/assistance">Asistencia</AccordionOption>
 					{/if}
 				</AccordionContent>
 			</AccordionItem>
@@ -130,44 +97,40 @@
 				</AccordionTrigger>
 
 				<AccordionContent>
-					<a
-						href="/it/devices"
-						class="hover:bg-muted flex items-center gap-2 rounded-md p-2 text-sm"
-						><Dot  class="text=[#5c5e63]"/>Dispositivos</a
-					>
-					<a href="/it/emails" class="hover:bg-muted flex items-center gap-2 rounded-md p-2 text-sm"
-						><Dot  class="text=[#5c5e63]"/>Correos</a
-					>
-					<a
-						href="/it/computers"
-						class="hover:bg-muted flex items-center gap-2 rounded-md p-2 text-sm"
-						><Dot  class="text=[#5c5e63]"/>Computadoras</a
-					>
+					<AccordionOption href="/it/devices">Dispositivos</AccordionOption>
+					<AccordionOption href="/it/emails">Correos</AccordionOption>
+					<AccordionOption href="/it/computers">Computadoras</AccordionOption>
 				</AccordionContent>
 			</AccordionItem>
 		{/if}
 		{#if hasAccess('structure')}
-			<div>
-				<a class="hover:bg-muted block rounded-md p-2 text-sm hover:no-underline" href="/structure">
+			<AccordionItem value="7" class="border-none">
+				<AccordionTrigger class="hover:bg-muted rounded-md p-2 text-sm hover:no-underline">
 					<span class="flex items-center gap-2">
 						<GitMerge class="size-4 text-[#5c5e63]" />
 						Estructura
 					</span>
-				</a>
-			</div>
+				</AccordionTrigger>
+
+				<AccordionContent>
+					<AccordionOption href="/structure/areas">Areas</AccordionOption>
+					<AccordionOption href="/structure/positions">Posiciones</AccordionOption>
+				</AccordionContent>
+			</AccordionItem>
 		{/if}
 		{#if hasAccess('users')}
-			<div>
-				<a
-					class="hover:bg-muted block rounded-md p-2 text-sm hover:no-underline"
-					href="/admin/users"
-				>
+			<AccordionItem value="6" class="border-none">
+				<AccordionTrigger class="hover:bg-muted rounded-md p-2 text-sm hover:no-underline">
 					<span class="flex items-center gap-2">
-						<SquareUser class="size-4 text-[#5c5e63]" />
-						Usuarios
+						<Shield class="size-4 text-[#5c5e63]" />
+						Admin
 					</span>
-				</a>
-			</div>
+				</AccordionTrigger>
+
+				<AccordionContent>
+					<AccordionOption href="/admin/users">Usuarios</AccordionOption>
+				</AccordionContent>
+			</AccordionItem>
 		{/if}
 
 		<AccordionItem value="4" class="border-none">
@@ -179,28 +142,25 @@
 			</AccordionTrigger>
 
 			<AccordionContent>
-				<a
-					href="/resources/directory"
-					class="hover:bg-muted flex items-center gap-2 rounded-md p-2 text-sm"><Dot  class="text=[#5c5e63]"/>Directorio</a
-				>
-				<!-- <a
+				<AccordionOption href="/resources/directory">Directorio</AccordionOption>
+				<!-- <AccordionOption
 					href="/resources/formats"
-					class="hover:bg-muted flex items-center gap-2 rounded-md p-2 text-sm"
-					><Dot  class="text=[#5c5e63]"/>Formatos</a
+					
+					><Dot  class="text=[#5c5e63]"/>Formatos</
 				> -->
 			</AccordionContent>
 		</AccordionItem>
 	</Accordion>
 
-	<div class="mt-auto space-y-2 px-2">
+	<div class="mt-auto space-y-1 px-2">
 		<p class="hover:bg-muted block rounded-md p-2">
-			<span class="flex items-center gap-2">
+			<span class="flex items-center gap-2 text-sm">
 				<UserCircle class="size-4 text-[#5c5e63]" />
 				{username}
 			</span>
 		</p>
 		<button class="hover:bg-muted block w-full rounded-md p-2" on:click={() => (showModal = true)}>
-			<span class="flex items-center gap-2">
+			<span class="flex items-center gap-2 text-sm">
 				<LogOut class="size-4 text-[#5c5e63]" />
 				Salir
 			</span>

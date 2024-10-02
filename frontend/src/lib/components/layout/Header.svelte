@@ -34,7 +34,7 @@
 	};
 </script>
 
-<header class="flex h-[49px] w-full items-center border-b px-4 sticky">
+<header class="flex h-[49px] w-full items-center border-b px-5 sticky">
 	<h3 class="text font-semibold">
 		{traductions[$location.split('/')[2]] || traductions[$location.split('/')[1]] || 'Inicio'}
 	</h3>
