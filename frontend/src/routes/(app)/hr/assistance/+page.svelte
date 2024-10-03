@@ -95,7 +95,6 @@
 	<TableHeader>
 		<TableHead class="w-[1%]">No. Empleado</TableHead>
 		<TableHead class="w-[20%]">Nombre</TableHead>
-		<TableHead class="w-[1%]">Area</TableHead>
 		<TableHead class="w-[1%]">Posicion</TableHead>
 		<TableHead class="w-[10%]">Lunes</TableHead>
 		<TableHead class="w-[10%]">Martes</TableHead>
@@ -108,11 +107,7 @@
 			<TableRow>
 				<TableCell>{assistance.noEmpleado}</TableCell>
 				<TableCell>{assistance.name}</TableCell>
-				<TableCell
-					><Badge color={assistance.areaId === '1' ? 'dark' : 'blue'}
-						>{areas[assistance.areaId || '']}</Badge
-					></TableCell
-				>
+
 				<TableCell
 					><Badge color="purple">{positions[assistance.positionId || ''] || ''}</Badge></TableCell
 				>

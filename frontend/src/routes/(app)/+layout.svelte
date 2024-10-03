@@ -22,7 +22,7 @@
 
 <div class="app flex">
 	<SideBar></SideBar>
-	<main class="flex h-screen flex-col bg-[#fffefe]">
+	<main class="flex h-screen flex-col bg-[#fffefe] xl:ml-64 w-full xl:w-[calc(100%-256px)]">
 		<Header></Header>
 		<slot></slot>
 	</main>
@@ -30,9 +30,4 @@
 
 <Toaster />
 
-<style>
-	main {
-		width: calc(100% - 256px);
-		margin-left: 256px;
-	}
-</style>
+

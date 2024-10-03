@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Cookies from 'js-cookie';
-	import { location } from '../../utils/location';
+	import { sidebarOpen } from '../../utils/store';
 	import AccordionItem from '../ui/accordion/accordion-item.svelte';
 	import { Accordion, AccordionOption } from '../ui/accordion';
 	import AccordionTrigger from '../ui/accordion/accordion-trigger.svelte';
@@ -20,23 +20,36 @@
 	import { Dialog, DialogBody, DialogContent } from '$lib/components/ui/dialog';
 	import { Button } from '$lib/components/ui/button';
 	import { goto } from '$app/navigation';
+	import { cn } from '$lib/utils';
+	import { browser } from '$app/environment';
 
-	let activeUrl = '';
 	let showModal = false;
-
-	$: {
-		activeUrl = $location;
-	}
 
 	const username = Cookies.get('username');
 
 	const hasAccess = (name: string) => {
 		return parseInt(Cookies.get('perm_' + name) || '0') > 0;
 	};
+
+	function closeSidebar() {
+		sidebarOpen.set(false);
+	}
+
+	$: if ($sidebarOpen) {
+		requestAnimationFrame(() => {
+			document.querySelector('main')?.addEventListener('click', closeSidebar);
+		});
+	} else {
+		if (browser) document.querySelector('main')?.removeEventListener('click', closeSidebar);
+	}
 </script>
 
-<span class="absolute max-w-16"></span>
-<Card class="fixed bottom-0 top-0 flex w-64 flex-col rounded-[9px] bg-[#fbfafa] shadow-none">
+<Card
+	class={cn(
+		'md: fixed -left-64 bottom-0 top-0 z-40 flex w-64 flex-col rounded-[9px] bg-[#f6f6f5] shadow-none transition-all duration-300 xl:left-0',
+		$sidebarOpen ? 'left-0' : ''
+	)}
+>
 	<a href="/" class="flex h-12 w-full items-center gap-2 border-b px-4 pt-0 font-semibold">
 		<img src="/logo.png" alt="logo" class="h-6 w-6" />
 		CST Group

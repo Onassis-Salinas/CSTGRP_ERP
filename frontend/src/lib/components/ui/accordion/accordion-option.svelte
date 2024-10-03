@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { cn } from '$lib/utils.js';
-	import { location } from '$lib/utils/location';
+	import { location } from '$lib/utils/store';
 	import { Dot } from 'lucide-svelte';
 	import { fade, scale } from 'svelte/transition';
 

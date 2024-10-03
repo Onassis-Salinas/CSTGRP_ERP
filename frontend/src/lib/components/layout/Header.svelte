@@ -1,13 +1,15 @@
 <script lang="ts">
-	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.js';
-	import { location } from './../../utils/location';
+	import { location, sidebarOpen } from './../../utils/store';
 	import { afterNavigate } from '$app/navigation';
 	import { browser } from '$app/environment';
+	import { Button } from '../ui/button';
+	import { PanelRight } from 'lucide-svelte';
 
 	afterNavigate(() => {
 		if (browser) {
 			location.set(window?.location?.pathname);
 		}
+		sidebarOpen.set(false);
 	});
 
 	const traductions: any = {
@@ -37,6 +39,9 @@
 </script>
 
 <header class="flex h-[49px] w-full items-center border-b px-5 sticky">
+	<Button class="xl:hidden block" variant="ghost" on:click={() => sidebarOpen.set(true)}>
+		<PanelRight class="size-4" />
+	</Button>
 	<h3 class="text font-semibold">
 		{traductions[$location.split('/')[2]] || traductions[$location.split('/')[1]] || 'Inicio'}
 	</h3>
