@@ -55,6 +55,7 @@ export const valueTraduccion = {
   anydeskPW: "Anydesk PW",
   lastMaintance: "Ultimo mantenimiento",
   owner: "Usuario",
+  docs: "Documentación",
 };
 
 export const getTraducction = (value: string) => {

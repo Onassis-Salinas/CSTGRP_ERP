@@ -113,6 +113,7 @@
 					<AccordionOption href="/it/devices">Dispositivos</AccordionOption>
 					<AccordionOption href="/it/emails">Correos</AccordionOption>
 					<AccordionOption href="/it/computers">Computadoras</AccordionOption>
+					<AccordionOption href="/it/docs">Documentación</AccordionOption>
 				</AccordionContent>
 			</AccordionItem>
 		{/if}
