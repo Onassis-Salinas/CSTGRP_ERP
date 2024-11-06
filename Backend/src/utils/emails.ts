@@ -1,12 +1,14 @@
 import nodemailer from 'nodemailer';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 const transporter = nodemailer.createTransport({
   host: 'smtp.netfirms.com',
   port: 465,
   secure: true,
   auth: {
-    user: 'alerts@cstgrp.com',
-    pass: 'al2024$CST',
+    user: process.env.ALERTS_EMAIL,
+    pass: process.env.EMAIL_PW,
   },
 });
 
