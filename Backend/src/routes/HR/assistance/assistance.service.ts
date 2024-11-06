@@ -6,8 +6,8 @@ import { getSingleSchema, weekSchema } from './assistance.schema';
 
 @Injectable()
 export class AssistanceService {
-  async getWeek(params: z.infer<typeof weekSchema>) {
-    const [firstDate] = getWeekDays(params.date);
+  async getWeek(body: z.infer<typeof weekSchema>) {
+    const [firstDate] = getWeekDays(body.date);
 
     const assistance =
       await sql`SELECT id, "incidenceId0", "incidenceId1", "incidenceId2", "incidenceId3", "incidenceId4", "areaId", "positionId", 
@@ -20,8 +20,8 @@ export class AssistanceService {
     return assistance;
   }
 
-  async getSingle(params: z.infer<typeof getSingleSchema>) {
-    return params;
+  async getSingle(body: z.infer<typeof getSingleSchema>) {
+    return body;
   }
 
   async createWeek(body: z.infer<typeof weekSchema>) {

@@ -23,22 +23,22 @@ export class ResourcesService {
     return list;
   }
 
-  async getFormats(params) {
+  async getFormats(body) {
     const ftp = new PromiseFTP();
 
     await ftp.connect(ftpConfig);
     const list = await ftp.list(
-      `/Servidor_Ingenieria/INGENIERIA Y CALIDAD/SGC ISO 9001-2015/4. FORMATOS (F)/${params.folder}`,
+      `/Servidor_Ingenieria/INGENIERIA Y CALIDAD/SGC ISO 9001-2015/4. FORMATOS (F)/${body.folder}`,
     );
     await ftp.end();
     return list;
   }
 
   async getDirectory() {
-    return (await sql`select directory.id, employees.name, positions.name as position, emails.email, extension
+    return await sql`select directory.id, employees.name, positions.name as position, emails.email, extension
       from directory
       join employees on employees.id = directory."employeeId"
       join emails on emails.id = directory."emailId"
-      join positions on positions.id = employees."positionId"`);
+      join positions on positions.id = employees."positionId"`;
   }
 }

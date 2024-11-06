@@ -13,7 +13,7 @@ import exceljs from 'exceljs';
 
 @Injectable()
 export class EmployeesService {
-  async getAssistance(params) {
+  async getAssistance(body) {
     const [firstDate] = getWeekDays(new Date());
     const rows = await sql`SELECT "mondayDate",
     (SELECT name FROM incidences WHERE id = assistance."incidenceId0") AS "incidence0",
@@ -22,20 +22,20 @@ export class EmployeesService {
     (SELECT name FROM incidences WHERE id = assistance."incidenceId3") AS "incidence3",
     (SELECT name FROM incidences WHERE id = assistance."incidenceId4") AS "incidence4"
     FROM assistance
-    WHERE "mondayDate" > ${new Date(new Date(firstDate).setDate(new Date(firstDate).getDate() - 28))} AND "employeeId" = ${parseInt(params.id)}
+    WHERE "mondayDate" > ${new Date(new Date(firstDate).setDate(new Date(firstDate).getDate() - 28))} AND "employeeId" = ${parseInt(body.id)}
     ORDER BY "mondayDate" desc`;
 
     return rows;
   }
 
-  async getProductivity(params) {
+  async getProductivity(body) {
     const [firstDate] = getWeekDays(new Date());
     const rows = await sql`select *
     from employeeproductivity
     JOIN assistance
     On assistance.id = employeeproductivity."assistanceId"
     where assistance."mondayDate" > ${new Date(new Date(firstDate).setDate(new Date(firstDate).getDate() - 60))}
-    And assistance."employeeId" = ${parseInt(params.id)}
+    And assistance."employeeId" = ${parseInt(body.id)}
     order by "mondayDate" asc`;
 
     return rows;

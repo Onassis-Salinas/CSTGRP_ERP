@@ -6,8 +6,8 @@ import { weekSchema, editSchema } from './productivity.schema';
 
 @Injectable()
 export class ProductivityService {
-  async getWeek(params: z.infer<typeof weekSchema>) {
-    const [firstDate] = getWeekDays(params.date);
+  async getWeek(body: z.infer<typeof weekSchema>) {
+    const [firstDate] = getWeekDays(body.date);
 
     const productivity = await sql`select *,
     (select name from employees where id = (select "employeeId" from assistance where id = employeeproductivity."assistanceId")),

@@ -7,9 +7,9 @@ import { processImport, processJob } from './various.utils';
 
 @Injectable()
 export class VariousService {
-  async getMeasurement(query) {
+  async getMeasurement(body) {
     const rows =
-      await sql`select measurement from materials where code = ${query.code}`;
+      await sql`select measurement from materials where code = ${body.code}`;
     if (!rows[0]) return;
     return rows[0].measurement;
   }

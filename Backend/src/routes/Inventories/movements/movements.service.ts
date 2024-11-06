@@ -11,24 +11,24 @@ import {
 
 @Injectable()
 export class MovementsService {
-  async getJobMovements(query: z.infer<typeof movementsFilterSchema>) {
+  async getJobMovements(body: z.infer<typeof movementsFilterSchema>) {
     const movements = await sql`SELECT
       materials.code, materials.description, materials.measurement, materials."clientId", materials."leftoverAmount", materialmovements.active, materialmovements.amount, materialmovements."realAmount", materialmovements.id, materialie.due, materialie.jobpo, materialie.programation, materialie.import
       FROM materialmovements
       JOIN materials on materials.id = materialmovements."materialId"
       JOIN materialie on materialie.id = materialmovements."movementId"
       WHERE
-      ${query.jobpo ? sql`materialie.jobpo = ${query.jobpo}` : sql`TRUE`} AND
-      ${query.import ? sql`materialie.import = ${query.import}` : sql`TRUE`} AND
-      ${query.programation ? sql`materialie.programation = ${query.programation}` : sql`TRUE`} AND
-      ${query.code ? sql`materials.code LIKE ${'%' + query.code + '%'}` : sql`TRUE`} AND
-      ${query.checked !== null ? sql`materialmovements.active = ${query.checked === 'true'}` : sql`TRUE`}
+      ${body.jobpo ? sql`materialie.jobpo = ${body.jobpo}` : sql`TRUE`} AND
+      ${body.import ? sql`materialie.import = ${body.import}` : sql`TRUE`} AND
+      ${body.programation ? sql`materialie.programation = ${body.programation}` : sql`TRUE`} AND
+      ${body.code ? sql`materials.code LIKE ${'%' + body.code + '%'}` : sql`TRUE`} AND
+      ${body.checked !== null ? sql`materialmovements.active = ${body.checked === 'true'}` : sql`TRUE`}
       ORDER BY materialie.due DESC, materialie.jobpo DESC, materials.code DESC, materialmovements.amount DESC, materialmovements.id DESC
       LIMIT 500`;
     return movements;
   }
 
-  async getMaterialMovements(params: z.infer<typeof idSchema>) {
+  async getMaterialMovements(body: z.infer<typeof idSchema>) {
     const movements = await sql`SELECT
         materialie.Due,
         materialie.programation,
@@ -45,7 +45,7 @@ export class MovementsService {
         JOIN
             materialie ON materialie.id = materialmovements."movementId"
         WHERE
-            materials.id = ${params.id} AND  materialmovements.active is true
+            materials.id = ${body.id} AND  materialmovements.active is true
         ORDER BY
             materialie.due DESC,
             materialmovements.id DESC

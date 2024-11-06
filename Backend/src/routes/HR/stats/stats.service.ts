@@ -6,31 +6,31 @@ import { z } from 'zod';
 
 @Injectable()
 export class StatsService {
-  async birthDays(params: z.infer<typeof dateSchema>) {
+  async birthDays(body: z.infer<typeof dateSchema>) {
     const rows =
-      await sql`SELECT "noEmpleado", name, "bornDate" from employees where extract(month from "bornDate") = extract(month from ${params.date}::DATE)`;
+      await sql`SELECT "noEmpleado", name, "bornDate" from employees where extract(month from "bornDate") = extract(month from ${body.date}::DATE)`;
 
     return rows;
   }
 
-  async weeklyFires(params: z.infer<typeof dateSchema>) {
-    const [firstDate] = getWeekDays(params.date);
+  async weeklyFires(body: z.infer<typeof dateSchema>) {
+    const [firstDate] = getWeekDays(body.date);
     const rows =
       await sql`SELECT COUNT(*) as count FROM assistance where Date = ${firstDate} and 6 IN (incidenceId0, incidenceId1, incidenceId2, incidenceId3, incidenceId4)`;
 
     return rows;
   }
 
-  async weeklyHires(params: z.infer<typeof dateSchema>) {
-    const [firstDate, secondDate] = getWeekDays(params.date);
+  async weeklyHires(body: z.infer<typeof dateSchema>) {
+    const [firstDate, secondDate] = getWeekDays(body.date);
     const rows =
       await sql`SELECT COUNT(*) as count FROM employees where admissionDate >= ${firstDate} and admissionDate <= ${secondDate}`;
 
     return rows;
   }
 
-  async assistance(params: z.infer<typeof dateSchema>) {
-    const [firstDate] = getWeekDays(params.date);
+  async assistance(body: z.infer<typeof dateSchema>) {
+    const [firstDate] = getWeekDays(body.date);
     const rows = [];
     for (let i = 0; i < 5; i++) {
       const evaluatedWeek = new Date(
@@ -63,9 +63,9 @@ export class StatsService {
       .map((e) => ({ ...e, value: Math.floor(e.value * 100) }));
   }
 
-  async assistanceInfo(params: z.infer<typeof dateSchema>) {
-    const [firstDate] = getWeekDays(params.date);
-    const dayNumber = getDayNumber(params.date);
+  async assistanceInfo(body: z.infer<typeof dateSchema>) {
+    const [firstDate] = getWeekDays(body.date);
+    const dayNumber = getDayNumber(body.date);
 
     const rows =
       await sql`SELECT (select name from incidences where id = ${sql('incidenceId' + dayNumber)}) as name, COUNT(*) as value FROM assistance WHERE "mondayDate" = ${firstDate} GROUP BY ${sql('incidenceId' + dayNumber)}`;
@@ -73,9 +73,9 @@ export class StatsService {
     return rows;
   }
 
-  async dailyIncidencesList(params: z.infer<typeof dateSchema>) {
-    const [firstDate] = getWeekDays(params.date);
-    const dayNumber = getDayNumber(params.date);
+  async dailyIncidencesList(body: z.infer<typeof dateSchema>) {
+    const [firstDate] = getWeekDays(body.date);
+    const dayNumber = getDayNumber(body.date);
 
     const rows =
       await sql`SELECT (select name from incidences where id = ${sql('incidenceId' + dayNumber)}) as incidence, 
@@ -108,8 +108,8 @@ export class StatsService {
     return rows;
   }
 
-  async employeeRotation(params: z.infer<typeof dateSchema>) {
-    const [firstDate, secondDate] = getWeekDays(params.date);
+  async employeeRotation(body: z.infer<typeof dateSchema>) {
+    const [firstDate, secondDate] = getWeekDays(body.date);
     const dayMiliSeconds = 24 * 60 * 60 * 1000;
 
     const initialDate = new Date(
