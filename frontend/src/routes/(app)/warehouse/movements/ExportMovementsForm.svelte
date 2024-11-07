@@ -14,7 +14,7 @@
 		TableHeader,
 		TableRow
 	} from '$lib/components/ui/table';
-	import { Input } from '$lib/components/ui/input';
+	import { FileInput, Input } from '$lib/components/ui/input';
 	import api from '$lib/utils/server';
 	import { showSuccess } from '$lib/utils/showToast';
 	import { Checkbox } from '$lib/components/ui/checkbox';
@@ -77,15 +77,17 @@
 		materials = materials;
 	}
 	function cleanData() {
-		materials = [];
+		materials = [{ code: '', measurement: '', amount: '', active: false }];
 		formData = {};
 		files = null;
 		inputDisabled = false;
 	}
+
+	$: console.log(files);
 </script>
 
 <Dialog bind:open={show}>
-	<DialogContent>
+	<DialogContent class="max-w-2xl">
 		<DialogHeader>
 			<DialogTitle>Registrar salida</DialogTitle>
 		</DialogHeader>
@@ -103,56 +105,56 @@
 					<span>Fecha</span>
 					<Input type="date" bind:value={formData.due} />
 				</div>
-				<div class="space-y-2">
+				<div class="col-span-3 space-y-2">
 					<span>Archivo</span>
-					<!-- <Input type="file" bind:files /> -->
+					<FileInput type="file" bind:files />
 				</div>
 			</div>
 
-			<hr />
+			<hr class="my-4" />
 
 			<Table>
-				<TableHead
-					
-				>
+				<TableHeader>
 					<TableHead class="">Codigo</TableHead>
 					<TableHead class="">Cantidad</TableHead>
 					<TableHead class="">Medida</TableHead>
 					<TableHead class="w-1">Surtido</TableHead>
 					<TableHead class="w-1 p-0"></TableHead>
-				</TableHead>
+				</TableHeader>
 
 				<TableBody>
 					{#each materials as material, i}
 						<TableRow>
-							<TableCell
+							<TableCell class="p-0"
 								><MaterialInput
 									bind:value={materials[i].code}
 									bind:measurement={materials[i].measurement}
 								/></TableCell
 							>
-							<TableCell><Input type="number" bind:value={materials[i].amount} /></TableCell>
-							<TableCell class="w-6"
+							<TableCell class="p-0"
 								><Input
-									class="!opacity-100"
-									disabled
-									bind:value={materials[i].measurement}
+									class="rounded-none border-none !opacity-100"
+									type="number"
+									bind:value={materials[i].amount}
 								/></TableCell
 							>
-							<TableCell class="w-1 text-center"
+							<TableCell class="w-5">{materials[i].measurement}</TableCell>
+							<TableCell class="w-1 p-0 text-center"
 								><Checkbox class="mx-auto size-5" bind:checked={materials[i].active} /></TableCell
 							>
-							<TableCell class="flex h-9 justify-center"
-								><Button on:click={() => deleteMaterial(i)} color="red" class="aspect-square p-1"
-									><Trash /></Button
+							<TableCell class="flex h-9 justify-center p-0"
+								><Button
+									on:click={() => deleteMaterial(i)}
+									variant="ghost"
+									class="text-destructive-foreground aspect-square p-1"
+									><Trash class="size-5" /></Button
 								></TableCell
 							>
 						</TableRow>
 					{/each}
 					<TableRow>
 						<TableCell class="col-span-4"
-							><Button on:click={addMaterial} class="w-full" color="light">Anadir material</Button
-							></TableCell
+							><Button on:click={addMaterial} class="w-full">Anadir material</Button></TableCell
 						>
 					</TableRow>
 				</TableBody>

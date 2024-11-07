@@ -31,12 +31,14 @@ async function bootstrap() {
   app.useGlobalFilters(new ValidationFilter());
   app.useGlobalFilters(new DBFilter());
 
-  //middleware
+  //Middleware
   await app.register(fastifyCookie);
   await app.register(multipart);
+
+  //Static files
   app.register(fastifyStatic, {
-    root: join(__dirname, '..', 'src', 'public'),
-    prefix: '/recursos/',
+    root: join(__dirname, '..', 'public'),
+    prefix: '/static/',
   });
 
   //Swagger implementation

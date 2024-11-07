@@ -8,7 +8,6 @@
 	:root {
 		--background: 0 0% 100%;
 		--foreground: 220 7.89% 14.9%;
-		
 
 		--muted: 220 9.68% 93.92%;
 		--muted-foreground: 240 3.8% 46.1%;
@@ -31,8 +30,8 @@
 		--accent: 220 9.68% 93.92%;
 		--accent-foreground: 240 5.9% 10%;
 
-		--destructive: 0 72.2% 50.6%;
-		--destructive-foreground: 0 0% 98%;
+		--destructive: 0 85.7% 97.3%;
+		--destructive-foreground: 0 62.8% 30.6%;
 
 		--ring: 240 10% 3.9%;
 

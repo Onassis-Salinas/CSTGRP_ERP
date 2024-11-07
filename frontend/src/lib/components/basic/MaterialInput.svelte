@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { cn } from '$lib/utils';
 	import api from '../../utils/server';
 	import { Input } from '../ui/input';
 
@@ -14,7 +15,8 @@
 
 <Input
 	bind:value
-	class={measurement
-		? ''
-		: 'bg-destructive text-destructive-foreground border-destructive-foreground'}
+	class={cn(
+		'rounded-none border-none',
+		measurement ? '' : 'bg-destructive text-destructive-foreground'
+	)}
 />

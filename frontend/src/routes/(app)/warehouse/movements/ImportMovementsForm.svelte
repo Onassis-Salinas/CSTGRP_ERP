@@ -8,7 +8,7 @@
 		DialogHeader,
 		DialogTitle
 	} from '$lib/components/ui/dialog';
-	import { Input } from '$lib/components/ui/input';
+	import { FileInput, Input } from '$lib/components/ui/input';
 	import {
 		Table,
 		TableBody,
@@ -67,7 +67,7 @@
 	}
 
 	function cleanData() {
-		materials = [];
+		materials = [{ code: '', measurement: '', amount: '' }];
 		formData = {};
 		files = null;
 		inputDisabled = false;
@@ -75,12 +75,12 @@
 </script>
 
 <Dialog bind:open={show}>
-	<DialogContent>
+	<DialogContent class="max-w-2xl">
 		<DialogHeader>
 			<DialogTitle>Registrar salida</DialogTitle>
 		</DialogHeader>
 		<DialogBody>
-			<div class="grid w-full grid-cols-3 gap-4">
+			<div class="grid w-full grid-cols-2 gap-4">
 				<div class="space-y-2">
 					<span>Importacion</span>
 					<Input disabled={inputDisabled} name="text" bind:value={formData.import} />
@@ -89,13 +89,13 @@
 					<span>Fecha</span>
 					<Input type="date" bind:value={formData.due} />
 				</div>
-				<div class="space-y-2">
+				<div class=" col-span-3 space-y-2">
 					<span>Archivo</span>
-					<Input type="file" bind:Value={files} />
+					<FileInput type="file" bind:files />
 				</div>
 			</div>
 
-			<hr />
+			<hr class="my-4" />
 
 			<Table>
 				<TableHeader>
@@ -108,23 +108,26 @@
 				<TableBody>
 					{#each materials as material, i}
 						<TableRow>
-							<TableCell
+							<TableCell class="p-0"
 								><MaterialInput
 									bind:value={materials[i].code}
 									bind:measurement={materials[i].measurement}
 								/></TableCell
 							>
-							<TableCell><Input type="number" bind:value={materials[i].amount} /></TableCell>
-							<TableCell class="w-6"
+							<TableCell class="p-0"
 								><Input
-									class="!opacity-100"
-									disabled
-									bind:value={materials[i].measurement}
+									class="rounded-none border-none"
+									type="number"
+									bind:value={materials[i].amount}
 								/></TableCell
 							>
-							<TableCell class="flex h-9 justify-center"
-								><Button on:click={() => deleteMaterial(i)} color="red" class="aspect-square p-1"
-									><Trash /></Button
+							<TableCell class="w-5">{materials[i].measurement}</TableCell>
+							<TableCell class="flex h-9 justify-center p-0"
+								><Button
+									on:click={() => deleteMaterial(i)}
+									variant="ghost"
+									class="text-destructive-foreground aspect-square p-1"
+									><Trash class="size-5" /></Button
 								></TableCell
 							>
 						</TableRow>
