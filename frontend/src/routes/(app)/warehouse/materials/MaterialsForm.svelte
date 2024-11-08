@@ -9,7 +9,7 @@
 		DialogHeader,
 		DialogTitle
 	} from '$lib/components/ui/dialog';
-	import { Input } from '$lib/components/ui/input';
+	import { FileInput, Input } from '$lib/components/ui/input';
 	import api from '$lib/utils/server';
 	import { showSuccess } from '$lib/utils/showToast';
 	import { onMount } from 'svelte';
@@ -18,6 +18,7 @@
 	export let reload: any;
 	export let selectedMaterial: material;
 	let formData: material;
+	let files: FileList | undefined;
 
 	$: if (show || true) setFormData();
 	function setFormData() {
@@ -37,23 +38,26 @@
 	}
 
 	async function handleSubmit() {
-		if (selectedMaterial.id) {
-			await api.put('materials', {
+		const form = new FormData();
+		form.append(
+			'json',
+			JSON.stringify({
 				...formData,
 				id: parseInt(formData.id),
 				clientId: parseInt(formData.clientId),
 				minAmount: formData.minAmount?.toString()
-			});
+			})
+		);
+		if (files) form.append('file', files[0]);
+
+		if (selectedMaterial.id) {
+			await api.put('materials', form);
 			showSuccess('Material actualizado');
 		} else {
-			await api.post('materials', {
-				...formData,
-				id: parseInt(formData.id),
-				clientId: parseInt(formData.clientId),
-				minAmount: formData.minAmount?.toString()
-			});
+			await api.post('materials', form);
 			showSuccess('Material registrado');
 		}
+
 		await reload();
 		show = false;
 	}
@@ -71,8 +75,13 @@
 			</DialogTitle>
 		</DialogHeader>
 		<DialogBody>
+
+			<img src={selectedMaterial.image} alt="" class="w-full" />
 			<form on:submit|preventDefault={handleSubmit}>
 				<div class="grid w-full grid-cols-2 gap-4">
+					<Label name="Imagen" class="col-span-2">
+						<FileInput name="text" bind:files />
+					</Label>
 					<Label name="Codigo">
 						<Input name="text" bind:value={formData.code} />
 					</Label>

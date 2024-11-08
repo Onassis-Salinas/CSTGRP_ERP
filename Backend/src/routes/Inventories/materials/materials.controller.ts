@@ -6,12 +6,15 @@ import {
   UseGuards,
   Put,
   Delete,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { MaterialsService } from './materials.service';
 import { ApiTags } from '@nestjs/swagger';
 import { ZodPiPe } from 'src/interceptors/validation/validation.pipe';
 import { deleteSchema, editSchema, createSchema } from './materials.schema';
 import { AuthGuard } from 'src/interceptors/auth/authorization.guard';
+import { FileInterceptor, File } from '@nest-lab/fastify-multer';
 
 @ApiTags('Materials')
 @Controller('materials')
@@ -25,8 +28,13 @@ export class MaterialsController {
   }
 
   @Post()
-  register(@Body(new ZodPiPe(createSchema)) body) {
-    return this.materialsService.createMaterial(body);
+  @UseInterceptors(FileInterceptor('file'))
+  register(@Body() body, @UploadedFile() file: File) {
+    const validatedBody = new ZodPiPe(createSchema).transform(
+      JSON.parse(body.json),
+    );
+
+    return this.materialsService.createMaterial(validatedBody, file);
   }
 
   @Put()

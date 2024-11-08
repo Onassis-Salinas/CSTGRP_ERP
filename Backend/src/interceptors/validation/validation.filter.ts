@@ -1,6 +1,6 @@
 import { Catch, ArgumentsHost, HttpStatus } from '@nestjs/common';
 import { FastifyReply } from 'fastify';
-import { valueTraduccion } from 'src/utils/traduction';
+import { getTraducction } from 'src/utils/traduction';
 import { ZodError } from 'zod';
 
 @Catch(ZodError)
@@ -35,7 +35,7 @@ export class ValidationFilter<T extends ZodError> {
 
     const bodyExists = !!exception.errors[0].path[0];
     console.log(exception.errors[0]);
-    message = `Dato (${valueTraduccion[exception.errors[0].path[0]]}) ${getError(exception.errors[0])}`;
+    message = `Dato (${getTraducction(exception.errors[0].path[0])}) ${getError(exception.errors[0])}`;
 
     response.status(HttpStatus.BAD_REQUEST).send({
       errors: bodyExists ? exception.errors : 'No se ah mandado ningun dato',

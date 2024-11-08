@@ -2,12 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { deleteSchema, editSchema, createSchema } from './materials.schema';
 import { z } from 'zod';
 import sql from 'src/utils/db';
+import { File } from '@nest-lab/fastify-multer';
+import { saveFile } from 'src/utils/storage';
 
 @Injectable()
 export class MaterialsService {
   async findAllMaterials() {
     const materials =
-      await sql`SELECT id, code, description, measurement, "clientId", "minAmount" FROM materials order by code asc`;
+      await sql`SELECT id, code, description, measurement, "clientId", "minAmount", image FROM materials order by code asc`;
     return materials;
   }
 
@@ -17,8 +19,9 @@ export class MaterialsService {
     return materials;
   }
 
-  async createMaterial(body: z.infer<typeof createSchema>) {
-    await sql`insert into materials ${sql({ ...body })} returning id`;
+  async createMaterial(body: any, file: File) {
+    const image = await saveFile(file, 'inventory');
+    await sql`insert into materials ${sql({ ...body, image })} returning id`;
     return;
   }
 

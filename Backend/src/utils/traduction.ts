@@ -1,4 +1,4 @@
-export const valueTraduccion = {
+const valueTraduccion = {
   id: 'ID',
   noEmpleado: 'Número de Empleado',
   nss: 'NSS',
@@ -52,18 +52,19 @@ export const valueTraduccion = {
   import: 'Importacion',
   date: 'Fecha',
   due: 'Fecha',
-  anydeskPW: "Anydesk PW",
-  lastMaintance: "Ultimo mantenimiento",
-  owner: "Usuario",
-  docs: "Documentación",
+  anydeskPW: 'Anydesk PW',
+  lastMaintance: 'Ultimo mantenimiento',
+  owner: 'Usuario',
+  docs: 'Documentación',
+  code: 'Codigo',
 };
 
-export const getTraducction = (value: string) => {
-  const lowerValue = value.toLowerCase();
+export const getTraducction = (value: string | number) => {
+  if (typeof value === 'number') value = value.toString();
+
   for (const key in valueTraduccion) {
-    if (lowerValue === key.toLowerCase()) {
-      return valueTraduccion[key];
-    }
+    if (value.toLowerCase() === key.toLowerCase()) return valueTraduccion[key];
   }
+
   return value; // Return original value if no match found
 };
