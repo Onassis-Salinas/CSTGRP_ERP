@@ -33,19 +33,19 @@
 </script>
 
 <Dialog bind:open={show}>
-	<DialogContent>
+	<DialogContent class="grid h-[90%] max-w-6xl grid-rows-[auto_1fr] gap-4">
 		<DialogHeader>
 			<DialogTitle>
 				{selectedMaterial.code}
 			</DialogTitle>
 		</DialogHeader>
-		<DialogBody>
+		<DialogBody class="h-full max-w-full">
 			<div class="mb-4">Ubicacion: {selectedMaterial.location}</div>
 			<img src={getImage(selectedMaterial.image)} alt="" class="w-full" />
 
 			<Table>
 				<TableHeader class="sticky top-0 bg-gray-100">
-					<TableHead>job</TableHead>
+					<TableHead class="border-l">job</TableHead>
 					<TableHead>Programacion</TableHead>
 					<TableHead>Importacion</TableHead>
 					<TableHead>Cantidad Job</TableHead>
@@ -56,20 +56,20 @@
 				<TableBody>
 					{#each movements as row}
 						<TableRow>
-							<TableCell class="px-4 py-4">{row.jobpo || ''}</TableCell>
-							<TableCell class="px-4 py-4">{row.programation || ''}</TableCell>
-							<TableCell class="px-4 py-4">{row.import || ''}</TableCell>
-							<TableCell class="px-4 py-4"
+							<TableCell class="border-l">{row.jobpo || ''}</TableCell>
+							<TableCell>{row.programation || ''}</TableCell>
+							<TableCell>{row.import || ''}</TableCell>
+							<TableCell
 								><Badge color={parseInt(row.amount) > 0 ? 'green' : 'red'}>{row.amount}</Badge
 								></TableCell
 							>
-							<TableCell class="px-4 py-4"
+							<TableCell
 								><Badge color={parseInt(row.realAmount) > 0 ? 'green' : 'red'}
 									>{row.realAmount}</Badge
 								></TableCell
 							>
-							<TableCell class="px-4 py-4">{formatDate(row.due)}</TableCell>
-							<TableCell class="px-4 py-4"
+							<TableCell>{formatDate(row.due)}</TableCell>
+							<TableCell
 								><Badge color={parseInt(row.balance) > 0 ? 'green' : 'red'}>{row.balance}</Badge
 								></TableCell
 							>
