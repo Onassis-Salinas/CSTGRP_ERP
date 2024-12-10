@@ -77,7 +77,7 @@
 <Dialog bind:open={show}>
 	<DialogContent class="max-w-2xl">
 		<DialogHeader>
-			<DialogTitle>Registrar salida</DialogTitle>
+			<DialogTitle>Registrar importacion</DialogTitle>
 		</DialogHeader>
 		<DialogBody>
 			<div class="grid w-full grid-cols-2 gap-4">

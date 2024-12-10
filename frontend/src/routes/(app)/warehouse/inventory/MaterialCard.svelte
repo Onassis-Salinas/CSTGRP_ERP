@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { Image } from 'lucide-svelte';
 	import { Badge } from '$lib/components/ui/badge';
 	import {
 		Dialog,
@@ -15,7 +16,7 @@
 		TableHeader,
 		TableRow
 	} from '$lib/components/ui/table';
-	import { formatDate } from '$lib/utils/functions';
+	import { formatDate, getImage } from '$lib/utils/functions';
 	import api from '$lib/utils/server';
 
 	export let show: boolean;
@@ -39,7 +40,8 @@
 			</DialogTitle>
 		</DialogHeader>
 		<DialogBody>
-			<div class="grid w-full grid-cols-2 gap-2"></div>
+			<div class="mb-4">Ubicacion: {selectedMaterial.location}</div>
+			<img src={getImage(selectedMaterial.image)} alt="" class="w-full" />
 
 			<Table>
 				<TableHeader class="sticky top-0 bg-gray-100">

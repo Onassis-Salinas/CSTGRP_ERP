@@ -38,8 +38,12 @@ export class MaterialsController {
   }
 
   @Put()
-  edit(@Body(new ZodPiPe(editSchema)) body) {
-    return this.materialsService.editMaterial(body);
+  @UseInterceptors(FileInterceptor('file'))
+  edit(@Body() body, @UploadedFile() file: File) {
+    const validatedBody = new ZodPiPe(editSchema).transform(
+      JSON.parse(body.json),
+    );
+    return this.materialsService.editMaterial(validatedBody, file);
   }
 
   @Delete()

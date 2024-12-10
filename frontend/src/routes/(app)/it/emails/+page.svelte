@@ -4,17 +4,10 @@
 	import { TableBody, TableCell, TableHeader, TableRow } from '$lib/components/ui/table';
 	import TableHead from '$lib/components/ui/table/table-head.svelte';
 	import api from '$lib/utils/server';
-	import { EllipsisVertical, Pen, PlusCircle, Trash } from 'lucide-svelte';
+	import { PlusCircle } from 'lucide-svelte';
 	import DeletePopUp from '$lib/components/complex/DeletePopUp.svelte';
 	import { onMount } from 'svelte';
-	import {
-		DropdownMenu,
-		DropdownMenuContent,
-		DropdownMenuItem,
-		DropdownMenuTrigger
-	} from '$lib/components/ui/dropdown-menu';
 	import { showSuccess } from '$lib/utils/showToast';
-	import { formatDate } from '$lib/utils/functions';
 	import EmailsForm from './EmailsForm.svelte';
 	import PwCell from '$lib/components/ui/table/pw-cell.svelte';
 	import MenuBar from '$lib/components/basic/MenuBar.svelte';

@@ -34,12 +34,13 @@
 		warehouse: 'Inventario',
 		it: 'Sistemas',
 		positions: 'Posiciones',
-		areas: 'Areas'
+		areas: 'Areas',
+		'po-imp': 'PO/Job - Importaciones'
 	};
 </script>
 
-<header class="flex h-[49px] w-full items-center border-b px-5 sticky">
-	<Button class="xl:hidden block" variant="ghost" on:click={() => sidebarOpen.set(true)}>
+<header class="sticky flex h-[49px] w-full items-center border-b px-5">
+	<Button class="block xl:hidden" variant="ghost" on:click={() => sidebarOpen.set(true)}>
 		<PanelRight class="size-4" />
 	</Button>
 	<h3 class="text font-semibold">

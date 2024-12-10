@@ -89,7 +89,7 @@
 <Dialog bind:open={show}>
 	<DialogContent class="max-w-2xl">
 		<DialogHeader>
-			<DialogTitle>Registrar salida</DialogTitle>
+			<DialogTitle>Registrar job o po</DialogTitle>
 		</DialogHeader>
 		<DialogBody>
 			<div class="grid w-full grid-cols-3 gap-4">

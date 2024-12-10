@@ -46,7 +46,7 @@
 
 <Card
 	class={cn(
-		'md: fixed -left-64 bottom-0 top-0 z-40 flex w-64 flex-col rounded-[9px] bg-[#f6f6f5] shadow-none transition-all duration-300 xl:left-0',
+		'md: fixed -left-64 bottom-0 top-0 z-40 flex w-64 flex-col rounded-[9px] bg-[#fbfbfb] shadow-none transition-all duration-300 xl:left-0',
 		$sidebarOpen ? 'left-0' : ''
 	)}
 >
@@ -66,13 +66,12 @@
 				</AccordionTrigger>
 				<AccordionContent>
 					<AccordionOption href="/warehouse/dashboard">Resumenes</AccordionOption>
-					{#if hasAccess('materials')}
-						<AccordionOption href="/warehouse/materials">Materiales</AccordionOption>
-					{/if}
+
+					<AccordionOption href="/warehouse/inventory">Inventario</AccordionOption>
 					{#if hasAccess('inventory')}
-						<AccordionOption href="/warehouse/inventory">Inventario</AccordionOption>
+					<AccordionOption href="/warehouse/po-imp">Po-Imp</AccordionOption>
 						<AccordionOption href="/warehouse/movements">Movimientos</AccordionOption>
-					{/if}
+						{/if}
 				</AccordionContent>
 			</AccordionItem>
 		{/if}

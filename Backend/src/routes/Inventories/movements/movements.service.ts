@@ -3,15 +3,20 @@ import { z } from 'zod';
 import sql from 'src/utils/db';
 import {
   exportSchema,
+  extraMovementSchema,
   idSchema,
+  IEFilterSchema,
   importSchema,
   movementsFilterSchema,
   updateAmountSchema,
+  updateExportSchema,
+  updateImportSchema,
 } from './movements.schema';
+import { updateMaterialAmount } from 'src/utils/functions';
 
 @Injectable()
 export class MovementsService {
-  async getJobMovements(body: z.infer<typeof movementsFilterSchema>) {
+  async getMovements(body: z.infer<typeof movementsFilterSchema>) {
     const movements = await sql`SELECT
       materials.code, materials.description, materials.measurement, materials."clientId", materials."leftoverAmount", materialmovements.active, materialmovements.amount, materialmovements."realAmount", materialmovements.id, materialie.due, materialie.jobpo, materialie.programation, materialie.import
       FROM materialmovements
@@ -25,6 +30,31 @@ export class MovementsService {
       ${body.checked !== null ? sql`materialmovements.active = ${body.checked === 'true'}` : sql`TRUE`}
       ORDER BY materialie.due DESC, materialie.jobpo DESC, materials.code DESC, materialmovements.amount DESC, materialmovements.id DESC
       LIMIT 500`;
+    return movements;
+  }
+
+  async getIE(body: z.infer<typeof IEFilterSchema>) {
+    const movements = await sql`
+      SELECT * 
+      FROM materialie
+      WHERE 
+        ${
+          body.type === 'imports'
+            ? sql`"import" IS NOT NULL`
+            : body.type === 'exports'
+              ? sql`"jobpo" IS NOT NULL`
+              : sql`TRUE`
+        }
+        ${
+          body.code
+            ? sql`AND (
+              "import" ILIKE ${'%' + body.code + '%'} OR 
+              "jobpo" ILIKE ${'%' + body.code + '%'} OR 
+              "programation" ILIKE ${'%' + body.code + '%'}
+            )`
+            : sql``
+        }
+      ORDER BY due DESC, jobpo DESC, import DESC`;
     return movements;
   }
 
@@ -55,13 +85,33 @@ export class MovementsService {
 
   async updateRealAmount(body: z.infer<typeof updateAmountSchema>) {
     const [movement] =
-      await sql`select active, id, amount from materialmovements where id = ${body.id}`;
+      await sql`select "materialId", active, id, amount from materialmovements where id = ${body.id}`;
 
     if (movement.active)
       throw new HttpException('Este movimiento ya se surtio', 400);
 
-    await sql`update materialmovements set "realAmount" = ${movement.amount >= 0 ? Math.abs(parseFloat(body.newAmount)) : -Math.abs(parseFloat(body.newAmount))} where id = ${body.id}`;
+    await sql.begin(async (sql) => {
+      await sql`update materialmovements set "realAmount" = ${movement.amount >= 0 ? Math.abs(parseFloat(body.newAmount)) : -Math.abs(parseFloat(body.newAmount))} where id = ${body.id}`;
+      await updateMaterialAmount(movement.materialId, sql);
+    });
+    return;
+  }
 
+  async updateImport(body: z.infer<typeof updateImportSchema>) {
+    await sql`update materialie set ${sql(body)} where id = ${body.id}`;
+
+    const movements =
+      await sql`select "materialId" from materialmovements where "movementId" = ${body.id}`;
+
+    movements.forEach(
+      async (movement) => await updateMaterialAmount(movement.materialId),
+    );
+
+    return;
+  }
+
+  async updateExport(body: z.infer<typeof updateExportSchema>) {
+    await sql`update materialie set ${sql(body)} where id = ${body.id}`;
     return;
   }
 
@@ -69,27 +119,19 @@ export class MovementsService {
     const [movement] =
       await sql`select active from materialmovements where id = ${body.id}`;
 
-    if (movement.active) {
-      await sql.begin(async (sql) => {
-        const [movement] =
-          await sql`UPDATE materialmovements SET active = false, "activeDate" = NULL WHERE id = ${body.id} returning amount, "realAmount", "materialId"`;
-
-        await sql`update materials set amount = amount - ${parseFloat(movement.realAmount)} where id = ${movement.materialId}`;
-      });
-    } else {
-      await sql.begin(async (sql) => {
-        const [movement] =
-          await sql`UPDATE materialmovements SET active = true, "activeDate" = ${new Date()} WHERE id = ${body.id} returning amount, "realAmount", "materialId"`;
-
-        await sql`update materials set amount = amount + ${parseFloat(movement.realAmount)} where id = ${movement.materialId}`;
-      });
-    }
+    await sql.begin(async (sql) => {
+      const [result] =
+        await sql`UPDATE materialmovements SET active = NOT active, "activeDate" = ${movement.active ? null : new Date()} WHERE id = ${body.id} returning "materialId"`;
+      await updateMaterialAmount(result.materialId, sql);
+    });
 
     return movement.active;
   }
 
   async postInput(body: z.infer<typeof importSchema>) {
-    const materials = body.materials.map((item: any) => item.code);
+    const materials = [
+      ...new Set(body.materials.map((item: any) => item.code)),
+    ];
     await sql.begin(async (sql) => {
       const materialRows =
         await sql`SELECT code FROM materials WHERE code in ${sql(materials)}`;
@@ -101,14 +143,14 @@ export class MovementsService {
           400,
         );
 
-      await sql`insert into materialie (import, due) values (${body.import},${body.due})`;
+      await sql`insert into materialie (import, due, location) values (${body.import},${body.due}, 'At M&M, In transit')`;
 
       for (const material of body.materials) {
         const [movement] =
           await sql`insert into materialmovements ("materialId", "movementId", amount, "realAmount", active, "activeDate") values
-         ((select id from materials where code = ${material.code}),(select id from materialie where import = ${body.import}), ${Math.abs(parseFloat(material.amount))},${Math.abs(parseFloat(material.amount))}, true, ${new Date()}) returning "realAmount", "materialId"`;
+         ((select id from materials where code = ${material.code}),(select id from materialie where import = ${body.import}), ${Math.abs(parseFloat(material.amount))},${Math.abs(parseFloat(material.amount))}, true, ${new Date()}) returning "materialId"`;
 
-        await sql`update materials set amount = amount + ${movement.realAmount} where id = ${movement.materialId}`;
+        await updateMaterialAmount(movement.materialId);
       }
     });
   }
@@ -132,12 +174,52 @@ export class MovementsService {
       for (const material of body.materials) {
         const [movement] =
           await sql`insert into materialmovements ("materialId", "movementId", amount, "realAmount", active, "activeDate") values
-         ((select Id from materials where code = ${material.code}),(select id from materialie where jobpo = ${body.jobpo}),${-Math.abs(parseFloat(material.amount))},${-Math.abs(parseFloat(material.amount))}, ${material.active}, ${material.active ? new Date() : null}) returning "realAmount", "materialId"`;
+         ((select Id from materials where code = ${material.code}),(select id from materialie where jobpo = ${body.jobpo}),${-Math.abs(parseFloat(material.amount))},${-Math.abs(parseFloat(material.amount))}, ${material.active}, ${material.active ? new Date() : null}) returning "materialId"`;
 
         if (material.active)
-          await sql`update materials set amount = amount + ${movement.realAmount} where id = ${movement.materialId}`;
+          await updateMaterialAmount(movement.materialId, sql);
       }
     });
+
+    return;
+  }
+
+  async postReposition(body: z.infer<typeof extraMovementSchema>) {
+    try {
+      await sql`insert into materialmovements ("materialId", "movementId", amount, "realAmount", active, "activeDate", extra) values
+      ((select id from materials where code = ${body.code}),
+      (select id from materialie where jobpo = ${body.job}),
+      ${-Math.abs(parseFloat(body.amount))},
+      ${-Math.abs(parseFloat(body.amount))},
+      true,
+      ${new Date()},
+      true)`;
+    } catch (err) {
+      if (err.column_name === 'materialId')
+        throw new HttpException(`El material ${body.code} no existe.`, 400);
+      if (err.column_name === 'movementId')
+        throw new HttpException(`El job ${body.job} no existe.`, 400);
+    }
+
+    return;
+  }
+
+  async postReturn(body: z.infer<typeof extraMovementSchema>) {
+    try {
+      await sql`insert into materialmovements ("materialId", "movementId", amount, "realAmount", active, "activeDate", extra) values
+      ((select id from materials where code = ${body.code}),
+      (select id from materialie where jobpo = ${body.job}),
+      ${Math.abs(parseFloat(body.amount))},
+      ${Math.abs(parseFloat(body.amount))},
+      true,
+      ${new Date()},
+      true)`;
+    } catch (err) {
+      if (err.column_name === 'materialId')
+        throw new HttpException(`El material ${body.code} no existe.`, 400);
+      if (err.column_name === 'movementId')
+        throw new HttpException(`El job ${body.job} no existe.`, 400);
+    }
 
     return;
   }

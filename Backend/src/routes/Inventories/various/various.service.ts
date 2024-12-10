@@ -1,9 +1,8 @@
 import { File } from '@nest-lab/fastify-multer';
 import { HttpException, Injectable } from '@nestjs/common';
-import * as pdfjsLib from 'pdfjs-dist';
 import sql from 'src/utils/db';
 import exceljs from 'exceljs';
-import { processImport, processJob } from './various.utils';
+import { processImport, processJob, processPDF } from './various.utils';
 
 @Injectable()
 export class VariousService {
@@ -21,24 +20,8 @@ export class VariousService {
 
   async convertJobPdf(pdfFile: File) {
     try {
-      const pdfData = new Uint8Array(pdfFile.buffer);
+      const pdfText = await processPDF(pdfFile);
 
-      const loadingTask = pdfjsLib.getDocument({ data: pdfData });
-      const pdfDocument = await loadingTask.promise;
-      const numPages = pdfDocument.numPages;
-
-      const pageTexts = [];
-
-      for (let pageNum = 1; pageNum <= numPages; pageNum++) {
-        const page = await pdfDocument.getPage(pageNum);
-        const textContent = await page.getTextContent();
-        const pageText = textContent.items
-          .map((item: any) => item.str)
-          .join(' ');
-        pageTexts.push(pageText);
-      }
-
-      const pdfText = pageTexts.join('\n');
       return processJob(pdfText);
     } catch (err) {
       console.log(err);
@@ -48,23 +31,8 @@ export class VariousService {
 
   async convertImportPdf(pdfFile: File) {
     try {
-      const pdfData = new Uint8Array(pdfFile.buffer);
+      const pdfText = await processPDF(pdfFile);
 
-      const loadingTask = pdfjsLib.getDocument({ data: pdfData });
-      const pdfDocument = await loadingTask.promise;
-      const numPages = pdfDocument.numPages;
-
-      const pageTexts = [];
-
-      for (let pageNum = 1; pageNum <= numPages; pageNum++) {
-        const page = await pdfDocument.getPage(pageNum);
-        const textContent = await page.getTextContent();
-        const pageText = textContent.items
-          .map((item: any) => item.str)
-          .join(' ');
-        pageTexts.push(pageText);
-      }
-      const pdfText = pageTexts.join('\n');
       return processImport(pdfText);
     } catch (err) {
       console.log(err);

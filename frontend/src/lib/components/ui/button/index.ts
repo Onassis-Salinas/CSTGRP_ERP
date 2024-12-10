@@ -18,7 +18,7 @@ const buttonVariants = tv({
 			sm: 'h-8 rounded-md px-2',
 			lg: 'h-11 rounded-md px-8',
 			icon: 'h-10 w-10',
-			action: 'h-8 rounded-sm px-2.5'
+			action: 'h-[28px] rounded-sm px-2'
 		}
 	},
 	defaultVariants: {

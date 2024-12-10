@@ -1,15 +1,7 @@
-import {
-  Controller,
-  Post,
-  UploadedFile,
-  UseGuards,
-  UseInterceptors,
-} from '@nestjs/common';
+import { Controller, Get, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FunctionsService } from './functions.service';
 import { ApiTags } from '@nestjs/swagger';
-
 import { AuthGuard } from 'src/interceptors/auth/authorization.guard';
-import { File, FileInterceptor } from '@nest-lab/fastify-multer';
 
 @ApiTags('Functions')
 @Controller('functions')
@@ -17,15 +9,32 @@ import { File, FileInterceptor } from '@nest-lab/fastify-multer';
 export class FunctionsController {
   constructor(private readonly functionsService: FunctionsService) {}
 
-  @Post('importinventory')
-  @UseInterceptors(FileInterceptor('file'))
-  importInventory(@UploadedFile() file: File) {
-    return this.functionsService.importInventory(file);
+  @Get('inv')
+  importInventory() {
+    return this.functionsService.importInventory();
   }
 
-  // @Get('checkall')
-  // @UseInterceptors()
-  // checkAll() {
-  //   return this.functionsService.checkAll();
-  // }
+  @Get('checkall')
+  @UseInterceptors()
+  checkAll() {
+    return this.functionsService.checkAll();
+  }
+
+  @Get('job')
+  @UseInterceptors()
+  processAllJobs() {
+    return this.functionsService.processAllJobs();
+  }
+
+  @Get('imp')
+  @UseInterceptors()
+  processAllImports() {
+    return this.functionsService.processAllImports();
+  }
+
+  @Get('all')
+  @UseInterceptors()
+  doAll() {
+    return this.functionsService.doAll();
+  }
 }

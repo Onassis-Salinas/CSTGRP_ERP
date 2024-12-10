@@ -9,7 +9,7 @@
 </script>
 
 <td
-	class={cn("px-3 whitespace-nowrap py-0 align-middle h-9 border-r", className)}
+	class={cn("px-3 whitespace-nowrap py-0 align-middle h-[35px] border-r", className)}
 	{...$$restProps}
 	on:click
 	on:keydown

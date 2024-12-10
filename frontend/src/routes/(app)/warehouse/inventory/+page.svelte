@@ -5,12 +5,19 @@
 	import { Input } from '$lib/components/ui/input';
 	import { TableBody, TableCell, TableHead, TableHeader, TableRow } from '$lib/components/ui/table';
 	import api from '$lib/utils/server';
-	import { Expand, FileDown } from 'lucide-svelte';
+	import { FileDown, PlusCircle } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 	import MaterialCard from './MaterialCard.svelte';
 	import MenuBar from '$lib/components/basic/MenuBar.svelte';
+	import OptionsCell from '$lib/components/basic/OptionsCell.svelte';
+	import MaterialsForm from './MaterialsForm.svelte';
+	import DeletePopUp from '$lib/components/complex/DeletePopUp.svelte';
+	import { showSuccess } from '$lib/utils/showToast';
 
 	let show = false;
+	let show1 = false;
+	let show2 = false;
+
 	let selectedMaterial: material = {
 		code: '',
 		measurement: '',
@@ -70,6 +77,40 @@
 		document.body.removeChild(link);
 	}
 
+	function editMaterial(i: number) {
+		selectedMaterial = filteredInventory[i];
+		show1 = true;
+	}
+	function createMaterial() {
+		selectedMaterial = {
+			code: '',
+			measurement: '',
+			description: '',
+			minAmount: '',
+			clientId: '',
+			id: ''
+		};
+		show1 = true;
+	}
+	function deleteMaterial(i: number) {
+		selectedMaterial = filteredInventory[i];
+		show2 = true;
+	}
+	async function handleDelete() {
+		await api.delete('/materials', { data: { id: parseInt(selectedMaterial.id) } });
+		selectedMaterial = {
+			code: '',
+			measurement: '',
+			description: '',
+			minAmount: '',
+			clientId: '',
+			id: ''
+		};
+		showSuccess('Material eliminado');
+		await getInventory();
+		show2 = false;
+	}
+
 	onMount(() => {
 		getInventory();
 	});
@@ -77,10 +118,11 @@
 
 <MenuBar>
 	<div>
-		<Input bind:value={filters.code} placeholder="Codigo" />
+		<Input menu bind:value={filters.code} placeholder="Codigo" />
 	</div>
-	<div>
+	<div class="flex gap-2">
 		<Button on:click={exportInventory}><FileDown class="mr-1.5 size-3.5" /> Exportar</Button>
+		<Button on:click={createMaterial}><PlusCircle class="mr-1.5 size-3.5" />Añadir Material</Button>
 	</div>
 </MenuBar>
 
@@ -88,7 +130,7 @@
 	<TableHeader>
 		<TableHead class="fixed left-3 z-30 bg-inherit p-1"></TableHead>
 		<TableHead class="">Codigo</TableHead>
-		<TableHead class="w-full">Descripcion</TableHead>
+		<TableHead class="">Descripcion</TableHead>
 		<TableHead class="">Cantidad sobrante</TableHead>
 		<TableHead class="">Cantidad</TableHead>
 		<TableHead class="">Minimo</TableHead>
@@ -98,14 +140,14 @@
 	<TableBody>
 		{#each filteredInventory as material, i}
 			<TableRow>
-				<TableCell class="sticky left-0 bg-background px-0">
-					<Button on:click={() => viewMaterial(i)} variant="ghost" class="h-full aspect-square hover:bg-muted/50 ">
-						<Expand class="size-3.5" />
-					</Button>
-				</TableCell>
+				<OptionsCell
+					viewFunc={() => viewMaterial(i)}
+					editFunc={() => editMaterial(i)}
+					deleteFunc={() => deleteMaterial(i)}
+				/>
 
-				<TableCell class="whitespace-nowrap">{material.code}</TableCell>
-				<TableCell>{material.description}</TableCell>
+				<TableCell class="">{material.code}</TableCell>
+				<TableCell class="overflow-hidden min-w-24 w-full max-w-1">{material.description}</TableCell>
 				<TableCell>{material.leftoverAmount}</TableCell>
 				<TableCell>{material.amount}</TableCell>
 				<TableCell>{material.minAmount}</TableCell>
@@ -117,3 +159,5 @@
 </CusTable>
 
 <MaterialCard bind:show bind:selectedMaterial />
+<MaterialsForm bind:show={show1} bind:selectedMaterial reload={getInventory} />
+<DeletePopUp bind:show={show2} text="Eliminar material" deleteFunc={handleDelete} />

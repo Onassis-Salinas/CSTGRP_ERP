@@ -13,7 +13,7 @@
 	export let editFunc: (() => void) | undefined = undefined;
 </script>
 
-<TableCell class="bg-background sticky left-0 p-0">
+<TableCell class="bg-background sticky left-0 p-0 border-r-0">
 	<DropdownMenu>
 		<DropdownMenuTrigger
 			class="hover:bg-muted/50 flex aspect-square h-full w-full items-center justify-center"

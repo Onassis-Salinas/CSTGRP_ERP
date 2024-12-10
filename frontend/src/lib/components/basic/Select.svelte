@@ -9,6 +9,7 @@
 	export let value: string | number;
 	export let onSelectedChange = () => {};
 	export let cell = false;
+	export let menu = false;
 
 	$: newItems = items?.map((item) => ({
 		value: item.value,
@@ -30,7 +31,9 @@
 		onSelectedChange();
 	}}
 >
-	<Select.Trigger class={cn(cell ? 'h-full w-full border-none' : '', className)}>
+	<Select.Trigger
+		class={cn(cell ? 'h-full w-full border-none' : '', menu ? 'h-[28px]' : '', className)}
+	>
 		<Select.Value {placeholder}></Select.Value>
 	</Select.Trigger>
 	<Select.Content>

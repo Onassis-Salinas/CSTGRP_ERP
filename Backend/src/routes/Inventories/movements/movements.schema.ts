@@ -1,7 +1,12 @@
-import { z } from 'zod';
+import { date, z } from 'zod';
 
 export const idSchema = z.object({
   id: z.string(),
+});
+
+export const IEFilterSchema = z.object({
+  code: z.string().nullable(),
+  type: z.string().nullable(),
 });
 
 export const movementsFilterSchema = z.object({
@@ -39,4 +44,23 @@ export const exportSchema = z.object({
       active: z.boolean(),
     }),
   ),
+});
+
+export const updateImportSchema = z.object({
+  id: z.string(),
+  import: z.string(),
+  location: z.string(),
+});
+
+export const updateExportSchema = z.object({
+  id: z.string(),
+  due: z.string(),
+  jobpo: z.string(),
+  programation: z.string(),
+});
+
+export const extraMovementSchema = z.object({
+  code: z.string(),
+  amount: z.string(),
+  job: z.string(),
 });

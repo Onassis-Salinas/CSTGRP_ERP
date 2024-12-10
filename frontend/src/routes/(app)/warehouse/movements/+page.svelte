@@ -14,10 +14,17 @@
 	import ImportMovementsForm from './ImportMovementsForm.svelte';
 	import ExportMovementsForm from './ExportMovementsForm.svelte';
 	import MenuBar from '$lib/components/basic/MenuBar.svelte';
+	import { DropdownMenu, DropdownMenuTrigger } from '$lib/components/ui/dropdown-menu';
+	import DropdownMenuContent from '$lib/components/ui/dropdown-menu/dropdown-menu-content.svelte';
+	import DropdownMenuItem from '$lib/components/ui/dropdown-menu/dropdown-menu-item.svelte';
+	import RepositionForm from './RepositionForm.svelte';
+	import ReturnForm from './returnForm.svelte';
 
 	let show = false;
 	let show1 = false;
 	let show2 = false;
+	let show3 = false;
+	let show4 = false;
 	let movementI = 0;
 
 	let clients: any = {};
@@ -85,16 +92,25 @@
 
 <MenuBar>
 	<form class="flex gap-2" on:submit|preventDefault={getMovements} action={''}>
-		<Input bind:value={filters.import} placeholder="Importacion" />
-		<Input bind:value={filters.programation} placeholder="Programacion" />
-		<Input bind:value={filters.jobpo} placeholder="Job" />
-		<Input bind:value={filters.code} placeholder="Material" />
-		<Select items={checkStatus} bind:value={filters.checked} />
+		<Input menu bind:value={filters.import} placeholder="Importacion" />
+		<Input menu bind:value={filters.programation} placeholder="Programacion" />
+		<Input menu bind:value={filters.jobpo} placeholder="Job" />
+		<Input menu bind:value={filters.code} placeholder="Material" />
+		<Select menu items={checkStatus} bind:value={filters.checked} />
 		<Button type="submit"><Search class="mr-1.5 size-3.5" />Buscar</Button>
 	</form>
 	<div class="flex gap-2">
-		<Button on:click={() => (show = true)}><Pen class="mr-1.5 size-3.5" />Entrada</Button>
-		<Button on:click={() => (show1 = true)}><Pen class="mr-1.5 size-3.5" />Salida</Button>
+		<DropdownMenu>
+			<DropdownMenuTrigger>
+				<Button><Pen class="mr-1.5 size-3.5" />Registrar</Button>
+				<DropdownMenuContent>
+					<DropdownMenuItem on:click={() => (show = true)}>Importacion</DropdownMenuItem>
+					<DropdownMenuItem on:click={() => (show1 = true)}>Job - PO</DropdownMenuItem>
+					<DropdownMenuItem on:click={() => (show3 = true)}>Reposicion</DropdownMenuItem>
+					<DropdownMenuItem on:click={() => (show4 = true)}>Retorno</DropdownMenuItem>
+				</DropdownMenuContent>
+			</DropdownMenuTrigger>
+		</DropdownMenu>
 	</div>
 </MenuBar>
 
@@ -119,7 +135,8 @@
 				<TableCell>{movement.programation || ''}</TableCell>
 				<TableCell>{movement.jobpo || ''}</TableCell>
 				<TableCell>{movement.code}</TableCell>
-				<TableCell class="w-full">{movement.description}</TableCell>
+				<TableCell class="w-full min-w-24 max-w-1 overflow-hidden">{movement.description}</TableCell
+				>
 				<TableCell
 					><Badge color={parseFloat(movement.leftoverAmount) >= 0 ? 'primary' : 'red'}
 						>{movement.leftoverAmount}</Badge
@@ -133,6 +150,7 @@
 
 				<TableCell
 					><Input
+						menu
 						class="w-24"
 						type="number"
 						bind:value={movement.realAmount}
@@ -161,3 +179,5 @@
 	action={checkMovement}
 	text={`Seguro que quieres surtir ${movements[movementI]?.realAmount} ${movements[movementI]?.measurement} del material ${movements[movementI]?.code} ?`}
 />
+<RepositionForm bind:show={show3} reload={getMovements} />
+<ReturnForm bind:show={show4} reload={getMovements} />

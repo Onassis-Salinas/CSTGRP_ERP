@@ -14,10 +14,14 @@ import { AuthGuard } from 'src/interceptors/auth/authorization.guard';
 import { ZodPiPe } from 'src/interceptors/validation/validation.pipe';
 import {
   exportSchema,
+  extraMovementSchema,
   idSchema,
+  IEFilterSchema,
   importSchema,
   movementsFilterSchema,
   updateAmountSchema,
+  updateExportSchema,
+  updateImportSchema,
 } from './movements.schema';
 
 @ApiTags('Material Movements')
@@ -31,8 +35,13 @@ export class MovementsController {
   }
 
   @Get()
-  getjobMovements(@Query(new ZodPiPe(movementsFilterSchema)) params) {
-    return this.movementsService.getJobMovements(params);
+  getMovements(@Query(new ZodPiPe(movementsFilterSchema)) params) {
+    return this.movementsService.getMovements(params);
+  }
+
+  @Get('ie')
+  getIE(@Query(new ZodPiPe(IEFilterSchema)) params) {
+    return this.movementsService.getIE(params);
   }
 
   @Post('import')
@@ -45,13 +54,33 @@ export class MovementsController {
     return this.movementsService.postExport(body);
   }
 
+  @Post('reposition')
+  postReposition(@Body(new ZodPiPe(extraMovementSchema)) body) {
+    return this.movementsService.postReposition(body);
+  }
+
+  @Post('return')
+  postReturn(@Body(new ZodPiPe(extraMovementSchema)) body) {
+    return this.movementsService.postReturn(body);
+  }
+
   @Put('activate')
   activateMovement(@Body(new ZodPiPe(idSchema)) body) {
     return this.movementsService.activateMovement(body);
   }
 
-  // @Put('realamount')
-  // udpateRealAmount(@Body(new ZodPiPe(updateAmountSchema)) body) {
-  //   return this.movementsService.updateRealAmount(body);
-  // }
+  @Put('import')
+  updateImport(@Body(new ZodPiPe(updateImportSchema)) body) {
+    return this.movementsService.updateImport(body);
+  }
+
+  @Put('export')
+  updateExport(@Body(new ZodPiPe(updateExportSchema)) body) {
+    return this.movementsService.updateExport(body);
+  }
+
+  @Put('realamount')
+  udpateRealAmount(@Body(new ZodPiPe(updateAmountSchema)) body) {
+    return this.movementsService.updateRealAmount(body);
+  }
 }

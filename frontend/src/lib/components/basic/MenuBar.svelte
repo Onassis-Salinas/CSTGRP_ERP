@@ -8,7 +8,7 @@
 	import { Button } from '../ui/button';
 </script>
 
-<div class="h-[52px] items-center flex justify-between border-b px-5">
+<div class="h-[48px] items-center flex justify-between border-b px-2.5">
 	<div class="flex lg:hidden">
 		<DropdownMenu>
 			<DropdownMenuTrigger>

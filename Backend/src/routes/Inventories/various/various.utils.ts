@@ -1,33 +1,65 @@
 import { parseNumber } from 'src/utils/parseData';
+import { File } from '@nest-lab/fastify-multer';
+import * as pdfjsLib from 'pdfjs-dist';
+
+export async function processPDF(pdfFile: File) {
+  const pdfData = new Uint8Array(pdfFile.buffer);
+
+  const loadingTask = pdfjsLib.getDocument({ data: pdfData });
+  const pdfDocument = await loadingTask.promise;
+  const numPages = pdfDocument.numPages;
+
+  const pageTexts = [];
+
+  for (let pageNum = 1; pageNum <= numPages; pageNum++) {
+    const page = await pdfDocument.getPage(pageNum);
+    const textContent = await page.getTextContent();
+    const pageText = textContent.items.map((item: any) => item.str).join(' ');
+    pageTexts.push(pageText);
+  }
+
+  return pageTexts.join('\n');
+}
 
 export function processImport(text: string) {
   const linesArray: string[] = text.split(/\s{3,}| {2}/);
-
+  console.log(linesArray);
   const importNum =
     linesArray[
       linesArray.findIndex((line: string) => line.includes('Tracking :')) + 1
     ];
-  const dateParts =
-    linesArray[linesArray.findIndex((line: string) => line === ':') + 1].split(
-      '/',
-    );
+  let dateParts =
+    linesArray[
+      linesArray.findIndex((line: string) => line === '(mm/dd/yyyy) :') + 1
+    ].split('/');
+
+  if (dateParts.length !== 3) {
+    dateParts =
+      linesArray[
+        linesArray.findIndex((line: string) => line === ':') + 1
+      ].split('/');
+  }
   const dueDate = [dateParts[2], dateParts[0], dateParts[1]].join('-');
 
   const materials: Array<object> = [];
   linesArray.forEach((element: string, i: number) => {
     if (element.includes('•')) {
-      const code = linesArray[i + 1].replaceAll(' ', '');
+      let code = linesArray[i + 1].replaceAll(' ', '');
+      if (code.endsWith('-CA')) {
+        code += linesArray[i + 2].replaceAll(' ', '');
+      }
+      if (code.substring(0, 5) !== 'CSI-P')
+        // const excludedValues = ['THS', 'TTF', 'ALS'];
+        // if (excludedValues.some((substring) => code.includes(substring))) return;
 
-      // const excludedValues = ['THS', 'TTF', 'ALS'];
-      // if (excludedValues.some((substring) => code.includes(substring))) return;
-
-      if (code.substring(0, 3) !== 'CSI') return;
-
+        return;
       if (code.includes('ZEN')) return;
       if (code.includes('EAL-')) return;
       if (code.includes('ZP-')) return;
+      if (code.length === 13 && code[12] === 'F') return;
+      if (code.length === 15 && code[14] === 'M') return;
 
-      let amount: string;
+      let amount: number;
       for (let j = i; j < i + 20; j++) {
         if (
           !isNaN(parseNumber(linesArray[j].split(' ')[0])) &&
@@ -35,16 +67,19 @@ export function processImport(text: string) {
           linesArray[j].split(' ')[1] &&
           linesArray[j].split(' ')[1] !== '•'
         ) {
-          console.log(linesArray[j]);
-          amount = linesArray[j].split(' ')[0].replaceAll(',', '');
-          materials.push({ code, amount });
+          amount = parseFloat(linesArray[j].split(' ')[0].replaceAll(',', ''));
+          if (code.length === 13 && code[12] === 'M') {
+            code = code.slice(0, -1);
+            amount = amount * 2;
+          }
+          materials.push({ code, amount: amount.toString() });
           break;
         }
       }
     }
   });
 
-  if (materials.length === 0) throw new Error('');
+  if (materials.length === 0) throw new Error('Sin materiales');
 
   return { dueDate, importNum, materials };
 }
@@ -96,7 +131,6 @@ export function processJob(text: string) {
             !isNaN(parseNumber(linesArray[i + j])) &&
             !/\d/.test(linesArray[i + j + 1])
           ) {
-            console.log(linesArray[i + j], linesArray[i + j + 1]);
             material.amount = linesArray[i + j].replace(/,/g, '');
             break;
           }

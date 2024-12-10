@@ -1,3 +1,5 @@
+import sql from './db';
+
 export function getWeekDays(dateString: any) {
   if (dateString instanceof Date) {
     dateString = dateString.toISOString().split('T')[0];
@@ -51,4 +53,22 @@ export function formatDate(strDate?: string) {
   const fecha = partes[0].split('-');
   const fechaFormateada = fecha[2] + '/' + fecha[1] + '/' + fecha[0];
   return fechaFormateada;
+}
+
+export async function updateMaterialAmount(id, dbInstance?: any) {
+  if (!dbInstance) dbInstance = sql;
+
+  await dbInstance`
+    UPDATE materials
+    SET amount = (
+      SELECT COALESCE(SUM(materialmovements."realAmount"), 0) AS balance
+      FROM materialmovements 
+        JOIN materials ON materials.id = materialmovements."materialId"
+        JOIN materialie ON materialie.id = materialmovements."movementId"
+      WHERE materialmovements.active = true
+        AND (materialie.location IS NULL OR materialie.location = 'At CST, Qtys verified')
+        AND materials.id = ${id}
+    )
+    WHERE id = ${id} 
+    returning amount`;
 }

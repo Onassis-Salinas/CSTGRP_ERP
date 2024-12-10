@@ -2,17 +2,33 @@ import { Injectable } from '@nestjs/common';
 
 import sql from 'src/utils/db';
 import dotenv from 'dotenv';
-import { File } from '@nest-lab/fastify-multer';
 import ExcelJS from 'exceljs';
+import * as fs from 'fs';
+import * as path from 'path';
+import {
+  processImport,
+  processJob,
+  processPDF,
+} from 'src/routes/Inventories/various/various.utils';
+import { File } from '@nest-lab/fastify-multer';
+import { updateMaterialAmount } from 'src/utils/functions';
 
 dotenv.config();
 
 @Injectable()
 export class FunctionsService {
-  async importInventory(file: File) {
-    if (!file.buffer) return 'sin archivo';
+  async importInventory() {
+    // Ruta del archivo
+    const filePath = path.resolve(
+      '/home/onassis/Downloads/CSI PROGRAMACIONES/CSTECH_CycleCount_May_2024 (inventario inicial del cliente).xlsx',
+    );
+
+    // Leer el archivo desde el sistema
+    const fileBuffer = fs.readFileSync(filePath);
+
+    // Cargar el archivo en ExcelJS
     const wb = new ExcelJS.Workbook();
-    await wb.xlsx.load(file.buffer);
+    await wb.xlsx.load(fileBuffer);
 
     const rows: any[] = wb
       .getWorksheet(1)
@@ -29,7 +45,8 @@ export class FunctionsService {
       .filter((item) => item.code)
       .map((e) => ({ ...e, code: 'CSI-' + e.code }));
 
-    await sql.begin(async () => {
+    // Ejecutar transacciones en SQL
+    await sql.begin(async (sql) => {
       await sql`delete from materialmovements`;
       await sql`delete from materials`;
       await sql`delete from materialie`;
@@ -53,16 +70,7 @@ export class FunctionsService {
       JOIN materialie ON materialie.id = materialmovements."movementId"
       WHERE materialie.jobpo IS NOT NULL`;
 
-    console.log(movements);
-
     for (const body of movements) {
-      const [movement] = await sql`
-        SELECT active
-        FROM materialmovements
-        WHERE id = ${body.id}`;
-
-      if (movement.active) continue;
-
       await sql.begin(async (sql) => {
         const [movement] = await sql`
           UPDATE materialmovements
@@ -70,10 +78,7 @@ export class FunctionsService {
           WHERE id = ${body.id}
           RETURNING amount, "realAmount", "materialId"`;
 
-        await sql`
-          UPDATE materials
-          SET amount = amount + ${parseFloat(movement.realAmount)}
-          WHERE id = ${movement.materialId}`;
+        updateMaterialAmount(movement.materialId, sql);
       });
     }
 
@@ -84,5 +89,109 @@ export class FunctionsService {
       WHERE materialmovements.active <> true`;
 
     return newMovements;
+  }
+
+  async processAllJobs() {
+    const directory =
+      '/home/onassis/Downloads/CSI PROGRAMACIONES/Importaciones/exports/';
+    const files = fs.readdirSync(directory);
+
+    for (const file of files) {
+      const filePath = path.join(directory, file);
+      const fileBuffer = fs.readFileSync(filePath);
+
+      const pdfText = await processPDF({ buffer: fileBuffer } as File);
+
+      const body = processJob(pdfText);
+
+      ///
+      const materials = body.materials.map((item: any) => item.code);
+
+      const materialRows =
+        await sql`SELECT code FROM materials WHERE code in ${sql(materials)}`;
+
+      if (materialRows.length !== materials.length) {
+        for (const material of body.materials) {
+          const [materialExists] =
+            await sql`select id from materials where code = ${material.code}`;
+          if (!materialExists)
+            await sql`insert into materials (code, description, measurement, amount, "minAmount", "clientId") values (${material.code}, '', 'PZ', 0, 0, 3)`;
+        }
+      }
+
+      await sql.begin(async (sql) => {
+        await sql`Select id from materials where code in (${materials})`;
+
+        await sql`Insert into materialie (jobpo, programation, due) values (${body.jobpo}, ${1}, ${body.dueDate})`;
+
+        for (const material of body.materials) {
+          const [movement] =
+            await sql`insert into materialmovements ("materialId", "movementId", amount, "realAmount", active, "activeDate") values
+             ((select Id from materials where code = ${material.code}),(select id from materialie where jobpo = ${body.jobpo}),${-Math.abs(parseFloat(material.amount))},${-Math.abs(parseFloat(material.amount))}, false, ${material.active ? new Date() : null}) returning "materialId"`;
+
+          if (material.active)
+            await updateMaterialAmount(movement.materialId, sql);
+        }
+      });
+    }
+  }
+
+  async processAllImports() {
+    const directory =
+      '/home/onassis/Downloads/CSI PROGRAMACIONES/Importaciones/rvimports/';
+    const files = fs.readdirSync(directory);
+
+    for (const file of files) {
+      const filePath = path.join(directory, file);
+      const fileBuffer = fs.readFileSync(filePath);
+
+      const pdfText = await processPDF({ buffer: fileBuffer } as File);
+
+      let body: {
+        dueDate: string;
+        importNum: string;
+        materials: any[];
+      };
+      try {
+        body = processImport(pdfText);
+      } catch (err) {
+        console.log('error: ' + file);
+        continue;
+      }
+
+      const materials = [
+        ...new Set(body.materials.map((item: any) => item.code)),
+      ];
+
+      await sql.begin(async (sql) => {
+        const materialRows =
+          await sql`SELECT code FROM materials WHERE code in ${sql(materials)}`;
+        if (materialRows.length !== materials.length) {
+          for (const material of body.materials) {
+            const [materialExists] =
+              await sql`select id from materials where code = ${material.code}`;
+            if (!materialExists)
+              await sql`insert into materials (code, description, measurement, amount, "minAmount", "clientId") values (${material.code}, '', 'PZ', 0, 0, 3)`;
+          }
+        }
+
+        await sql`insert into materialie (import, due, location) values (${body.importNum}, ${body.dueDate}, 'At CST, Qtys verified')`;
+
+        for (const material of body.materials) {
+          const [movement] =
+            await sql`insert into materialmovements ("materialId", "movementId", amount, "realAmount", active, "activeDate") values
+           ((select id from materials where code = ${material.code}),(select id from materialie where import = ${body.importNum}), ${Math.abs(parseFloat(material.amount))},${Math.abs(parseFloat(material.amount))}, true, ${new Date()}) returning "materialId"`;
+
+          await updateMaterialAmount(movement.materialId, sql);
+        }
+      });
+    }
+  }
+
+  async doAll() {
+    await this.importInventory();
+    await this.processAllJobs();
+    await this.checkAll();
+    await this.processAllImports();
   }
 }

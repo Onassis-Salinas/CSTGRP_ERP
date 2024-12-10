@@ -37,7 +37,7 @@
 			'Octubre',
 			'Noviembre',
 			'Diciembre'
-		][parseInt(selectedDate.split('-')[1])];
+		][parseInt(selectedDate.split('-')[1]) - 1];
 
 	async function fetchConstData() {
 		warnings = (await api.get('/inventorystats/stockwarnings')).data;
@@ -50,11 +50,11 @@
 </script>
 
 <MenuBar>
-	<Input class="w-fit shadow-sm" type="date" bind:value={selectedDate}></Input>
-	<Input class="h-fit w-fit font-semibold" value={textDate}></Input>
+	<Input menu class="w-fit shadow-sm" type="date" bind:value={selectedDate}></Input>
+	<Input menu class="w-fit font-semibold" value={textDate}></Input>
 </MenuBar>
 
-<div class="grid grid-cols-3 place-items-stretch gap-4 p-4 flex-1 overflow-auto">
+<div class="grid flex-1 grid-cols-3 place-items-stretch gap-4 overflow-auto p-4">
 	<Card class="col-span-2 flex h-[30rem] w-full max-w-full flex-col">
 		<CardHeader>
 			<CardTitle>En minimos</CardTitle>

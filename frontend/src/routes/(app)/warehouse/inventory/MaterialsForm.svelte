@@ -91,6 +91,9 @@
 					<Label name="Descripcion" class="col-span-2">
 						<Input name="text" bind:value={formData.description} />
 					</Label>
+					<Label name="Ubicacion" class="col-span-2">
+						<Input name="text" bind:value={formData.location} />
+					</Label>
 					<Label name="Medida">
 						<Select items={measurements} bind:value={formData.measurement} />
 					</Label>

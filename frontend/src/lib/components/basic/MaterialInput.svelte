@@ -5,6 +5,7 @@
 
 	export let value: string | undefined;
 	export let measurement = '';
+	export let normal = false;
 
 	$: if (value) getMeasurement();
 
@@ -16,7 +17,7 @@
 <Input
 	bind:value
 	class={cn(
-		'rounded-none border-none',
+		normal ? '' : 'rounded-none border-none',
 		measurement ? '' : 'bg-destructive text-destructive-foreground'
 	)}
 />
