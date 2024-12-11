@@ -62,5 +62,5 @@ export const updateExportSchema = z.object({
 export const extraMovementSchema = z.object({
   code: z.string(),
   amount: z.string(),
-  job: z.string(),
+  job: z.string().optional().nullable(),
 });

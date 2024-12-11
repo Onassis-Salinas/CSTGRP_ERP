@@ -133,7 +133,9 @@
 			<TableRow>
 				<TableCell>{movement.import || ''}</TableCell>
 				<TableCell>{movement.programation || ''}</TableCell>
-				<TableCell>{movement.jobpo || ''}</TableCell>
+				<TableCell
+					>{(movement.jobpo || '') + (movement.extra ? ' -R' : '')}</TableCell
+				>
 				<TableCell>{movement.code}</TableCell>
 				<TableCell class="w-full min-w-24 max-w-1 overflow-hidden">{movement.description}</TableCell
 				>

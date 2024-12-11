@@ -18,7 +18,7 @@ import { updateMaterialAmount } from 'src/utils/functions';
 export class MovementsService {
   async getMovements(body: z.infer<typeof movementsFilterSchema>) {
     const movements = await sql`SELECT
-      materials.code, materials.description, materials.measurement, materials."clientId", materials."leftoverAmount", materialmovements.active, materialmovements.amount, materialmovements."realAmount", materialmovements.id, materialie.due, materialie.jobpo, materialie.programation, materialie.import
+      materials.code, materials.description, materials.measurement, materials."clientId", materials."leftoverAmount", materialmovements.active, materialmovements.amount, materialmovements."realAmount", materialmovements.id, materialie.due, materialie.jobpo, materialie.programation, materialie.import, materialmovements.extra
       FROM materialmovements
       JOIN materials on materials.id = materialmovements."materialId"
       JOIN materialie on materialie.id = materialmovements."movementId"
@@ -194,14 +194,31 @@ export class MovementsService {
 
   async postReposition(body: z.infer<typeof extraMovementSchema>) {
     try {
-      await sql`insert into materialmovements ("materialId", "movementId", amount, "realAmount", active, "activeDate", extra) values
+      const [material] =
+        await sql`select "leftoverAmount" from materials where code = ${body.code}`;
+
+      let materialFromInventory =
+        -Math.abs(parseFloat(body.amount)) +
+        parseFloat(material.leftoverAmount);
+      if (materialFromInventory > 0) materialFromInventory = 0;
+
+      const materialFromLeftover =
+        -Math.abs(parseFloat(body.amount)) - materialFromInventory;
+
+      await sql.begin(async (sql) => {
+        await sql`insert into materialmovements ("materialId", "movementId", amount, "realAmount", active, "activeDate", extra) values
       ((select id from materials where code = ${body.code}),
       (select id from materialie where jobpo = ${body.job}),
       ${-Math.abs(parseFloat(body.amount))},
-      ${-Math.abs(parseFloat(body.amount))},
+      ${materialFromInventory},
       true,
       ${new Date()},
       true)`;
+
+        await sql`update materials set
+     "leftoverAmount" = "leftoverAmount" + ${materialFromLeftover}
+     where code = ${body.code}`;
+      });
     } catch (err) {
       if (err.column_name === 'materialId')
         throw new HttpException(`El material ${body.code} no existe.`, 400);
@@ -214,7 +231,8 @@ export class MovementsService {
 
   async postReturn(body: z.infer<typeof extraMovementSchema>) {
     try {
-      await sql`insert into materialmovements ("materialId", "movementId", amount, "realAmount", active, "activeDate", extra) values
+      if (body.job) {
+        await sql`insert into materialmovements ("materialId", "movementId", amount, "realAmount", active, "activeDate", extra) values
       ((select id from materials where code = ${body.code}),
       (select id from materialie where jobpo = ${body.job}),
       ${Math.abs(parseFloat(body.amount))},
@@ -222,11 +240,37 @@ export class MovementsService {
       true,
       ${new Date()},
       true)`;
+      } else {
+        const [material] =
+          await sql`select "leftoverAmount" from materials where code = ${body.code}`;
+
+        if (material.leftoverAmount < parseFloat(body.amount))
+          throw new HttpException(
+            `El material ${body.code} no tiene suficiente material sobrante`,
+            400,
+          );
+
+        sql.begin(async (sql) => {
+          await sql`insert into materialmovements ("materialId", "movementId", amount, "realAmount", active, "activeDate", extra) values
+        ((select id from materials where code = ${body.code}),
+        (select id from materialie where import = 'Retorno'),
+        ${Math.abs(parseFloat(body.amount))},
+        ${Math.abs(parseFloat(body.amount))},
+        true,
+        ${new Date()},
+        true)`;
+
+          await sql`update materials set
+         "leftoverAmount" = "leftoverAmount" - ${Math.abs(parseFloat(body.amount))}
+         where code = ${body.code}`;
+        });
+      }
     } catch (err) {
       if (err.column_name === 'materialId')
         throw new HttpException(`El material ${body.code} no existe.`, 400);
       if (err.column_name === 'movementId')
         throw new HttpException(`El job ${body.job} no existe.`, 400);
+      throw err;
     }
 
     return;
