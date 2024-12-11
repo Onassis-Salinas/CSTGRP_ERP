@@ -125,6 +125,14 @@ export class MovementsService {
       await updateMaterialAmount(result.materialId, sql);
     });
 
+    const [updatedMovement] =
+      await sql`select * from materialmovements where id = ${body.id}`;
+
+    console.log(updatedMovement);
+    await sql`update materials set
+     "leftoverAmount" = "leftoverAmount" + ${updatedMovement.active ? parseFloat(updatedMovement.amount) - parseFloat(updatedMovement.realAmount) : -parseFloat(updatedMovement.amount) + parseFloat(updatedMovement.realAmount)}
+     where id = ${updatedMovement.materialId}`;
+
     return movement.active;
   }
 
