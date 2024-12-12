@@ -121,7 +121,7 @@
 		<TableHead class="">Job-PO</TableHead>
 		<TableHead class="">Codigo</TableHead>
 		<TableHead class="">Descripcion</TableHead>
-		<TableHead class="">Cantidad sobrante</TableHead>
+		<TableHead class="">Sobrante</TableHead>
 		<TableHead class="">Cantidad</TableHead>
 		<TableHead class="">Cantidad Real</TableHead>
 		<TableHead class="">Medida</TableHead>

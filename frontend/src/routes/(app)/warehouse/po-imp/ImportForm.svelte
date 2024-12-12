@@ -33,7 +33,6 @@
 		formData.id = selectedMovement.id;
 	}
 
-
 	async function handleSubmit() {
 		if (selectedMovement.id) {
 			await api.put('materialmovements/import', formData);
@@ -52,7 +51,7 @@
 </script>
 
 <Dialog bind:open={show}>
-	<DialogContent>
+	<DialogContent class="max-w-lg">
 		<DialogHeader>
 			<DialogTitle>Editar importacion</DialogTitle>
 		</DialogHeader>

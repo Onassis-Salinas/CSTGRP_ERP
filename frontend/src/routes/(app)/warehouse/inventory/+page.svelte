@@ -131,7 +131,8 @@
 		<TableHead class="fixed left-3 z-30 bg-inherit p-1"></TableHead>
 		<TableHead class="">Codigo</TableHead>
 		<TableHead class="">Descripcion</TableHead>
-		<TableHead class="">Cantidad sobrante</TableHead>
+		<TableHead class="">Ubicacion</TableHead>
+		<TableHead class="">Sobrante</TableHead>
 		<TableHead class="">Cantidad</TableHead>
 		<TableHead class="">Minimo</TableHead>
 		<TableHead class="">Medida</TableHead>
@@ -149,9 +150,14 @@
 				<TableCell class="">{material.code}</TableCell>
 				<TableCell class="w-full min-w-24 max-w-1 overflow-hidden">{material.description}</TableCell
 				>
-				<TableCell>{material.leftoverAmount}</TableCell>
-				<TableCell>{material.amount}</TableCell>
-				<TableCell>{material.minAmount}</TableCell>
+				<TableCell class="">{material.location || ''}</TableCell>
+				<TableCell><Badge color="gray">{material.leftoverAmount}</Badge></TableCell>
+				<TableCell
+					><Badge color={material.amount < material.minAmount ? 'yellow' : 'green'}
+						>{material.amount}</Badge
+					></TableCell
+				>
+				<TableCell><Badge color="gray">{material.minAmount}</Badge></TableCell>
 				<TableCell>{material.measurement}</TableCell>
 				<TableCell>
 					{#if clients[material.clientId]}

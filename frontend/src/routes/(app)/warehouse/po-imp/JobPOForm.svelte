@@ -44,7 +44,7 @@
 </script>
 
 <Dialog bind:open={show}>
-	<DialogContent>
+	<DialogContent class="max-w-lg">
 		<DialogHeader>
 			<DialogTitle>
 				Editar PO-Job
