@@ -29,7 +29,7 @@ export class MovementsService {
       ${body.code ? sql`materials.code LIKE ${'%' + body.code + '%'}` : sql`TRUE`} AND
       ${body.checked !== null ? sql`materialmovements.active = ${body.checked === 'true'}` : sql`TRUE`}
       ORDER BY materialie.due DESC, materialie.jobpo DESC, materials.code DESC, materialmovements.amount DESC, materialmovements.id DESC
-      LIMIT 500`;
+      LIMIT 150`;
     return movements;
   }
 
@@ -65,6 +65,7 @@ export class MovementsService {
         materialie.jobpo,
         materialie.import,
         materialmovements.amount,
+        materialmovements.extra,
         materialmovements."realAmount",
         materialmovements.active,
         SUM(materialmovements."realAmount") OVER (ORDER BY materialie.due ASC, materialmovements.id ASC) AS balance
@@ -79,7 +80,61 @@ export class MovementsService {
         ORDER BY
             materialie.due DESC,
             materialmovements.id DESC
-        LIMIT 500`;
+        LIMIT 200`;
+    return movements;
+  }
+
+  async getMaterialComparison(body: z.infer<typeof idSchema>) {
+    const movements = await sql`SELECT
+    materialie.Due,
+    materialie.programation,
+    materialie.jobpo,
+    materialmovements.amount,
+    (
+        SELECT SUM(amount) 
+        FROM materialmovements AS m
+        WHERE m."materialId" = materialmovements."materialId" AND m."movementId" = materialmovements."movementId"
+    ) AS "realAmount"
+        FROM
+        materialmovements
+    JOIN
+        materials ON materials.id = materialmovements."materialId"
+    JOIN
+        materialie ON materialie.id = materialmovements."movementId"
+    WHERE
+        materials.id = ${body.id} AND materialmovements.active IS true
+        AND materialie.jobpo IS NOT NULL
+        AND materialmovements.extra = false -- Filtrar solo los movimientos con extra = false
+    ORDER BY
+        materialie.due DESC,
+        materialmovements.id DESC
+    LIMIT 300;`;
+
+    return movements;
+  }
+
+  async getJobComparison(body: z.infer<typeof idSchema>) {
+    const movements = await sql`SELECT
+    materials.code,
+    materials.measurement,
+    materialmovements.amount,
+    (
+        SELECT SUM(amount) 
+        FROM materialmovements AS m
+        WHERE m."materialId" = materialmovements."materialId" AND m."movementId" = materialmovements."movementId"
+    ) AS "realAmount"
+        FROM
+        materialmovements
+    JOIN
+        materials ON materials.id = materialmovements."materialId"
+    JOIN
+        materialie ON materialie.id = materialmovements."movementId"
+    WHERE
+        materialmovements."movementId" = ${body.id} AND materialmovements.active IS true
+        AND materialmovements.extra = false
+    ORDER BY
+        materialmovements.id DESC;`;
+
     return movements;
   }
 

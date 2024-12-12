@@ -34,6 +34,16 @@ export class MovementsController {
     return this.movementsService.getMaterialMovements(params);
   }
 
+  @Get('material/comparison/:id')
+  getMaterialComparison(@Param(new ZodPiPe(idSchema)) params) {
+    return this.movementsService.getMaterialComparison(params);
+  }
+
+  @Get('job/comparison/:id')
+  getJobComparison(@Param(new ZodPiPe(idSchema)) params) {
+    return this.movementsService.getJobComparison(params);
+  }
+
   @Get()
   getMovements(@Query(new ZodPiPe(movementsFilterSchema)) params) {
     return this.movementsService.getMovements(params);

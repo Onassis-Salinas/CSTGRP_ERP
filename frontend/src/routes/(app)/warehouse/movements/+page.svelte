@@ -43,7 +43,7 @@
 		{ value: 'false', name: 'No surtido' }
 	];
 
-	let movements: movement[] = [];
+	let movements: any[] = [];
 
 	async function getMovements() {
 		const result = (await api.get(`/materialmovements`, { params: filters })).data;

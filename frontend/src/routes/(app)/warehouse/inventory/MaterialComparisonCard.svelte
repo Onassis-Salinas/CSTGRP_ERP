@@ -25,7 +25,8 @@
 	let movements: any[] = [];
 
 	async function fetchData() {
-		movements = (await api.get('/materialmovements/material/' + selectedMaterial.id)).data;
+		movements = (await api.get('/materialmovements/material/comparison/' + selectedMaterial.id))
+			.data;
 	}
 	$: if (selectedMaterial.id) {
 		fetchData();
@@ -40,39 +41,30 @@
 			</DialogTitle>
 		</DialogHeader>
 		<DialogBody class="h-full max-w-full">
-			<div class="mb-4">Ubicacion: {selectedMaterial.location}</div>
-			<img src={getImage(selectedMaterial.image)} alt="" class="w-full" />
-
 			<Table>
 				<TableHeader class="sticky top-0 bg-gray-100">
 					<TableHead class="border-l">job</TableHead>
 					<TableHead>Programacion</TableHead>
-					<TableHead>Importacion</TableHead>
 					<TableHead>Cantidad Job</TableHead>
 					<TableHead>Cantidad real</TableHead>
 					<TableHead>Fecha</TableHead>
-					<TableHead>Balance</TableHead>
 				</TableHeader>
 				<TableBody>
 					{#each movements as row}
 						<TableRow>
-							<TableCell class="border-l">{(row.jobpo || '') + (row.extra ? ' -R' : '')}</TableCell>
-							<TableCell>{row.programation || ''}</TableCell>
-							<TableCell>{row.import || ''}</TableCell>
+							<TableCell class="border-l">{row.jobpo}</TableCell>
+							<TableCell>{row.programation}</TableCell>
+							<TableCell><Badge color={'gray'}>{row.amount}</Badge></TableCell>
 							<TableCell
-								><Badge color={parseInt(row.amount) > 0 ? 'green' : 'red'}>{row.amount}</Badge
-								></TableCell
-							>
-							<TableCell
-								><Badge color={parseInt(row.realAmount) > 0 ? 'green' : 'red'}
-									>{row.realAmount}</Badge
+								><Badge
+									color={row.realAmount === row.amount
+										? 'gray'
+										: parseFloat(row.realAmount) > parseFloat(row.amount)
+											? 'green'
+											: 'red'}>{row.realAmount}</Badge
 								></TableCell
 							>
 							<TableCell>{formatDate(row.due)}</TableCell>
-							<TableCell
-								><Badge color={parseInt(row.balance) > 0 ? 'green' : 'red'}>{row.balance}</Badge
-								></TableCell
-							>
 						</TableRow>
 					{/each}
 				</TableBody>

@@ -16,8 +16,8 @@
 
 	export let show = false;
 	export let reload: any;
-	export let selectedMaterial: material;
-	let formData: material;
+	export let selectedMaterial: any;
+	let formData: any;
 	let files: FileList | undefined;
 
 	$: if (show || true) setFormData();
@@ -75,7 +75,6 @@
 			</DialogTitle>
 		</DialogHeader>
 		<DialogBody>
-
 			<img src={selectedMaterial.image} alt="" class="w-full" />
 			<form on:submit|preventDefault={handleSubmit}>
 				<div class="grid w-full grid-cols-2 gap-4">

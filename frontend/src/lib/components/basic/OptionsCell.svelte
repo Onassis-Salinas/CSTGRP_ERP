@@ -11,9 +11,10 @@
 	export let viewFunc: (() => void) | undefined = undefined;
 	export let deleteFunc: (() => void) | undefined = undefined;
 	export let editFunc: (() => void) | undefined = undefined;
+	export let extraButtons: { fn: () => void; name: string; icon: any }[] = [];
 </script>
 
-<TableCell class="bg-background sticky left-0 p-0 border-r-0">
+<TableCell class="bg-background sticky left-0 border-r-0 p-0">
 	<DropdownMenu>
 		<DropdownMenuTrigger
 			class="hover:bg-muted/50 flex aspect-square h-full w-full items-center justify-center"
@@ -22,6 +23,13 @@
 		</DropdownMenuTrigger>
 
 		<DropdownMenuContent>
+			{#each extraButtons as button}
+				<DropdownMenuItem on:click={button.fn}>
+					<svelte:component this={button.icon} class="size-3.5" />
+					{button.name}
+				</DropdownMenuItem>
+			{/each}
+
 			{#if viewFunc}
 				<DropdownMenuItem on:click={viewFunc}>
 					<Eye class="size-3.5" /> Ver

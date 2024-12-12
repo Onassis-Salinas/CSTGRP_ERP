@@ -5,7 +5,7 @@
 	import { Input } from '$lib/components/ui/input';
 	import { TableBody, TableCell, TableHead, TableHeader, TableRow } from '$lib/components/ui/table';
 	import api from '$lib/utils/server';
-	import { FileDown, PlusCircle } from 'lucide-svelte';
+	import { FileDown, PlusCircle, Ruler } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 	import MaterialCard from './MaterialCard.svelte';
 	import MenuBar from '$lib/components/basic/MenuBar.svelte';
@@ -13,12 +13,14 @@
 	import MaterialsForm from './MaterialsForm.svelte';
 	import DeletePopUp from '$lib/components/complex/DeletePopUp.svelte';
 	import { showSuccess } from '$lib/utils/showToast';
+	import MaterialComparisonCard from './MaterialComparisonCard.svelte';
 
 	let show = false;
 	let show1 = false;
 	let show2 = false;
+	let show3 = false;
 
-	let selectedMaterial: material = {
+	let selectedMaterial: any = {
 		code: '',
 		measurement: '',
 		description: '',
@@ -27,7 +29,7 @@
 		id: '',
 		leftoverAmount: ''
 	};
-	let inventory: material[] = [];
+	let inventory: any[] = [];
 	let clients: any = {};
 
 	let filters = {
@@ -51,12 +53,6 @@
 		});
 	}
 
-	function viewMaterial(i: number) {
-		console.log('s');
-		selectedMaterial = filteredInventory[i];
-		show = true;
-	}
-
 	async function exportInventory() {
 		const response = await api.get('/inventory/export', {
 			responseType: 'arraybuffer'
@@ -77,6 +73,16 @@
 		document.body.removeChild(link);
 	}
 
+	function viewMaterial(i: number) {
+		selectedMaterial = filteredInventory[i];
+		show = true;
+	}
+
+	function viewComparison(i: number) {
+		selectedMaterial = filteredInventory[i];
+		show3 = true;
+	}
+
 	function editMaterial(i: number) {
 		selectedMaterial = filteredInventory[i];
 		show1 = true;
@@ -92,10 +98,12 @@
 		};
 		show1 = true;
 	}
+
 	function deleteMaterial(i: number) {
 		selectedMaterial = filteredInventory[i];
 		show2 = true;
 	}
+
 	async function handleDelete() {
 		await api.delete('/materials', { data: { id: parseInt(selectedMaterial.id) } });
 		selectedMaterial = {
@@ -145,7 +153,15 @@
 					viewFunc={() => viewMaterial(i)}
 					editFunc={() => editMaterial(i)}
 					deleteFunc={() => deleteMaterial(i)}
+					extraButtons={[
+						{
+							fn: () => viewComparison(i),
+							name: 'Comparar',
+							icon: Ruler
+						}
+					]}
 				/>
+				
 
 				<TableCell class="">{material.code}</TableCell>
 				<TableCell class="w-full min-w-24 max-w-1 overflow-hidden">{material.description}</TableCell
@@ -172,5 +188,6 @@
 </CusTable>
 
 <MaterialCard bind:show bind:selectedMaterial />
+<MaterialComparisonCard bind:show={show3} bind:selectedMaterial />
 <MaterialsForm bind:show={show1} bind:selectedMaterial reload={getInventory} />
 <DeletePopUp bind:show={show2} text="Eliminar material" deleteFunc={handleDelete} />

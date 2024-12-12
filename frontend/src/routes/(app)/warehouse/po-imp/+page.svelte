@@ -10,11 +10,12 @@
 	import { formatDate } from '$lib/utils/functions';
 	import JobPoForm from './JobPOForm.svelte';
 	import ImportForm from './ImportForm.svelte';
+	import JobComparisonCard from './JobComparisonCard.svelte';
+	import { Ruler } from 'lucide-svelte';
 
 	let show = false;
 	let show1 = false;
 	let show2 = false;
-	let show3 = false;
 
 	let filters = {
 		type: 'both',
@@ -48,6 +49,10 @@
 		selectedMovement = movements[i];
 		show = true;
 	}
+	function compareJob(i: number) {
+		selectedMovement = movements[i];
+		show2 = true;
+	}
 
 	onMount(() => {
 		getMovements();
@@ -79,7 +84,12 @@
 	<TableBody>
 		{#each movements as movement, i}
 			<TableRow>
-				<OptionsCell editFunc={movement.import ? () => editImport(i) : () => editJobPO(i)} />
+				<OptionsCell
+					editFunc={movement.import ? () => editImport(i) : () => editJobPO(i)}
+					extraButtons={movement.jobpo
+						? [{ fn: () => compareJob(i), name: 'Comparar', icon: Ruler }]
+						: []}
+				/>
 				<TableCell>{movement.import || ''}</TableCell>
 				<TableCell>{movement.jobpo || ''}</TableCell>
 				<TableCell>{movement.location || ''}</TableCell>
@@ -92,3 +102,4 @@
 
 <JobPoForm bind:show reload={getMovements} {selectedMovement} />
 <ImportForm bind:show={show1} reload={getMovements} {selectedMovement} />
+<JobComparisonCard bind:show={show2} bind:selectedJob={selectedMovement} />
