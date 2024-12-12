@@ -47,7 +47,7 @@
 		inventory = result.data;
 		const clientList = (await api.get('/inventoryvarious/clients')).data;
 		clientList.forEach((client: any) => {
-			clients[client.value] = client.name;
+			clients[client.value] = client;
 		});
 	}
 
@@ -147,12 +147,19 @@
 				/>
 
 				<TableCell class="">{material.code}</TableCell>
-				<TableCell class="overflow-hidden min-w-24 w-full max-w-1">{material.description}</TableCell>
+				<TableCell class="w-full min-w-24 max-w-1 overflow-hidden">{material.description}</TableCell
+				>
 				<TableCell>{material.leftoverAmount}</TableCell>
 				<TableCell>{material.amount}</TableCell>
 				<TableCell>{material.minAmount}</TableCell>
 				<TableCell>{material.measurement}</TableCell>
-				<TableCell><Badge color="blue">{clients[material.clientId]}</Badge></TableCell>
+				<TableCell>
+					{#if clients[material.clientId]}
+						<Badge color={clients[material.clientId].color}
+							>{clients[material.clientId].name}
+						</Badge>
+					{/if}
+				</TableCell>
 			</TableRow>
 		{/each}
 	</TableBody>

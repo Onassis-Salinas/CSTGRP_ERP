@@ -55,7 +55,7 @@
 	async function fetchClients() {
 		const clientList = (await api.get('/inventoryvarious/clients')).data;
 		clientList.forEach((client: any) => {
-			clients[client.value] = client.name;
+			clients[client.value] = client;
 		});
 		clients = clients;
 	}
@@ -133,17 +133,11 @@
 			<TableRow>
 				<TableCell>{movement.import || ''}</TableCell>
 				<TableCell>{movement.programation || ''}</TableCell>
-				<TableCell
-					>{(movement.jobpo || '') + (movement.extra ? ' -R' : '')}</TableCell
-				>
+				<TableCell>{(movement.jobpo || '') + (movement.extra ? ' -R' : '')}</TableCell>
 				<TableCell>{movement.code}</TableCell>
 				<TableCell class="w-full min-w-24 max-w-1 overflow-hidden">{movement.description}</TableCell
 				>
-				<TableCell
-					><Badge color={parseFloat(movement.leftoverAmount) >= 0 ? 'primary' : 'red'}
-						>{movement.leftoverAmount}</Badge
-					></TableCell
-				>
+				<TableCell><Badge color="gray">{movement.leftoverAmount}</Badge></TableCell>
 				<TableCell
 					><Badge color={parseFloat(movement.amount) >= 0 ? 'green' : 'red'}
 						>{movement.amount}</Badge
@@ -160,7 +154,13 @@
 					/></TableCell
 				>
 				<TableCell>{movement.measurement}</TableCell>
-				<TableCell><Badge color="blue">{clients[movement.clientId]}</Badge></TableCell>
+				<TableCell
+					>{#if clients[movement.clientId]}
+						<Badge color={clients[movement.clientId].color}
+							>{clients[movement.clientId].name}
+						</Badge>
+					{/if}</TableCell
+				>
 				<TableCell
 					><Checkbox
 						onCheckedChange={() => {

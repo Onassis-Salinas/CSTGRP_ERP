@@ -8,12 +8,6 @@
 	import AreaForms from './AreaForms.svelte';
 	import { showSuccess } from '$lib/utils/showToast';
 	import { Check, EllipsisVertical, Pen, PlusCircle, Trash } from 'lucide-svelte';
-	import {
-		DropdownMenu,
-		DropdownMenuContent,
-		DropdownMenuItem,
-		DropdownMenuTrigger
-	} from '$lib/components/ui/dropdown-menu';
 	import { onMount } from 'svelte';
 	import MenuBar from '$lib/components/basic/MenuBar.svelte';
 	import OptionsCell from '$lib/components/basic/OptionsCell.svelte';

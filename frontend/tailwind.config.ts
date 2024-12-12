@@ -51,36 +51,58 @@ const config: Config = {
 
 				// custom colors`
 				gray: {
-					foreground: 'rgb(67, 64, 60)',
-					DEFAULT: 'rgba(67, 64, 60, 0.05)'
+					foreground: 'hsl(var(--gray) / <alpha-value>)',
+					DEFAULT: 'hsl(var(--gray-foreground) / <alpha-value>)'
 				},
-				blue: {
-					foreground: 'rgb(37, 128, 187)',
-					DEFAULT: 'rgba(37, 128, 187, 0.05)'
-				},
-				orange: {
-					foreground: 'rgb(207, 68, 19)',
-					DEFAULT: 'rgba(207, 68, 19, 0.05)'
-				},
-				green: {
-					foreground: 'rgb(46, 142, 85)',
-					DEFAULT: 'rgba(46, 142, 85, 0.05)'
-				},
-				yellow: {
-					foreground: 'rgb(204, 137, 18)',
-					DEFAULT: 'rgba(204, 137, 18, 0.05)'
-				},
-				purple: {
-					foreground: 'rgb(111, 27, 210)',
-					DEFAULT: 'rgba(111, 27, 210, 0.05)'
-				},
-				cyan: {
-					foreground: 'rgb(18, 157, 135)',
-					DEFAULT: 'rgba(18, 157, 135, 0.05)'
-				},
+
 				red: {
-					foreground: 'rgb(229, 30, 36)',
-					DEFAULT: 'rgba(229, 30, 36, 0.05)'
+					foreground: 'hsl(var(--red) / <alpha-value>)',
+					DEFAULT: 'hsl(var(--red-foreground) / <alpha-value>)'
+				},
+
+				brown: {
+					foreground: 'hsl(var(--brown) / <alpha-value>)',
+					DEFAULT: 'hsl(var(--brown-foreground) / <alpha-value>)'
+				},
+
+				orange: {
+					foreground: 'hsl(var(--orange) / <alpha-value>)',
+					DEFAULT: 'hsl(var(--orange-foreground) / <alpha-value>)'
+				},
+
+				lime: {
+					foreground: 'hsl(var(--lime) / <alpha-value>)',
+					DEFAULT: 'hsl(var(--lime-foreground) / <alpha-value>)'
+				},
+
+				green: {
+					foreground: 'hsl(var(--green) / <alpha-value>)',
+					DEFAULT: 'hsl(var(--green-foreground) / <alpha-value>)'
+				},
+
+				cyan: {
+					foreground: 'hsl(var(--cyan) / <alpha-value>)',
+					DEFAULT: 'hsl(var(--cyan-foreground) / <alpha-value>)'
+				},
+
+				blue: {
+					foreground: 'hsl(var(--blue) / <alpha-value>)',
+					DEFAULT: 'hsl(var(--blue-foreground) / <alpha-value>)'
+				},
+
+				purple: {
+					foreground: 'hsl(var(--purple) / <alpha-value>)',
+					DEFAULT: 'hsl(var(--purple-foreground) / <alpha-value>)'
+				},
+
+				yellow: {
+					foreground: 'hsl(var(--yellow) / <alpha-value>)',
+					DEFAULT: 'hsl(var(--yellow-foreground) / <alpha-value>)'
+				},
+
+				pink: {
+					foreground: 'hsl(var(--pink) / <alpha-value>)',
+					DEFAULT: 'hsl(var(--pink-foreground) / <alpha-value>)'
 				}
 			},
 			borderRadius: {

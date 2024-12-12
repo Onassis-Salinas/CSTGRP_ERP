@@ -14,7 +14,7 @@ export class VariousService {
   }
 
   async getClients() {
-    const rows = await sql`select id as value, name from clients`;
+    const rows = await sql`select id as value, name, color from clients`;
     return rows;
   }
 

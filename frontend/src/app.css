@@ -36,6 +36,39 @@
 		--ring: 240 10% 3.9%;
 
 		--radius: 0.75rem;
+
+		--gray: 222 3% 37%;
+		--gray-foreground: 0 0% 96%;
+
+		--red: 0 55% 30%;
+		--red-foreground: 0 100% 96%;
+
+		--brown: 26 98% 23%;
+		--brown-foreground: 26 93% 93%;
+
+		--orange: 45 100% 21%;
+		--orange-foreground: 45 100% 90%;
+
+		--lime: 70 86% 20%;
+		--lime-foreground: 68 85% 89%;
+
+		--green: 156 85% 19%;
+		--green-foreground: 135 70% 92%;
+
+		--cyan: 192 83% 23%;
+		--cyan-foreground: 194 85% 92%;
+
+		--blue: 219 68% 30%;
+		--blue-foreground: 219 100% 94%;
+
+		--purple: 259 83% 40%;
+		--purple-foreground: 260 100% 97%;
+
+		--yellow: 53 93% 18%;
+		--yellow-foreground: 53 93% 88%;
+
+		--pink: 310 89% 22%;
+		--pink-foreground: 343 90% 96%;
 	}
 
 	.dark {
