@@ -60,15 +60,52 @@ export async function updateMaterialAmount(id, dbInstance?: any) {
 
   await dbInstance`
     UPDATE materials
+
     SET amount = (
       SELECT COALESCE(SUM(materialmovements."realAmount"), 0) AS balance
       FROM materialmovements 
         JOIN materials ON materials.id = materialmovements."materialId"
         JOIN materialie ON materialie.id = materialmovements."movementId"
       WHERE materialmovements.active = true
-        AND (materialie.location IS NULL OR materialie.location = 'At CST, Qtys verified')
+        AND (materialie.location IS NULL OR materialie.location = 'At CST, Qtys verified' or materialie.import = 'Retorno')
         AND materials.id = ${id}
-    )
+    ),
+
+    "leftoverAmount" = (
+      ( 
+        SELECT COALESCE(SUM(materialmovements."realAmount" - materialmovements.amount), 0) AS balance
+        FROM materialmovements 
+          JOIN materials ON materials.id = materialmovements."materialId"
+          JOIN materialie ON materialie.id = materialmovements."movementId"
+        WHERE materialmovements.active = true
+          AND (materialie.location IS NULL OR materialie.location = 'At CST, Qtys verified')
+          AND materialmovements.extra = false
+          AND materials.id = ${id}
+      ) 
+        +
+      ( 
+        SELECT COALESCE(SUM(materialmovements.amount), 0) AS balance
+        FROM materialmovements 
+          JOIN materials ON materials.id = materialmovements."materialId"
+          JOIN materialie ON materialie.id = materialmovements."movementId"
+        WHERE materialmovements.active = true
+          AND materialmovements.extra = true
+          AND materialie.id = (select id from materialie where import = 'Retorno')
+          AND materials.id = ${id}
+      )
+        -
+      ( 
+        SELECT COALESCE(SUM(materialmovements.amount - materialmovements."realAmount"), 0) AS balance
+        FROM materialmovements 
+          JOIN materials ON materials.id = materialmovements."materialId"
+          JOIN materialie ON materialie.id = materialmovements."movementId"
+        WHERE materialmovements.active = true
+          AND materialmovements.extra = true
+          AND materialmovements.amount < 0
+          AND materials.id = ${id}
+      )
+    ) * -1
+  
     WHERE id = ${id} 
     returning amount`;
 }

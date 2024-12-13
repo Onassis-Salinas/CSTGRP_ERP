@@ -77,6 +77,8 @@ export class MovementsService {
             materialie ON materialie.id = materialmovements."movementId"
         WHERE
             materials.id = ${body.id} AND  materialmovements.active is true
+            AND (materialie.location IS NULL OR materialie.location = 'At CST, Qtys verified' or materialie.import = 'Retorno')
+
         ORDER BY
             materialie.due DESC,
             materialmovements.id DESC
@@ -145,10 +147,7 @@ export class MovementsService {
     if (movement.active)
       throw new HttpException('Este movimiento ya se surtio', 400);
 
-    await sql.begin(async (sql) => {
-      await sql`update materialmovements set "realAmount" = ${movement.amount >= 0 ? Math.abs(parseFloat(body.newAmount)) : -Math.abs(parseFloat(body.newAmount))} where id = ${body.id}`;
-      await updateMaterialAmount(movement.materialId, sql);
-    });
+    await sql`update materialmovements set "realAmount" = ${movement.amount >= 0 ? Math.abs(parseFloat(body.newAmount)) : -Math.abs(parseFloat(body.newAmount))} where id = ${body.id}`;
     return;
   }
 
@@ -180,14 +179,6 @@ export class MovementsService {
       await updateMaterialAmount(result.materialId, sql);
     });
 
-    const [updatedMovement] =
-      await sql`select * from materialmovements where id = ${body.id}`;
-
-    console.log(updatedMovement);
-    await sql`update materials set
-     "leftoverAmount" = "leftoverAmount" + ${updatedMovement.active ? parseFloat(updatedMovement.amount) - parseFloat(updatedMovement.realAmount) : -parseFloat(updatedMovement.amount) + parseFloat(updatedMovement.realAmount)}
-     where id = ${updatedMovement.materialId}`;
-
     return movement.active;
   }
 
@@ -212,7 +203,6 @@ export class MovementsService {
           await sql`insert into materialmovements ("materialId", "movementId", amount, "realAmount", active, "activeDate") values
          ((select id from materials where code = ${material.code}),(select id from materialie where import = ${body.import}), ${Math.abs(parseFloat(material.amount))},${Math.abs(parseFloat(material.amount))}, true, ${new Date()}) returning "materialId"`;
 
-        console.log(movement);
         await updateMaterialAmount(movement.materialId);
       }
     });
@@ -250,15 +240,12 @@ export class MovementsService {
   async postReposition(body: z.infer<typeof extraMovementSchema>) {
     try {
       const [material] =
-        await sql`select "leftoverAmount" from materials where code = ${body.code}`;
+        await sql`select id, "leftoverAmount" from materials where code = ${body.code}`;
 
       let materialFromInventory =
         -Math.abs(parseFloat(body.amount)) +
         parseFloat(material.leftoverAmount);
       if (materialFromInventory > 0) materialFromInventory = 0;
-
-      const materialFromLeftover =
-        -Math.abs(parseFloat(body.amount)) - materialFromInventory;
 
       await sql.begin(async (sql) => {
         await sql`insert into materialmovements ("materialId", "movementId", amount, "realAmount", active, "activeDate", extra) values
@@ -269,10 +256,6 @@ export class MovementsService {
         true,
         ${new Date()},
         true)`;
-
-        const [material] = await sql`update materials set
-        "leftoverAmount" = "leftoverAmount" + ${materialFromLeftover}
-        where code = ${body.code} returning id`;
 
         await updateMaterialAmount(material.id, sql);
       });
@@ -299,7 +282,7 @@ export class MovementsService {
       true)`;
       } else {
         const [material] =
-          await sql`select "leftoverAmount" from materials where code = ${body.code}`;
+          await sql`select id, "leftoverAmount" from materials where code = ${body.code}`;
 
         if (material.leftoverAmount < parseFloat(body.amount))
           throw new HttpException(
@@ -317,10 +300,6 @@ export class MovementsService {
           ${new Date()},
           true)`;
 
-          await sql`update materials set
-          "leftoverAmount" = "leftoverAmount" - ${Math.abs(parseFloat(body.amount))}
-          where code = ${body.code} returning id`;
-
           await updateMaterialAmount(material.id, sql);
         });
       }
@@ -331,6 +310,21 @@ export class MovementsService {
         throw new HttpException(`El job ${body.job} no existe.`, 400);
       throw err;
     }
+
+    return;
+  }
+
+  async deleteIE(body: z.infer<typeof idSchema>) {
+    const movements =
+      await sql`select "materialId" from materialmovements where "movementId" = ${body.id}`;
+
+    sql.begin(async (sql) => {
+      await sql`delete from materialie where id = ${body.id}`;
+
+      for (const movement of movements) {
+        await updateMaterialAmount(movement.materialId, sql);
+      }
+    });
 
     return;
   }

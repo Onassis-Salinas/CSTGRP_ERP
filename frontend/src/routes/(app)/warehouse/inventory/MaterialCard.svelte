@@ -60,17 +60,17 @@
 							<TableCell>{row.programation || ''}</TableCell>
 							<TableCell>{row.import || ''}</TableCell>
 							<TableCell
-								><Badge color={parseInt(row.amount) > 0 ? 'green' : 'red'}>{row.amount}</Badge
+								><Badge color={parseFloat(row.amount) > 0 ? 'green' : 'red'}>{row.amount}</Badge
 								></TableCell
 							>
 							<TableCell
-								><Badge color={parseInt(row.realAmount) > 0 ? 'green' : 'red'}
+								><Badge color={parseFloat(row.realAmount) > 0 ? 'green' : 'red'}
 									>{row.realAmount}</Badge
 								></TableCell
 							>
 							<TableCell>{formatDate(row.due)}</TableCell>
 							<TableCell
-								><Badge color={parseInt(row.balance) > 0 ? 'green' : 'red'}>{row.balance}</Badge
+								><Badge color={parseFloat(row.balance) > 0 ? 'green' : 'red'}>{row.balance}</Badge
 								></TableCell
 							>
 						</TableRow>

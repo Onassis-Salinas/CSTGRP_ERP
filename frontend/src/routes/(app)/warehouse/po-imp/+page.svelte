@@ -12,10 +12,13 @@
 	import ImportForm from './ImportForm.svelte';
 	import JobComparisonCard from './JobComparisonCard.svelte';
 	import { Ruler } from 'lucide-svelte';
+	import DeletePopUp from '$lib/components/complex/DeletePopUp.svelte';
+	import { showSuccess } from '$lib/utils/showToast';
 
 	let show = false;
 	let show1 = false;
 	let show2 = false;
+	let show3 = false;
 
 	let filters = {
 		type: 'both',
@@ -30,7 +33,7 @@
 		{ value: 'exports', name: 'Exportaciones' }
 	];
 
-	let movements: movement[] = [];
+	let movements: any[] = [];
 
 	async function getMovements() {
 		const result = (await api.get(`/materialmovements/ie`, { params: filters })).data;
@@ -44,7 +47,10 @@
 		selectedMovement = movements[i];
 		show1 = true;
 	}
-
+	function deleteIE(i: number) {
+		selectedMovement = movements[i];
+		show3 = true;
+	}
 	function editJobPO(i: number) {
 		selectedMovement = movements[i];
 		show = true;
@@ -52,6 +58,14 @@
 	function compareJob(i: number) {
 		selectedMovement = movements[i];
 		show2 = true;
+	}
+
+	async function handleDelete() {
+		await api.delete('/materialmovements/ie/' + selectedMovement.id);
+		selectedMovement = {};
+		showSuccess('Movimiento eliminado');
+		await getMovements();
+		show3 = false;
 	}
 
 	onMount(() => {
@@ -86,6 +100,7 @@
 			<TableRow>
 				<OptionsCell
 					editFunc={movement.import ? () => editImport(i) : () => editJobPO(i)}
+					deleteFunc={() => deleteIE(i)}
 					extraButtons={movement.jobpo
 						? [{ fn: () => compareJob(i), name: 'Comparar', icon: Ruler }]
 						: []}
@@ -103,3 +118,8 @@
 <JobPoForm bind:show reload={getMovements} {selectedMovement} />
 <ImportForm bind:show={show1} reload={getMovements} {selectedMovement} />
 <JobComparisonCard bind:show={show2} bind:selectedJob={selectedMovement} />
+<DeletePopUp
+	bind:show={show3}
+	text="¿Estás seguro de que quieres eliminar este movimiento?"
+	deleteFunc={handleDelete}
+/>

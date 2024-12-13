@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -92,5 +93,10 @@ export class MovementsController {
   @Put('realamount')
   udpateRealAmount(@Body(new ZodPiPe(updateAmountSchema)) body) {
     return this.movementsService.updateRealAmount(body);
+  }
+
+  @Delete('ie/:id')
+  deleteIE(@Param(new ZodPiPe(idSchema)) body) {
+    return this.movementsService.deleteIE(body);
   }
 }
