@@ -212,7 +212,8 @@ export class MovementsService {
           await sql`insert into materialmovements ("materialId", "movementId", amount, "realAmount", active, "activeDate") values
          ((select id from materials where code = ${material.code}),(select id from materialie where import = ${body.import}), ${Math.abs(parseFloat(material.amount))},${Math.abs(parseFloat(material.amount))}, true, ${new Date()}) returning "materialId"`;
 
-        await updateMaterialAmount(movement.materialId, sql);
+        console.log(movement);
+        await updateMaterialAmount(movement.materialId);
       }
     });
   }

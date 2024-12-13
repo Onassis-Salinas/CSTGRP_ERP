@@ -9,11 +9,6 @@ import { AuthGuard } from 'src/interceptors/auth/authorization.guard';
 export class StatsController {
   constructor(private readonly statsService: StatsService) {}
 
-  @Get('pendingmovements')
-  pendingMovements() {
-    return this.statsService.getPendingMovements();
-  }
-
   @Get('stockwarnings')
   materialWarnings() {
     return this.statsService.getMaterialWarnings();
