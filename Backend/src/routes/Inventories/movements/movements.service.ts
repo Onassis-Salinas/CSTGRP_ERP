@@ -198,8 +198,7 @@ export class MovementsService {
     await sql.begin(async (sql) => {
       const materialRows =
         await sql`SELECT code FROM materials WHERE code in ${sql(materials)}`;
-      console.log(materialRows);
-      console.log(materials);
+
       if (materialRows.length !== materials.length)
         throw new HttpException(
           'Uno o varios de los materiales incorrectos',
@@ -213,7 +212,7 @@ export class MovementsService {
           await sql`insert into materialmovements ("materialId", "movementId", amount, "realAmount", active, "activeDate") values
          ((select id from materials where code = ${material.code}),(select id from materialie where import = ${body.import}), ${Math.abs(parseFloat(material.amount))},${Math.abs(parseFloat(material.amount))}, true, ${new Date()}) returning "materialId"`;
 
-        await updateMaterialAmount(movement.materialId);
+        await updateMaterialAmount(movement.materialId, sql);
       }
     });
   }
@@ -262,17 +261,19 @@ export class MovementsService {
 
       await sql.begin(async (sql) => {
         await sql`insert into materialmovements ("materialId", "movementId", amount, "realAmount", active, "activeDate", extra) values
-      ((select id from materials where code = ${body.code}),
-      (select id from materialie where jobpo = ${body.job}),
-      ${-Math.abs(parseFloat(body.amount))},
-      ${materialFromInventory},
-      true,
-      ${new Date()},
-      true)`;
+        ((select id from materials where code = ${body.code}),
+        (select id from materialie where jobpo = ${body.job}),
+        ${-Math.abs(parseFloat(body.amount))},
+        ${materialFromInventory},
+        true,
+        ${new Date()},
+        true)`;
 
-        await sql`update materials set
-     "leftoverAmount" = "leftoverAmount" + ${materialFromLeftover}
-     where code = ${body.code}`;
+        const [material] = await sql`update materials set
+        "leftoverAmount" = "leftoverAmount" + ${materialFromLeftover}
+        where code = ${body.code} returning id`;
+
+        await updateMaterialAmount(material.id, sql);
       });
     } catch (err) {
       if (err.column_name === 'materialId')
@@ -307,17 +308,19 @@ export class MovementsService {
 
         sql.begin(async (sql) => {
           await sql`insert into materialmovements ("materialId", "movementId", amount, "realAmount", active, "activeDate", extra) values
-        ((select id from materials where code = ${body.code}),
-        (select id from materialie where import = 'Retorno'),
-        ${Math.abs(parseFloat(body.amount))},
-        ${Math.abs(parseFloat(body.amount))},
-        true,
-        ${new Date()},
-        true)`;
+          ((select id from materials where code = ${body.code}),
+          (select id from materialie where import = 'Retorno'),
+          ${Math.abs(parseFloat(body.amount))},
+          ${Math.abs(parseFloat(body.amount))},
+          true,
+          ${new Date()},
+          true)`;
 
           await sql`update materials set
-         "leftoverAmount" = "leftoverAmount" - ${Math.abs(parseFloat(body.amount))}
-         where code = ${body.code}`;
+          "leftoverAmount" = "leftoverAmount" - ${Math.abs(parseFloat(body.amount))}
+          where code = ${body.code} returning id`;
+
+          await updateMaterialAmount(material.id, sql);
         });
       }
     } catch (err) {

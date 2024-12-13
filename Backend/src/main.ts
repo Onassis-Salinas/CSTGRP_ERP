@@ -12,7 +12,6 @@ import { DBFilter } from './interceptors/db/db.filter';
 import dotenv from 'dotenv';
 import fastifyStatic from '@fastify/static';
 import { join } from 'path';
-import sql from './utils/db';
 
 dotenv.config();
 async function bootstrap() {
@@ -50,8 +49,6 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
-
-  await sql`ALTER ROLE postgres SET search_path TO cim, public;`;
 
   await app.listen(process.env.PORT || 3000, '0.0.0.0');
 }

@@ -22,7 +22,7 @@ type permissionType =
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private readonly requiredPermission: permissionType) { }
+  constructor(private readonly requiredPermission: permissionType) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const httpContext = context.switchToHttp();
@@ -42,8 +42,6 @@ export class AuthGuard implements CanActivate {
       DELETE: 2,
     };
 
-
-
     try {
       const user: any = await jwt.verify(token, process.env.JWT_SECRET);
       const [{ perm }] =
@@ -55,6 +53,7 @@ export class AuthGuard implements CanActivate {
       res
         // .setCookie('perms', user, cookieConfig)
         .setCookie('areas', userperms.perm_assistance_areas, cookieConfig);
+      console.log(perm >= methods[req.method]);
       return perm >= methods[req.method];
     } catch (err) {
       throw new HttpException('Token invalido', 401);

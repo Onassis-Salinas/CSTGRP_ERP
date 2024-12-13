@@ -15,21 +15,19 @@
 		Monitor,
 		Shield,
 		UserCircle,
-		Users
+		Users,
+		ShoppingBag
 	} from 'lucide-svelte';
 	import { Dialog, DialogBody, DialogContent } from '$lib/components/ui/dialog';
 	import { Button } from '$lib/components/ui/button';
 	import { goto } from '$app/navigation';
 	import { cn } from '$lib/utils';
 	import { browser } from '$app/environment';
+	import { hasAccess } from '$lib/utils/functions';
 
 	let showModal = false;
 
 	const username = Cookies.get('username');
-
-	const hasAccess = (name: string) => {
-		return parseInt(Cookies.get('perm_' + name) || '0') > 0;
-	};
 
 	function closeSidebar() {
 		sidebarOpen.set(false);
@@ -69,9 +67,9 @@
 
 					<AccordionOption href="/warehouse/inventory">Inventario</AccordionOption>
 					{#if hasAccess('inventory')}
-					<AccordionOption href="/warehouse/po-imp">Po-Imp</AccordionOption>
+						<AccordionOption href="/warehouse/po-imp">Po-Imp</AccordionOption>
 						<AccordionOption href="/warehouse/movements">Movimientos</AccordionOption>
-						{/if}
+					{/if}
 				</AccordionContent>
 			</AccordionItem>
 		{/if}
@@ -128,6 +126,20 @@
 				<AccordionContent>
 					<AccordionOption href="/structure/areas">Areas</AccordionOption>
 					<AccordionOption href="/structure/positions">Posiciones</AccordionOption>
+				</AccordionContent>
+			</AccordionItem>
+		{/if}
+		{#if hasAccess('inventory') || (!hasAccess('inventory') && !hasAccess('users') && !hasAccess('structure') && !hasAccess('it') && !hasAccess('assistance') && !hasAccess('productivity') && !hasAccess('employees') && !hasAccess('materials'))}
+			<AccordionItem value="9" class="border-none">
+				<AccordionTrigger class="hover:bg-muted rounded-md p-2 text-sm hover:no-underline">
+					<span class="flex items-center gap-2">
+						<ShoppingBag class="size-4 text-[#5c5e63]" />
+						Clientes
+					</span>
+				</AccordionTrigger>
+
+				<AccordionContent>
+					<AccordionOption href="/clients/inventory">Inventario</AccordionOption>
 				</AccordionContent>
 			</AccordionItem>
 		{/if}

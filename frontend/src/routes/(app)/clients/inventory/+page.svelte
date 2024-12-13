@@ -1,0 +1,111 @@
+<script lang="ts">
+	import CusTable from '$lib/components/basic/CusTable.svelte';
+	import { Badge } from '$lib/components/ui/badge';
+	import { Input } from '$lib/components/ui/input';
+	import { TableBody, TableCell, TableHead, TableHeader, TableRow } from '$lib/components/ui/table';
+	import api from '$lib/utils/server';
+	import { Ruler } from 'lucide-svelte';
+	import { onMount } from 'svelte';
+	import MenuBar from '$lib/components/basic/MenuBar.svelte';
+	import OptionsCell from '$lib/components/basic/OptionsCell.svelte';
+	import MaterialComparisonCard from './MaterialComparisonCard.svelte';
+	import Select from '$lib/components/basic/Select.svelte';
+	import { hasAccess } from '$lib/utils/functions';
+
+	let show = false;
+
+	let selectedMaterial: any = {
+		code: '',
+		measurement: '',
+		description: '',
+		minAmount: '',
+		clientId: '',
+		id: '',
+		leftoverAmount: ''
+	};
+
+	let inventory: any[] = [];
+	let clients: any = {};
+	let clientList: any[] = [];
+
+	let filters = {
+		code: '',
+		clientId: ''
+	};
+
+	$: filteredInventory = inventory.filter((material) => {
+		if (filters.code) return material.code?.toUpperCase()?.includes(filters.code.toUpperCase());
+		return true;
+	});
+
+	async function getInventory() {
+		clientList = (await api.get('/clients/clients')).data;
+
+		clientList.forEach((client: any) => {
+			clients[client.value] = client;
+		});
+
+		const result = await api.get('/clients', { params: { clientId: filters.clientId } });
+		inventory = result.data;
+	}
+
+	function viewComparison(i: number) {
+		selectedMaterial = filteredInventory[i];
+		show = true;
+	}
+
+	onMount(() => {
+		getInventory();
+	});
+</script>
+
+<MenuBar>
+	<div class="flex gap-2">
+		<Input menu bind:value={filters.code} placeholder="Codigo" />
+		{#if hasAccess('inventory')}
+			<Select
+				items={clientList}
+				bind:value={filters.clientId}
+				menu
+				onSelectedChange={getInventory}
+			/>
+		{/if}
+	</div>
+</MenuBar>
+
+<CusTable>
+	<TableHeader>
+		<TableHead class="fixed left-3 z-30 bg-inherit p-1"></TableHead>
+		<TableHead class="">Codigo</TableHead>
+		<TableHead class="">Descripcion</TableHead>
+		<TableHead class="">Cantidad</TableHead>
+		<TableHead class="">Medida</TableHead>
+	</TableHeader>
+	<TableBody>
+		{#each filteredInventory as material, i}
+			<TableRow>
+				<OptionsCell
+					extraButtons={[
+						{
+							fn: () => viewComparison(i),
+							name: 'Comparar',
+							icon: Ruler
+						}
+					]}
+				/>
+
+				<TableCell class="">{material.code}</TableCell>
+				<TableCell class="w-full min-w-24 max-w-1 overflow-hidden">{material.description}</TableCell
+				>
+				<TableCell
+					><Badge color={material.amount < material.minAmount ? 'yellow' : 'green'}
+						>{material.amount}</Badge
+					></TableCell
+				>
+				<TableCell>{material.measurement}</TableCell>
+			</TableRow>
+		{/each}
+	</TableBody>
+</CusTable>
+
+<MaterialComparisonCard bind:show bind:selectedMaterial bind:selectedClient={filters.clientId} />

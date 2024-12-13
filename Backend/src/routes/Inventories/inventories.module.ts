@@ -4,6 +4,7 @@ import { MaterialsModule } from './materials/materials.module';
 import { VariousModule } from './various/various.module';
 import { MovementsModule } from './movements/movements.module';
 import { StatsModule } from './stats/stats.module';
+import { ClientMovementsModule } from './clients/movements/movements.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { StatsModule } from './stats/stats.module';
     VariousModule,
     MovementsModule,
     StatsModule,
+    ClientMovementsModule,
   ],
 })
 export class InventoriesModule {}

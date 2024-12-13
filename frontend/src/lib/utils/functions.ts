@@ -1,3 +1,5 @@
+import Cookies from 'js-cookie';
+
 export function formatDate(strDate?: string) {
 	if (!strDate) return '';
 	const partes = strDate.split('T');
@@ -32,4 +34,8 @@ export function getDayNumber(date: string | Date) {
 
 export function getImage(image: string) {
 	return import.meta.env.VITE_BASEURL + '/static/' + image;
+}
+
+export function hasAccess(name: string) {
+	return parseInt(Cookies.get('perm_' + name) || '0') > 0;
 }
