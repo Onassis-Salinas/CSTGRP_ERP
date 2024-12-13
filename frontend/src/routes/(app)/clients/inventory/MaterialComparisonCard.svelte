@@ -45,7 +45,7 @@
 		</DialogHeader>
 		<DialogBody class="h-full max-w-full">
 			<Table>
-				<TableHeader class="sticky top-0 bg-gray-100">
+				<TableHeader class="sticky top-0 border-t">
 					<TableHead class="border-l">job</TableHead>
 					<TableHead>Programacion</TableHead>
 					<TableHead>Importacion</TableHead>

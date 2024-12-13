@@ -127,7 +127,7 @@
 		</CardHeader>
 		<CardContent class="overflow-auto">
 			<Table>
-				<TableHeader class="sticky top-0 bg-gray-100">
+				<TableHeader class="sticky top-0">
 					<TableHead>Nombre</TableHead>
 					<TableHead>Incidencia</TableHead>
 					<!-- <TableHead>Area</TableHead> -->
@@ -205,7 +205,7 @@
 		</CardHeader>
 		<CardContent>
 			<Table>
-				<TableHead class="sticky top-0 bg-gray-100">
+				<TableHead class="sticky top-0">
 					<TableCell></TableCell>
 					<TableCell>No. Empleado</TableCell>
 					<TableCell>Nombre</TableCell>

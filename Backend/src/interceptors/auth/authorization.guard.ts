@@ -53,7 +53,6 @@ export class AuthGuard implements CanActivate {
       res
         // .setCookie('perms', user, cookieConfig)
         .setCookie('areas', userperms.perm_assistance_areas, cookieConfig);
-      console.log(perm >= methods[req.method]);
       return perm >= methods[req.method];
     } catch (err) {
       throw new HttpException('Token invalido', 401);
