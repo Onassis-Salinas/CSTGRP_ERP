@@ -14,6 +14,7 @@ import {
   updateImportSchema,
 } from './movements.schema';
 import { updateMaterialAmount } from 'src/utils/functions';
+import { sendEmail } from 'src/utils/emails';
 
 @Injectable()
 export class MovementsService {
@@ -233,6 +234,42 @@ export class MovementsService {
         if (material.active)
           await updateMaterialAmount(movement.materialId, sql);
       }
+
+      //Finally we anallize and send emails
+
+      const movements = await sql`WITH MaterialSum AS (
+        SELECT 
+            materials.id,
+            SUM(materialmovements.amount) as total_amount
+        FROM materialmovements
+        JOIN materials ON materials.id = materialmovements."materialId"
+        WHERE materialmovements.active = false
+        GROUP BY materials.id
+        )   
+    
+        SELECT 
+            DISTINCT(materials.code), 
+            materials.measurement, 
+            (
+              SELECT string_agg("jobpo", ' ,') 
+              FROM materialmovements 
+              JOIN materialie ON materialie.id = materialmovements."movementId" 
+              WHERE "materialId" = materials.id 
+              AND materialmovements.active = false
+            ) as jobpo,
+            ABS(materials.amount + materials."leftoverAmount" + ms.total_amount) as missing
+        FROM materials
+        JOIN MaterialSum ms ON ms.id = materials.id
+        WHERE materials.amount + materials."leftoverAmount" + ms.total_amount < 0
+        AND materials.code in ${sql(materials)}`;
+
+      // for (const movement of movements) {
+      //   await sendEmail(
+      //     `Material ${movement.code} faltante.`,
+      //     `El material ${movement.code} tiene ${movement.missing} ${movement.measurement} faltantes para completar las ordenes: ${movement.jobpo}.`,
+      //     ['onassis.dev@gmail.com'],
+      //   );
+      // }
     });
 
     return;

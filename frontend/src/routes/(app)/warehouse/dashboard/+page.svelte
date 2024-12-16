@@ -71,7 +71,6 @@
 					<TableHead>Requerido</TableHead>
 					<TableHead>Inventario</TableHead>
 					<TableHead>Faltante</TableHead>
-					<TableHead>Fecha</TableHead>
 					<TableHead>Medida</TableHead>
 				</TableHeader>
 				<TableBody>
@@ -82,7 +81,6 @@
 							<TableCell><Badge color="gray">{row.amount}</Badge></TableCell>
 							<TableCell><Badge color="gray">{row.balance}</Badge></TableCell>
 							<TableCell><Badge color="red">{row.missing}</Badge></TableCell>
-							<TableCell>{formatDate(row.due)}</TableCell>
 							<TableCell>{row.measurement}</TableCell>
 						</TableRow>
 					{/each}

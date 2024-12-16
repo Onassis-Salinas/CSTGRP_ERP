@@ -4,15 +4,32 @@ import sql from 'src/utils/db';
 @Injectable()
 export class StatsService {
   async getOutOfStock() {
-    const movements =
-      await sql`Select (materials.amount + materials."leftoverAmount") as balance,
-      ABS(materials.amount + materials."leftoverAmount" + materialmovements.amount) as missing,
-      materials.code, materials.measurement, ABS(materialmovements."amount") as amount, materialie.due, materialie.jobpo
-      FROM materialmovements
-      JOIN materials on materials.id = materialmovements."materialId"
-      JOIN materialie on materialie.id = materialmovements."movementId"
-      WHERE materialmovements.active = false
-      AND materials.amount + materials."leftoverAmount" + materialmovements.amount < 0`;
+    const movements = await sql`WITH MaterialSum AS (
+    SELECT 
+        materials.id,
+        SUM(materialmovements.amount) as total_amount
+    FROM materialmovements
+    JOIN materials ON materials.id = materialmovements."materialId"
+    WHERE materialmovements.active = false
+    GROUP BY materials.id
+    )   
+
+    SELECT 
+        DISTINCT(materials.code), 
+        materials.measurement, 
+        (materials.amount + materials."leftoverAmount") as balance,
+        (
+          SELECT string_agg("jobpo", ' ,') 
+          FROM materialmovements 
+          JOIN materialie ON materialie.id = materialmovements."movementId" 
+          WHERE "materialId" = materials.id 
+          AND materialmovements.active = false
+        ) as jobpo,
+        ABS(ms.total_amount) as amount,
+        ABS(materials.amount + materials."leftoverAmount" + ms.total_amount) as missing
+    FROM materials
+    JOIN MaterialSum ms ON ms.id = materials.id
+    WHERE materials.amount + materials."leftoverAmount" + ms.total_amount < 0`;
 
     return movements;
   }
