@@ -51,8 +51,10 @@
 </script>
 
 <MenuBar>
-	<span></span>
-	<Button on:click={createDevice}><PlusCircle class="mr-1.5 size-3.5" />Añadir computadora</Button>
+	  <svelte:fragment slot="right">
+		<Button on:click={createDevice}><PlusCircle class="mr-1.5 size-3.5" />Añadir computadora</Button
+		>
+	  </svelte:fragment>
 </MenuBar>
 
 <CusTable>

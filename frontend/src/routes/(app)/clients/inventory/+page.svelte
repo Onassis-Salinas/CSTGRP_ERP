@@ -60,17 +60,10 @@
 </script>
 
 <MenuBar>
-	<div class="flex gap-2">
-		<Input menu bind:value={filters.code} placeholder="Codigo" />
-		{#if hasAccess('inventory')}
-			<Select
-				items={clientList}
-				bind:value={filters.clientId}
-				menu
-				onSelectedChange={getInventory}
-			/>
-		{/if}
-	</div>
+	<Input menu bind:value={filters.code} placeholder="Codigo" />
+	{#if hasAccess('inventory')}
+		<Select items={clientList} bind:value={filters.clientId} menu onSelectedChange={getInventory} />
+	{/if}
 </MenuBar>
 
 <CusTable>

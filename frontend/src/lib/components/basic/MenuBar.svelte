@@ -8,8 +8,8 @@
 	import { Button } from '../ui/button';
 </script>
 
-<div class="h-[48px] items-center flex justify-between border-b px-2.5">
-	<div class="flex lg:hidden">
+<div class="flex h-[48px] items-center justify-between border-b px-2.5">
+	<div class="flex lg:hidden justify-between w-full">
 		<DropdownMenu>
 			<DropdownMenuTrigger>
 				<Button variant="outline" class="flex items-center gap-2">
@@ -18,12 +18,23 @@
 				</Button>
 			</DropdownMenuTrigger>
 
-			<DropdownMenuContent class= "flex flex-col p-2 gap-2">
-				<slot />
+			<DropdownMenuContent class="grid gap-2 p-2">
+				<slot name="left" />
+				<slot></slot>
 			</DropdownMenuContent>
 		</DropdownMenu>
+		<div>
+			
+			<slot name="right" />
+		</div>
 	</div>
 	<div class="hidden w-full justify-between lg:flex">
-		<slot></slot>
+		<div class="flex gap-2">
+			<slot name="left"></slot>
+			<slot></slot>
+		</div>
+		<div class="flex gap-2">
+			<slot name="right"></slot>
+		</div>
 	</div>
 </div>

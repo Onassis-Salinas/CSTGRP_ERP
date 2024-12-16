@@ -134,17 +134,17 @@
 </script>
 
 <MenuBar>
-	<div class="flex gap-2">
+	  <svelte:fragment slot="left">
 		<Input bind:value={searchParams.noEmpleado} placeholder="No. Empleado" />
 		<Input bind:value={searchParams.name} placeholder="Nombre" />
 
 		<Button on:click={() => (searchActive = true)} value={'active'}>Activos</Button>
 		<Button on:click={() => (searchActive = false)} value={'inactive'}>Inactivos</Button>
-	</div>
-	<div>
-		<Button on:click={exportList}><FileDown class="mr-1.5 size-3.5" />Exportar</Button>
+	  </svelte:fragment>
+	  <svelte:fragment slot="right">
+		<Button on:click={exportList}><FileDown class="size-3.5" /></Button>
 		<Button on:click={createEmployee}><PlusCircle class="mr-1.5 size-3.5" />Añadir empleado</Button>
-	</div>
+	  </svelte:fragment>
 </MenuBar>
 
 <CusTable>

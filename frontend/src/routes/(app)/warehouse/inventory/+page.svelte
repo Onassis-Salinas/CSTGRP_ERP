@@ -125,13 +125,13 @@
 </script>
 
 <MenuBar>
-	<div>
+	  <svelte:fragment slot="left">
 		<Input menu bind:value={filters.code} placeholder="Codigo" />
-	</div>
-	<div class="flex gap-2">
-		<Button on:click={exportInventory}><FileDown class="mr-1.5 size-3.5" /> Exportar</Button>
+	  </svelte:fragment>
+	  <svelte:fragment slot="right">
+		<Button on:click={exportInventory}><FileDown class="size-3.5" /></Button>
 		<Button on:click={createMaterial}><PlusCircle class="mr-1.5 size-3.5" />Añadir Material</Button>
-	</div>
+	  </svelte:fragment>
 </MenuBar>
 
 <CusTable>
@@ -161,7 +161,6 @@
 						}
 					]}
 				/>
-				
 
 				<TableCell class="">{material.code}</TableCell>
 				<TableCell class="w-full min-w-24 max-w-1 overflow-hidden">{material.description}</TableCell

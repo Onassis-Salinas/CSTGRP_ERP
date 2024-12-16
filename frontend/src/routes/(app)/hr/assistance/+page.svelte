@@ -79,16 +79,16 @@
 </script>
 
 <MenuBar>
-	<div class=" flex gap-2">
+	  <svelte:fragment slot="left">
 		<Select class="w-72" placeholder="Eligir Area" items={areasList} bind:value={areaSelected} />
 		<Input type="date" bind:value={dateSelected} on:change={getAssistance} />
-	</div>
-	<div class="flex gap-2">
+	  </svelte:fragment>
+	  <svelte:fragment slot="right">
 		{#if Cookies.get('perm_assistance_areas') === 'Todas'}
 			<!-- <ExportAssistance date={dateSelected} /> -->
 			<Button on:click={createWeek}><PlusCircle class="mr-1.5 size-3.5" />Generar semana</Button>
 		{/if}
-	</div>
+	  </svelte:fragment>
 </MenuBar>
 
 <CusTable>

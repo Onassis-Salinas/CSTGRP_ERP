@@ -91,7 +91,7 @@
 </script>
 
 <MenuBar>
-	<form class="flex gap-2" on:submit|preventDefault={getMovements} action={''}>
+	<form class="flex gap-2 flex-col lg:flex-row" on:submit|preventDefault={getMovements} action={''}>
 		<Input menu bind:value={filters.import} placeholder="Importacion" />
 		<Input menu bind:value={filters.programation} placeholder="Programacion" />
 		<Input menu bind:value={filters.jobpo} placeholder="Job" />
@@ -99,7 +99,7 @@
 		<Select menu items={checkStatus} bind:value={filters.checked} />
 		<Button type="submit"><Search class="mr-1.5 size-3.5" />Buscar</Button>
 	</form>
-	<div class="flex gap-2">
+	  <svelte:fragment slot="right">
 		<DropdownMenu>
 			<DropdownMenuTrigger>
 				<Button><Pen class="mr-1.5 size-3.5" />Registrar</Button>
@@ -111,7 +111,7 @@
 				</DropdownMenuContent>
 			</DropdownMenuTrigger>
 		</DropdownMenu>
-	</div>
+	  </svelte:fragment>
 </MenuBar>
 
 <CusTable>

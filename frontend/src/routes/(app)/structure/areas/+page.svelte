@@ -42,8 +42,9 @@
 </script>
 
 <MenuBar>
-	<span></span>
-	<Button on:click={createArea}><PlusCircle class="mr-1.5 size-3.5" />Añadir area</Button>
+	  <svelte:fragment slot="right">
+		<Button on:click={createArea}><PlusCircle class="mr-1.5 size-3.5" />Añadir area</Button>
+	  </svelte:fragment>
 </MenuBar>
 
 <CusTable>

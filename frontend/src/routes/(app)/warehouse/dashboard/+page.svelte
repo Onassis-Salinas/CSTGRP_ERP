@@ -50,8 +50,12 @@
 </script>
 
 <MenuBar>
-	<Input menu class="w-fit shadow-sm" type="date" bind:value={selectedDate}></Input>
-	<Input menu class="w-fit font-semibold" value={textDate}></Input>
+	  <svelte:fragment slot="left">
+		<Input menu class="w-fit shadow-sm" type="date" bind:value={selectedDate}></Input>
+	  </svelte:fragment>
+	  <svelte:fragment slot="right">
+		<Input menu class="w-fit font-semibold" value={textDate}></Input>
+	  </svelte:fragment>
 </MenuBar>
 
 <div class="grid flex-1 grid-cols-3 place-items-stretch gap-4 overflow-auto p-4">

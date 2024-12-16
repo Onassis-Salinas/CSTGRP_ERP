@@ -21,5 +21,5 @@
 >
 	<slot>
 		<ChevronRight />
-	</slot>
+	  </svelte:fragment>
 </li>

@@ -5,5 +5,5 @@
 </script>
 
 <div class={cn('max-h-[85lvh] overflow-auto scroll-auto border-t p-6', className)}>
-	<slot></slot>
+	<slot>  </slot>
 </div>

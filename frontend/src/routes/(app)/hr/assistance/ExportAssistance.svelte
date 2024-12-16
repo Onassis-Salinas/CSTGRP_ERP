@@ -106,4 +106,4 @@
     };
 </script>
 
-<Button  on:click={exportAssistance}><FileExportOutline class="mr-1.5 size-3.5" />Exportar</Button>
+<Button  on:click={exportAssistance}><FileExportOutline class="size-3.5" /></Button>

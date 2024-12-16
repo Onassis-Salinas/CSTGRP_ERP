@@ -43,8 +43,9 @@
 
 {#if parseInt(Cookies.get('perm_it') || '0') == 2}
 	<MenuBar>
-		<span></span>
-		<Button on:click={createDevice}><PlusCircle class="mr-1.5 size-3.5" />Añadir fila</Button>
+		  <svelte:fragment slot="right">
+			<Button on:click={createDevice}><PlusCircle class="mr-1.5 size-3.5" />Añadir fila</Button>
+		  </svelte:fragment>
 	</MenuBar>
 {/if}
 

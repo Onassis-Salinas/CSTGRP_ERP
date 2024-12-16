@@ -118,7 +118,7 @@
 </script>
 
 <MenuBar>
-	<div class="flex gap-2">
+	  <svelte:fragment slot="left">
 		<Input type="date" bind:value={dateSelected} on:change={getProductivity} />
 		{#if viewComplete}
 			<Button class="flex-none" on:click={() => (viewComplete = !viewComplete)}
@@ -129,11 +129,11 @@
 				><BookOpen class="mr-1.5 size-3.5" />Ver todo</Button
 			>
 		{/if}
-	</div>
-	<div class="flex gap-2">
+	  </svelte:fragment>
+	  <svelte:fragment slot="right">
 		<Button on:click={() => (show = true)}><Pen class="mr-1.5 size-3.5" />Capturar</Button>
 		<!-- <ExportProductivity productivity={separatedProductivity} {areas} {positions} {weekDays} /> -->
-	</div>
+	  </svelte:fragment>
 </MenuBar>
 
 <CusTable>

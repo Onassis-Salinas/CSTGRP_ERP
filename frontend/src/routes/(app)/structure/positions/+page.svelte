@@ -47,8 +47,9 @@
 </script>
 
 <MenuBar>
-	<span></span>
-	<Button on:click={createPosition}><PlusCircle class="mr-1.5 size-3.5" />Añadir posicion</Button>
+	  <svelte:fragment slot="right">
+		<Button on:click={createPosition}><PlusCircle class="mr-1.5 size-3.5" />Añadir posicion</Button>
+	  </svelte:fragment>
 </MenuBar>
 
 <CusTable>

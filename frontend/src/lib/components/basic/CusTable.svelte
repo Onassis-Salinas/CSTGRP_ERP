@@ -3,5 +3,5 @@
 </script>
 
 <Table class="block w-full overflow-auto h-full" divClass="flex-1">
-	<slot></slot>
+	<slot>  </slot>
 </Table>

@@ -74,7 +74,7 @@
 </script>
 
 <MenuBar>
-	<form class="flex gap-2" on:submit|preventDefault={getMovements} action={''}>
+	<form class="flex flex-col gap-2 lg:flex-row" on:submit|preventDefault={getMovements} action={''}>
 		<Select
 			class="min-w-36"
 			menu

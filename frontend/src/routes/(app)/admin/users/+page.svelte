@@ -109,9 +109,11 @@
 </script>
 
 <MenuBar>
-	<span></span>
-	<Button on:click={createUser}><PlusCircle class="ml-auto mr-1.5 size-3.5" />Añadir Usuario</Button
-	>
+	  <svelte:fragment slot="right">
+		<Button on:click={createUser}
+			><PlusCircle class="ml-auto mr-1.5 size-3.5" />Añadir Usuario</Button
+		>
+	  </svelte:fragment>
 </MenuBar>
 
 <CusTable>
