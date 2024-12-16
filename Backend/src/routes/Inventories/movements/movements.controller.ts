@@ -7,6 +7,7 @@ import {
   Post,
   Put,
   Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { MovementsService } from './movements.service';
@@ -96,7 +97,7 @@ export class MovementsController {
   }
 
   @Delete('ie/:id')
-  deleteIE(@Param(new ZodPiPe(idSchema)) body) {
-    return this.movementsService.deleteIE(body);
+  deleteIE(@Param(new ZodPiPe(idSchema)) body, @Req() req) {
+    return this.movementsService.deleteIE(body, req.cookies.token);
   }
 }

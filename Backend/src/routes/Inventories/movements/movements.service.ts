@@ -1,4 +1,5 @@
 import { HttpException, Injectable } from '@nestjs/common';
+import jwt from 'jsonwebtoken';
 import { z } from 'zod';
 import sql from 'src/utils/db';
 import {
@@ -106,7 +107,7 @@ export class MovementsService {
     WHERE
         materials.id = ${body.id} AND materialmovements.active IS true
         AND materialie.jobpo IS NOT NULL
-        AND materialmovements.extra = false -- Filtrar solo los movimientos con extra = false
+        AND materialmovements.extra = false
     ORDER BY
         materialie.due DESC,
         materialmovements.id DESC
@@ -314,7 +315,14 @@ export class MovementsService {
     return;
   }
 
-  async deleteIE(body: z.infer<typeof idSchema>) {
+  async deleteIE(body: z.infer<typeof idSchema>, token: string) {
+    const user: any = await jwt.verify(token, process.env.JWT_SECRET);
+    if (user.username !== 'juan' && user.username !== 'admin')
+      throw new HttpException(
+        'No tienes permisos para eliminar movimientos',
+        403,
+      );
+
     const movements =
       await sql`select "materialId" from materialmovements where "movementId" = ${body.id}`;
 
