@@ -46,13 +46,13 @@
 		<DialogBody class="h-full max-w-full">
 			<Table>
 				<TableHeader class="sticky top-0 border-t">
-					<TableHead class="border-l">job</TableHead>
-					<TableHead>Programacion</TableHead>
-					<TableHead>Importacion</TableHead>
-					<TableHead>Cantidad Job</TableHead>
-					<TableHead>Cantidad real</TableHead>
-					<TableHead>Balance</TableHead>
-					<TableHead>Fecha</TableHead>
+					<TableHead class="border-l">JOB</TableHead>
+					<TableHead>SCHEDULE</TableHead>
+					<TableHead>IMPORT NUMBER</TableHead>
+					<TableHead>MATERIAL NEEDED</TableHead>
+					<TableHead>ISSUED MATERIAL</TableHead>
+					<TableHead>INVENTORY</TableHead>
+					<TableHead>DATE</TableHead>
 				</TableHeader>
 				<TableBody>
 					{#each movements as row}

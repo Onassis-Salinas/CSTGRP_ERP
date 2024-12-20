@@ -60,7 +60,7 @@
 </script>
 
 <MenuBar>
-	<Input menu bind:value={filters.code} placeholder="Codigo" />
+	<Input menu bind:value={filters.code} placeholder="Lookup part number" />
 	{#if hasAccess('inventory')}
 		<Select items={clientList} bind:value={filters.clientId} menu onSelectedChange={getInventory} />
 	{/if}
@@ -69,10 +69,10 @@
 <CusTable>
 	<TableHeader>
 		<TableHead class="fixed left-3 z-30 bg-inherit p-1"></TableHead>
-		<TableHead class="">Codigo</TableHead>
-		<TableHead class="">Descripcion</TableHead>
-		<TableHead class="">Cantidad</TableHead>
-		<TableHead class="">Medida</TableHead>
+		<TableHead>PART NUMBER</TableHead>
+		<TableHead>DESCRIPTION</TableHead>
+		<TableHead>INVENTORY</TableHead>
+		<TableHead>UOM</TableHead>
 	</TableHeader>
 	<TableBody>
 		{#each filteredInventory as material, i}
@@ -81,13 +81,13 @@
 					extraButtons={[
 						{
 							fn: () => viewComparison(i),
-							name: 'Comparar',
+							name: 'DETAILS',
 							icon: Ruler
 						}
 					]}
 				/>
 
-				<TableCell class="">{material.code}</TableCell>
+				<TableCell>{material.code}</TableCell>
 				<TableCell class="w-full min-w-24 max-w-1 overflow-hidden">{material.description}</TableCell
 				>
 				<TableCell
