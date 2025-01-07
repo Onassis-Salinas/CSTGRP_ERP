@@ -129,7 +129,7 @@
 				</AccordionContent>
 			</AccordionItem>
 		{/if}
-		{#if hasAccess('inventory') || (!hasAccess('inventory') && !hasAccess('users') && !hasAccess('structure') && !hasAccess('it') && !hasAccess('assistance') && !hasAccess('productivity') && !hasAccess('employees') && !hasAccess('materials'))}
+		{#if (!hasAccess('inventory') && !hasAccess('users') && !hasAccess('structure') && !hasAccess('it') && !hasAccess('assistance') && !hasAccess('productivity') && !hasAccess('employees') && !hasAccess('materials'))}
 			<AccordionItem value="9" class="border-none">
 				<AccordionTrigger class="hover:bg-muted rounded-md p-2 text-sm hover:no-underline">
 					<span class="flex items-center gap-2">
@@ -157,7 +157,7 @@
 				</AccordionContent>
 			</AccordionItem>
 		{/if}
-
+<!-- 
 		<AccordionItem value="4" class="border-none">
 			<AccordionTrigger class="hover:bg-muted rounded-md p-2 text-sm hover:no-underline">
 				<span class="flex items-center gap-2">
@@ -168,13 +168,13 @@
 
 			<AccordionContent>
 				<AccordionOption href="/resources/directory">Directorio</AccordionOption>
-				<!-- <AccordionOption
+				<AccordionOption
 					href="/resources/formats"
 					
 					><Dot  class="text=[#5c5e63]"/>Formatos</
-				> -->
+				>
 			</AccordionContent>
-		</AccordionItem>
+		</AccordionItem> -->
 	</Accordion>
 
 	<div class="mt-auto space-y-1 px-2 pb-2">
