@@ -58,12 +58,15 @@
 			result = (await api.post('/inventoryvarious/jobpdf', form)).data;
 			formData.jobpo = result.jobpo;
 			formData.due = result.dueDate;
-			materials = result.materials;
+
+			result.materials = result.materials.map((obj) => ({ ...obj, active: false }));
+
+			materials = structuredClone(result.materials);
+			console.log(materials);
 		}
 		if (fileName?.includes('.xlsx')) {
 			result = (await api.post('/inventoryvarious/exportxlsx', form)).data;
 			materials = result.materials;
-			console.log(materials);
 		}
 		if (!result) throw new Error('Archivo invalido');
 	}
@@ -83,7 +86,7 @@
 		inputDisabled = false;
 	}
 
-	$: console.log(files);
+	// $: console.log(materials);
 </script>
 
 <Dialog bind:open={show}>
