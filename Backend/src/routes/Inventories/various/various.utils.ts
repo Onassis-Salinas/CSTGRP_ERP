@@ -23,7 +23,6 @@ export async function processPDF(pdfFile: File) {
 
 export function processImport(text: string) {
   const linesArray: string[] = text.split(/\s{3,}| {2}/);
-  console.log(linesArray);
   const importNum =
     linesArray[
       linesArray.findIndex((line: string) => line.includes('Tracking :')) + 1
@@ -79,7 +78,10 @@ export function processImport(text: string) {
     }
   });
 
-  if (materials.length === 0) throw new Error('Sin materiales');
+  if (materials.length === 0) {
+    console.log('sin materiales');
+    throw new Error('Sin materiales');
+  }
 
   return { dueDate, importNum, materials };
 }
