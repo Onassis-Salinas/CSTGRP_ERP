@@ -37,4 +37,16 @@ export class FunctionsController {
   doAll() {
     return this.functionsService.doAll();
   }
+
+  @Get('adjust')
+  @UseInterceptors()
+  adjustInventory() {
+    return this.functionsService.adjustInventory();
+  }
+
+  @Get('update')
+  @UseInterceptors()
+  update() {
+    return this.functionsService.update();
+  }
 }
