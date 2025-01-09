@@ -32,20 +32,24 @@ export class StatsService {
     WHERE materials.amount + materials."leftoverAmount" + ms.total_amount < 0`;
 
     const secondMovements = await sql`SELECT 
-    code, 
-    jobpo, 
-    measurement, 
+    code, materialie.jobpo, measurement, 
     (materials.amount + materials."leftoverAmount") AS missing
-    FROM materialmovements
-    JOIN materials ON materials.id = materialmovements."materialId"
+    FROM materialmovements JOIN materials ON materials.id = materialmovements."materialId"
     JOIN materialie ON materialie.id = materialmovements."movementId"
     WHERE 
-      (materials.amount + materials."leftoverAmount") < 0
-      AND materialmovements.id = (
-          SELECT MAX(materialmovements_inner.id)
-          FROM materialmovements materialmovements_inner
-          WHERE materialmovements_inner."materialId" = materialmovements."materialId"
-      )`;
+        (materials.amount + materials."leftoverAmount") < 0
+        AND materialmovements.id = (
+            SELECT materialmovements_inner.id
+            FROM materialmovements materialmovements_inner
+            WHERE 
+                materialmovements_inner."materialId" = materialmovements."materialId"
+                AND materialmovements_inner.active = true
+                AND materialmovements_inner."amount" < 0
+            ORDER BY 
+                materialmovements_inner."activeDate" DESC, 
+                materialmovements_inner.id DESC
+            LIMIT 1
+        )`;
 
     return [...movements, {}, ...secondMovements];
   }

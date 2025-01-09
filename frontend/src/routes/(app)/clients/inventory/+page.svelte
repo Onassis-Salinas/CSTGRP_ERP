@@ -91,7 +91,7 @@
 				<TableCell class="w-full min-w-24 max-w-1 overflow-hidden">{material.description}</TableCell
 				>
 				<TableCell
-					><Badge color={material.amount < material.minAmount ? 'yellow' : 'green'}
+					><Badge color={material.amount < 0 ? 'red' : 'green'}
 						>{material.amount}</Badge
 					></TableCell
 				>
