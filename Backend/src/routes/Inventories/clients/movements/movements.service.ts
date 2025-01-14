@@ -13,12 +13,16 @@ export class MovementsService {
   ) {
     const clientId = await getUserName(token, query);
 
-    const movements = await sql`SELECT
+    const movements = await sql`SELECT 
     materialie.Due,
     materialie.import,
     materialie.programation,
     materialie.jobpo,
-    materialmovements.amount,
+    (
+        SELECT SUM(amount) 
+        FROM materialmovements AS m
+        WHERE m."materialId" = materialmovements."materialId" AND m."movementId" = materialmovements."movementId" AND m.extra = false
+    ) AS "amount",
     (
         SELECT SUM(amount) 
         FROM materialmovements AS m
@@ -28,21 +32,31 @@ export class MovementsService {
         SELECT SUM(amount) 
         FROM materialmovements AS m
         WHERE m."materialId" = materialmovements."materialId" AND m."movementId" = materialmovements."movementId"
-        )) OVER (ORDER BY materialie.due ASC, materialmovements.id ASC) AS balance
-    FROM
-        materialmovements
-    JOIN
-        materials ON materials.id = materialmovements."materialId"
-    JOIN
-        materialie ON materialie.id = materialmovements."movementId"
-    WHERE
-        materials.id = ${body.id} AND materialmovements.active IS true
-        AND materialmovements.extra = false
-        AND "clientId" = ${clientId}
-    ORDER BY
-        materialie.due DESC,
-        materialmovements.id DESC
-    LIMIT 300;`;
+    )) OVER (ORDER BY materialie.due ASC, materialmovements.id ASC) AS balance
+FROM
+    materialmovements
+JOIN
+    materials ON materials.id = materialmovements."materialId"
+JOIN
+    materialie ON materialie.id = materialmovements."movementId"
+WHERE
+    materials.id = ${body.id}
+    AND materialmovements.id IN (
+        SELECT MAX(id)
+        FROM materialmovements
+        WHERE
+            "materialId" = ${body.id}
+            AND "clientId" = ${clientId}
+            AND active = true
+            AND extra = false
+        GROUP BY "movementId"
+    )
+    AND "clientId" = ${clientId}
+ORDER BY
+    materialie.due DESC,
+    materialmovements.id DESC
+LIMIT 300;
+`;
     return movements;
   }
 
