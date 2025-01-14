@@ -90,6 +90,8 @@ export function processJob(text: string) {
   let jobpo = '';
   let linesArray = text.split(/\s{3,}| {2}/);
 
+  console.log(linesArray);
+
   const index = linesArray.findIndex((line: any) =>
     line.includes('RAW MATERIAL COMPONENTS:'),
   );
@@ -115,11 +117,14 @@ export function processJob(text: string) {
   linesArray = linesArray.slice(index, endIndex);
   const materials: Array<any> = [];
 
-  let materialNumber = 10;
+  let materialNumber = 0;
   linesArray.forEach((element: any, i: number) => {
     // Materiales
-    if (element === String(materialNumber)) {
-      materialNumber += 10;
+    if (
+      element === String(materialNumber + 5) ||
+      element === String(materialNumber + 10)
+    ) {
+      materialNumber = parseInt(element);
       const excludedValues = ['PATTERN', 'SAMPLE', 'IS', 'FREIGHT', 'SCRN'];
       if (
         !excludedValues.some((substring) =>
@@ -148,5 +153,6 @@ export function processJob(text: string) {
       material.code[0] === 'P' ? 'CSI-' + material.code : material.code;
   });
 
+  console.log(materials);
   return { materials, jobpo, dueDate };
 }
