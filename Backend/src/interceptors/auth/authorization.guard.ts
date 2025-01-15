@@ -26,7 +26,7 @@ export class AuthGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const httpContext = context.switchToHttp();
-    const req: FastifyRequest = httpContext.getRequest();
+    const req: FastifyRequest & { userId: string } = httpContext.getRequest();
     const res = httpContext.getResponse();
 
     if (req.raw.url.includes('login') || req.raw.url.includes('logout'))
@@ -53,6 +53,7 @@ export class AuthGuard implements CanActivate {
       res
         // .setCookie('perms', user, cookieConfig)
         .setCookie('areas', userperms.perm_assistance_areas, cookieConfig);
+      req.userId = user.id;
       return perm >= methods[req.method];
     } catch (err) {
       throw new HttpException('Token invalido', 401);

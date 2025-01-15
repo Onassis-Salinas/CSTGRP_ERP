@@ -8,7 +8,6 @@
 	import { Card } from '../ui/card';
 	import Package from 'lucide-svelte/icons/package';
 	import {
-		File,
 		GitMerge,
 		LogOut,
 		CircleAlert,
@@ -69,6 +68,7 @@
 					{#if hasAccess('inventory')}
 						<AccordionOption href="/warehouse/po-imp">Po-Imp</AccordionOption>
 						<AccordionOption href="/warehouse/movements">Movimientos</AccordionOption>
+						<AccordionOption href="/warehouse/records">Historial</AccordionOption>
 					{/if}
 				</AccordionContent>
 			</AccordionItem>

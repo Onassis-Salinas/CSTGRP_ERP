@@ -20,7 +20,7 @@
 </script>
 
 <div class="app">
-	<main class="">
+	<main>
 		<slot>  </slot>
 	</main>
 </div>

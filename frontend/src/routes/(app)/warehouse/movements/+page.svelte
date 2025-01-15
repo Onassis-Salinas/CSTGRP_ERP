@@ -116,17 +116,17 @@
 
 <CusTable>
 	<TableHeader>
-		<TableHead class="">Importacion</TableHead>
-		<TableHead class="">Programacion</TableHead>
-		<TableHead class="">Job-PO</TableHead>
-		<TableHead class="">Codigo</TableHead>
-		<TableHead class="">Descripcion</TableHead>
-		<TableHead class="">Sobrante</TableHead>
-		<TableHead class="">Cantidad</TableHead>
-		<TableHead class="">Cantidad Real</TableHead>
-		<TableHead class="">Medida</TableHead>
-		<TableHead class="">Cliente</TableHead>
-		<TableHead class="">Surtido</TableHead>
+		<TableHead>Importacion</TableHead>
+		<TableHead>Programacion</TableHead>
+		<TableHead>Job-PO</TableHead>
+		<TableHead>Codigo</TableHead>
+		<TableHead>Descripcion</TableHead>
+		<TableHead>Sobrante</TableHead>
+		<TableHead>Cantidad</TableHead>
+		<TableHead>Cantidad Real</TableHead>
+		<TableHead>Medida</TableHead>
+		<TableHead>Cliente</TableHead>
+		<TableHead>Surtido</TableHead>
 	</TableHeader>
 	<TableBody>
 		{#each movements as movement, i}

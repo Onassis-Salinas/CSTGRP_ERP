@@ -118,9 +118,9 @@
 
 			<Table>
 				<TableHeader>
-					<TableHead class="">Codigo</TableHead>
-					<TableHead class="">Cantidad</TableHead>
-					<TableHead class="">Medida</TableHead>
+					<TableHead>Codigo</TableHead>
+					<TableHead>Cantidad</TableHead>
+					<TableHead>Medida</TableHead>
 					<TableHead class="w-1">Surtido</TableHead>
 					<TableHead class="w-1 p-0"></TableHead>
 				</TableHeader>

@@ -15,9 +15,13 @@ import {
 } from './movements.schema';
 import { updateMaterialAmount } from 'src/utils/functions';
 import { sendEmail } from 'src/utils/emails';
+import { ContextProvider } from 'src/interceptors/context.provider';
+import { createRecord } from 'src/utils/records';
 
 @Injectable()
 export class MovementsService {
+  constructor(private readonly req: ContextProvider) {}
+
   async getMovements(body: z.infer<typeof movementsFilterSchema>) {
     const movements = await sql`SELECT
       materials.code, materials.description, materials.measurement, materials."clientId", materials."leftoverAmount", materialmovements.active, materialmovements.amount, materialmovements."realAmount", materialmovements.id, materialie.due, materialie.jobpo, materialie.programation, materialie.import, materialmovements.extra
@@ -154,31 +158,80 @@ export class MovementsService {
   }
 
   async updateImport(body: z.infer<typeof updateImportSchema>) {
-    await sql`update materialie set ${sql(body)} where id = ${body.id}`;
+    await sql.begin(async (sql) => {
+      const previousObj = (
+        await sql`select import, location from materialie where id = ${body.id}`
+      )[0];
 
-    const movements =
-      await sql`select "materialId" from materialmovements where "movementId" = ${body.id}`;
+      const newObj = (
+        await sql`update materialie set ${sql(body)} where id = ${body.id} returning import, location`
+      )[0];
+      await createRecord(
+        `Actualizo la importacion: ${previousObj?.import} con status: ${previousObj?.location} a ${newObj?.import}, ${newObj?.location}`,
+        {
+          action: 'update',
+          module: 'inventory',
+          user: this.req.getUserId(),
+        },
+        sql,
+      );
+      const movements =
+        await sql`select "materialId" from materialmovements where "movementId" = ${body.id}`;
 
-    movements.forEach(
-      async (movement) => await updateMaterialAmount(movement.materialId),
-    );
+      movements.forEach(
+        async (movement) =>
+          await updateMaterialAmount(movement.materialId, sql),
+      );
+    });
 
     return;
   }
 
   async updateExport(body: z.infer<typeof updateExportSchema>) {
-    await sql`update materialie set ${sql(body)} where id = ${body.id}`;
+    await sql.begin(async (sql) => {
+      const previousObj = (
+        await sql`select jobpo, programation from materialie where id = ${body.id}`
+      )[0];
+
+      const newObj = (
+        await sql`update materialie set ${sql(body)} where id = ${body.id} returning jobpo, programation`
+      )[0];
+
+      await createRecord(
+        `Actualizo la exportacion: ${previousObj?.jobpo}, programacion: ${previousObj?.programation} a ${newObj?.jobpo}, ${newObj?.programation}`,
+        {
+          action: 'update',
+          module: 'inventory',
+          user: this.req.getUserId(),
+        },
+        sql,
+      );
+    });
+
     return;
   }
 
   async activateMovement(body: z.infer<typeof idSchema>) {
     const [movement] =
-      await sql`select active from materialmovements where id = ${body.id}`;
+      await sql`select active, (select code from materials where id = "materialId"), (select jobpo from materialie where id = "movementId") from materialmovements where id = ${body.id}`;
 
     await sql.begin(async (sql) => {
       const [result] =
         await sql`UPDATE materialmovements SET active = NOT active, "activeDate" = ${movement.active ? null : new Date()} WHERE id = ${body.id} returning "materialId"`;
+
       await updateMaterialAmount(result.materialId, sql);
+
+      await createRecord(
+        movement.active
+          ? `Desactivo el movimiento del job ${movement.jobpo} y  material ${movement.code} `
+          : `Activo el movimiento del job ${movement.jobpo} y  material ${movement.code} `,
+        {
+          action: 'update',
+          module: 'inventory',
+          user: this.req.getUserId(),
+        },
+        sql,
+      );
     });
 
     return movement.active;
@@ -199,6 +252,16 @@ export class MovementsService {
         );
 
       await sql`insert into materialie (import, due, location) values (${body.import},${body.due}, 'At M&M, In transit')`;
+
+      await createRecord(
+        `Registro la importacion: ${body.import}`,
+        {
+          action: 'create',
+          module: 'inventory',
+          user: this.req.getUserId(),
+        },
+        sql,
+      );
 
       for (const material of body.materials) {
         const [movement] =
@@ -226,6 +289,16 @@ export class MovementsService {
 
       await sql`Insert into materialie (jobpo, programation, due) values (${body.jobpo}, ${body.programation}, ${body.due})`;
 
+      await createRecord(
+        `Registro el job: ${body.jobpo}`,
+        {
+          action: 'create',
+          module: 'inventory',
+          user: this.req.getUserId(),
+        },
+        sql,
+      );
+
       for (const material of body.materials) {
         const [movement] =
           await sql`insert into materialmovements ("materialId", "movementId", amount, "realAmount", active, "activeDate") values
@@ -234,42 +307,6 @@ export class MovementsService {
         if (material.active)
           await updateMaterialAmount(movement.materialId, sql);
       }
-
-      //Finally we anallize and send emails
-
-      const movements = await sql`WITH MaterialSum AS (
-        SELECT 
-            materials.id,
-            SUM(materialmovements.amount) as total_amount
-        FROM materialmovements
-        JOIN materials ON materials.id = materialmovements."materialId"
-        WHERE materialmovements.active = false
-        GROUP BY materials.id
-        )   
-    
-        SELECT 
-            DISTINCT(materials.code), 
-            materials.measurement, 
-            (
-              SELECT string_agg("jobpo", ' ,') 
-              FROM materialmovements 
-              JOIN materialie ON materialie.id = materialmovements."movementId" 
-              WHERE "materialId" = materials.id 
-              AND materialmovements.active = false
-            ) as jobpo,
-            ABS(materials.amount + materials."leftoverAmount" + ms.total_amount) as missing
-        FROM materials
-        JOIN MaterialSum ms ON ms.id = materials.id
-        WHERE materials.amount + materials."leftoverAmount" + ms.total_amount < 0
-        AND materials.code in ${sql(materials)}`;
-
-      // for (const movement of movements) {
-      //   await sendEmail(
-      //     `Material ${movement.code} faltante.`,
-      //     `El material ${movement.code} tiene ${movement.missing} ${movement.measurement} faltantes para completar las ordenes: ${movement.jobpo}.`,
-      //     ['onassis.dev@gmail.com'],
-      //   );
-      // }
     });
 
     return;
@@ -295,6 +332,16 @@ export class MovementsService {
         ${new Date()},
         true)`;
 
+        await createRecord(
+          `Hizo una reposicion de ${body.amount} ${body.code} para el job ${body.job}`,
+          {
+            action: 'create',
+            module: 'inventory',
+            user: this.req.getUserId(),
+          },
+          sql,
+        );
+
         await updateMaterialAmount(material.id, sql);
       });
     } catch (err) {
@@ -309,26 +356,40 @@ export class MovementsService {
 
   async postReturn(body: z.infer<typeof extraMovementSchema>) {
     try {
-      if (body.job) {
-        await sql`insert into materialmovements ("materialId", "movementId", amount, "realAmount", active, "activeDate", extra) values
-      ((select id from materials where code = ${body.code}),
-      (select id from materialie where jobpo = ${body.job}),
-      ${Math.abs(parseFloat(body.amount))},
-      ${Math.abs(parseFloat(body.amount))},
-      true,
-      ${new Date()},
-      true)`;
-      } else {
-        const [material] =
-          await sql`select id, "leftoverAmount" from materials where code = ${body.code}`;
+      const [material] =
+        await sql`select id, "leftoverAmount" from materials where code = ${body.code}`;
 
+      if (body.job) {
+        await sql.begin(async (sql) => {
+          await sql`insert into materialmovements ("materialId", "movementId", amount, "realAmount", active, "activeDate", extra) values
+            ((select id from materials where code = ${body.code}),
+            (select id from materialie where jobpo = ${body.job}),
+            ${Math.abs(parseFloat(body.amount))},
+            ${Math.abs(parseFloat(body.amount))},
+            true,
+            ${new Date()},
+            true)`;
+
+          await updateMaterialAmount(material.id, sql);
+
+          await createRecord(
+            `Hizo un retorno de ${body.amount} ${body.code} para el job ${body.job}`,
+            {
+              action: 'create',
+              module: 'inventory',
+              user: this.req.getUserId(),
+            },
+            sql,
+          );
+        });
+      } else {
         if (material.leftoverAmount < parseFloat(body.amount))
           throw new HttpException(
             `El material ${body.code} no tiene suficiente material sobrante`,
             400,
           );
 
-        sql.begin(async (sql) => {
+        await sql.begin(async (sql) => {
           await sql`insert into materialmovements ("materialId", "movementId", amount, "realAmount", active, "activeDate", extra) values
           ((select id from materials where code = ${body.code}),
           (select id from materialie where import = 'Retorno'),
@@ -339,9 +400,20 @@ export class MovementsService {
           true)`;
 
           await updateMaterialAmount(material.id, sql);
+
+          await createRecord(
+            `Hizo un retorno de ${body.amount} al material ${body.code}`,
+            {
+              action: 'create',
+              module: 'inventory',
+              user: this.req.getUserId(),
+            },
+            sql,
+          );
         });
       }
     } catch (err) {
+      console.log(err);
       if (err.column_name === 'materialId')
         throw new HttpException(`El material ${body.code} no existe.`, 400);
       if (err.column_name === 'movementId')
@@ -364,11 +436,23 @@ export class MovementsService {
       await sql`select "materialId" from materialmovements where "movementId" = ${body.id}`;
 
     sql.begin(async (sql) => {
-      await sql`delete from materialie where id = ${body.id}`;
+      const deleted = (
+        await sql`delete from materialie where id = ${body.id} returning jobpo, import`
+      )[0];
 
       for (const movement of movements) {
         await updateMaterialAmount(movement.materialId, sql);
       }
+
+      await createRecord(
+        `Elimino ${deleted?.jobpo ? 'el job' : 'la importacion'} ${deleted?.jobpo || deleted?.import}`,
+        {
+          action: 'delete',
+          module: 'inventory',
+          user: this.req.getUserId(),
+        },
+        sql,
+      );
     });
 
     return;

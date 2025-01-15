@@ -224,23 +224,23 @@
 
 					<div class="grid grid-cols-3 gap-1">
 						<Badge
-							class=""
+							
 							color={getColors(parseInt(formData.produced0) / parseInt(formData.goal0))}
 							>{(parseInt(formData.produced0) / parseInt(formData.goal0)) * 100 || ''}%</Badge
 						>
 						<Badge
-							class=""
+							
 							color={getColors(parseInt(formData.produced1) / parseInt(formData.goal1))}
 							>{(parseInt(formData.produced1) / parseInt(formData.goal1)) * 100 || ''}%</Badge
 						>
 						<Badge
-							class=""
+							
 							color={getColors(parseInt(formData.produced2) / parseInt(formData.goal2))}
 							>{(parseInt(formData.produced2) / parseInt(formData.goal2)) * 100 || ''}%</Badge
 						>
 					</div>
 					<Badge
-						class=""
+						
 						color={getColors(
 							((parseInt(formData.produced0) / parseInt(formData.goal0) || 0) +
 								(parseInt(formData.produced1) / parseInt(formData.goal1) || 0) +

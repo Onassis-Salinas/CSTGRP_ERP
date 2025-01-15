@@ -35,6 +35,7 @@
 		it: 'Sistemas',
 		positions: 'Posiciones',
 		areas: 'Areas',
+		records: 'Historial',
 		'po-imp': 'PO/Job - Importaciones'
 	};
 </script>

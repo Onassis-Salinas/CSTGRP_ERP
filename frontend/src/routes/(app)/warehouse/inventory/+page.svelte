@@ -137,14 +137,14 @@
 <CusTable>
 	<TableHeader>
 		<TableHead class="fixed left-3 z-30 bg-inherit p-1"></TableHead>
-		<TableHead class="">Codigo</TableHead>
-		<TableHead class="">Descripcion</TableHead>
-		<TableHead class="">Ubicacion</TableHead>
-		<TableHead class="">Sobrante</TableHead>
-		<TableHead class="">Cantidad</TableHead>
-		<TableHead class="">Minimo</TableHead>
-		<TableHead class="">Medida</TableHead>
-		<TableHead class="">Cliente</TableHead>
+		<TableHead>Codigo</TableHead>
+		<TableHead>Descripcion</TableHead>
+		<TableHead>Ubicacion</TableHead>
+		<TableHead>Sobrante</TableHead>
+		<TableHead>Cantidad</TableHead>
+		<TableHead>Minimo</TableHead>
+		<TableHead>Medida</TableHead>
+		<TableHead>Cliente</TableHead>
 	</TableHeader>
 	<TableBody>
 		{#each filteredInventory as material, i}
@@ -162,10 +162,10 @@
 					]}
 				/>
 
-				<TableCell class="">{material.code}</TableCell>
+				<TableCell>{material.code}</TableCell>
 				<TableCell class="w-full min-w-24 max-w-1 overflow-hidden">{material.description}</TableCell
 				>
-				<TableCell class="">{material.location || ''}</TableCell>
+				<TableCell>{material.location || ''}</TableCell>
 				<TableCell><Badge color="gray">{material.leftoverAmount}</Badge></TableCell>
 				<TableCell
 					><Badge color={material.amount < material.minAmount ? 'yellow' : 'green'}
