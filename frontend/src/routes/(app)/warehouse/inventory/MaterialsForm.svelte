@@ -30,7 +30,8 @@
 		{ name: 'YARDAS', value: 'YD' },
 		{ name: 'METROS', value: 'MT' },
 		{ name: 'PIEZAS', value: 'PC' },
-		{ name: 'PIES', value: 'FT' }
+		{ name: 'PIES', value: 'FT' },
+		{ name: 'GALONES', value: 'GAL' }
 	];
 
 	async function getClients() {
