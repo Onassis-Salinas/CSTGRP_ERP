@@ -68,6 +68,8 @@
 					{#if hasAccess('inventory')}
 						<AccordionOption href="/warehouse/po-imp">Po-Imp</AccordionOption>
 						<AccordionOption href="/warehouse/movements">Movimientos</AccordionOption>
+					{/if}
+					{#if hasAccess('users')}
 						<AccordionOption href="/warehouse/records">Historial</AccordionOption>
 					{/if}
 				</AccordionContent>
@@ -129,7 +131,7 @@
 				</AccordionContent>
 			</AccordionItem>
 		{/if}
-		{#if (!hasAccess('inventory') && !hasAccess('users') && !hasAccess('structure') && !hasAccess('it') && !hasAccess('assistance') && !hasAccess('productivity') && !hasAccess('employees') && !hasAccess('materials'))}
+		{#if !hasAccess('inventory') && !hasAccess('users') && !hasAccess('structure') && !hasAccess('it') && !hasAccess('assistance') && !hasAccess('productivity') && !hasAccess('employees') && !hasAccess('materials')}
 			<AccordionItem value="9" class="border-none">
 				<AccordionTrigger class="hover:bg-muted rounded-md p-2 text-sm hover:no-underline">
 					<span class="flex items-center gap-2">
@@ -157,7 +159,7 @@
 				</AccordionContent>
 			</AccordionItem>
 		{/if}
-<!-- 
+		<!-- 
 		<AccordionItem value="4" class="border-none">
 			<AccordionTrigger class="hover:bg-muted rounded-md p-2 text-sm hover:no-underline">
 				<span class="flex items-center gap-2">
