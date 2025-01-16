@@ -62,8 +62,9 @@ export class MaterialsService {
   }
 
   async deleteMaterial(body: z.infer<typeof deleteSchema>) {
+    let deletedObj;
     await sql.begin(async (sql) => {
-      const [deletedObj] =
+      [deletedObj] =
         await sql`delete from materials where id = ${body.id} returning image, code`;
       await createRecord(
         `Elimino el material ${deletedObj.code}`,
@@ -74,8 +75,8 @@ export class MaterialsService {
         },
         sql,
       );
-      deleteFile(deletedObj.image);
     });
+    if (deletedObj?.image) deleteFile(deletedObj?.image);
 
     return;
   }

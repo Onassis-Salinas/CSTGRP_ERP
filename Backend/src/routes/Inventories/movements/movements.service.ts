@@ -435,7 +435,7 @@ export class MovementsService {
     const movements =
       await sql`select "materialId" from materialmovements where "movementId" = ${body.id}`;
 
-    sql.begin(async (sql) => {
+    await sql.begin(async (sql) => {
       const deleted = (
         await sql`delete from materialie where id = ${body.id} returning jobpo, import`
       )[0];
