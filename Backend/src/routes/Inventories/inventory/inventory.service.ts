@@ -15,7 +15,7 @@ export class InventoryService {
     const worksheet = workbook.addWorksheet('Inventario');
 
     const rows = await sql`select
-      id, code, description, (amount + "leftoverAmount") as amount, measurement,
+      id, code, description, (amount + "leftoverAmount") as total, "leftoverAmount", amount, measurement,
       (select name from clients where id = "clientId") as client
       from materials`;
 
@@ -41,6 +41,8 @@ export class InventoryService {
       { header: 'Material', key: 'code', width: 25 },
       { header: 'Descripcion', key: 'description', width: 120 },
       { header: 'Cantidad', key: 'amount', width: 15 },
+      { header: 'Sobrante en area', key: 'leftoverAmount', width: 20 },
+      { header: 'Total', key: 'total', width: 15 },
       { header: 'Medida', key: 'measurement', width: 14 },
       { header: 'Cliente', key: 'client', width: 15 },
       { header: 'Job 1', key: 'job0', width: 12 },
