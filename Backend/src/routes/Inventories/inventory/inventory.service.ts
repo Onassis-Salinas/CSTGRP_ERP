@@ -15,7 +15,7 @@ export class InventoryService {
     const worksheet = workbook.addWorksheet('Inventario');
 
     const rows = await sql`select
-      id, code, description, amount, measurement,
+      id, code, description, (amount + "leftoverAmount") as amount, measurement,
       (select name from clients where id = "clientId") as client
       from materials`;
 
