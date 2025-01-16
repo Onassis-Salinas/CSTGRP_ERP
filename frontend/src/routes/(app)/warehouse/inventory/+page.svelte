@@ -14,6 +14,8 @@
 	import DeletePopUp from '$lib/components/complex/DeletePopUp.svelte';
 	import { showSuccess } from '$lib/utils/showToast';
 	import MaterialComparisonCard from './MaterialComparisonCard.svelte';
+	import { format } from 'date-fns';
+	import { es } from 'date-fns/locale';
 
 	let show = false;
 	let show1 = false;
@@ -64,7 +66,7 @@
 
 		const link = document.createElement('a');
 		link.href = URL.createObjectURL(blob);
-		link.download = 'Inventario.xlsx';
+		link.download = `Inventario ${format(new Date(), 'dd/MM/yyyy HH:mm', { locale: es })}.xlsx`;
 
 		document.body.appendChild(link);
 
@@ -125,13 +127,13 @@
 </script>
 
 <MenuBar>
-	  <svelte:fragment slot="left">
+	<svelte:fragment slot="left">
 		<Input menu bind:value={filters.code} placeholder="Codigo" />
-	  </svelte:fragment>
-	  <svelte:fragment slot="right">
+	</svelte:fragment>
+	<svelte:fragment slot="right">
 		<Button on:click={exportInventory}><FileDown class="size-3.5" /></Button>
 		<Button on:click={createMaterial}><PlusCircle class="mr-1.5 size-3.5" />Añadir Material</Button>
-	  </svelte:fragment>
+	</svelte:fragment>
 </MenuBar>
 
 <CusTable>
