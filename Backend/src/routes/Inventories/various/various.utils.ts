@@ -47,11 +47,7 @@ export function processImport(text: string) {
       if (code.endsWith('-CA')) {
         code += linesArray[i + 2].replaceAll(' ', '');
       }
-      if (code.substring(0, 5) !== 'CSI-P')
-        // const excludedValues = ['THS', 'TTF', 'ALS'];
-        // if (excludedValues.some((substring) => code.includes(substring))) return;
-
-        return;
+      if (code.substring(0, 5) !== 'CSI-') return;
       if (code.includes('ZEN')) return;
       if (code.includes('EAL-')) return;
       if (code.includes('ZP-')) return;
