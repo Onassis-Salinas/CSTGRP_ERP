@@ -17,76 +17,6 @@ dotenv.config();
 
 @Injectable()
 export class FunctionsService {
-  async adjustInventory() {
-    // Ruta del archivo
-    const filePath = path.resolve('/home/onassis/Inventario inicial.xlsx');
-
-    // Leer el archivo desde el sistema
-    const fileBuffer = fs.readFileSync(filePath);
-
-    // Cargar el archivo en ExcelJS
-    const wb = new ExcelJS.Workbook();
-    await wb.xlsx.load(fileBuffer);
-
-    const rows: any[] = wb
-      .getWorksheet(1)
-      .getRows(2, 10000)
-      .map((row) => {
-        return {
-          code: row.getCell(2).value,
-          amount: row.getCell(4).value,
-        };
-      })
-      .filter((item) => item.code);
-
-    console.log(rows);
-
-    let job: any;
-    let importRows: any;
-    // Ejecutar transacciones en SQL
-    await sql.begin(async (sql) => {
-      const [{ id: importId }] =
-        await sql`insert into materialie (import, due) values (2, '2024-01-01') returning id`;
-
-      for (const row of rows) {
-        if (!(row.amount > 0)) continue;
-
-        // try {
-        console.log(row.code);
-          await sql`INSERT INTO materialmovements ("materialId", "movementId", amount, "realAmount", active) values
-          ((select id from materials where code = ${row.code}), ${importId}, ${row.amount}, ${row.amount}, true)`;
-        // } catch (e) {
-          // console.log(e);
-          // console.log(row.code);
-          // console.log('///////');
-        // }
-      }
-
-      const [{ id: jobId }] =
-        await sql`Insert into materialie (jobpo, programation, due) values (1, 1, '2024-01-01' ) returning id`;
-
-      for (const row of rows) {
-        if (!(row.amount < 0)) continue;
-
-        // try {
-          await sql`INSERT INTO materialmovements ("materialId", "movementId", amount, "realAmount", active) values
-          ((select id from materials where code = ${row.code}), ${jobId}, ${row.amount}, ${row.amount}, true)`;
-        // } catch (e) {
-          // console.log(e);
-          // console.log(row.code);
-          // console.log('///////');
-        // }
-      }
-
-      job =
-        await sql`select (select code from materials where id = "materialId") as code, amount from materialmovements where "movementId" = ${jobId}`;
-      importRows =
-        await sql`select (select code from materials where id = "materialId") as code, amount from materialmovements where "movementId" = ${importId}`;
-    });
-
-    return [job, importRows];
-  }
-
   async importInventory() {
     // Ruta del archivo
     const filePath = path.resolve(
@@ -133,11 +63,41 @@ export class FunctionsService {
     return rows;
   }
 
-  async update(){
-    const materials = await sql`select id from materials`
-    for (const material of materials){
-      console.log(material.id)
-      await updateMaterialAmount(material.id)
+  async importLocations(file: File) {
+    const wb = new ExcelJS.Workbook();
+    await wb.xlsx.load(file.buffer);
+
+    const rows: any[] = wb
+      .getWorksheet(1)
+      .getRows(2, 10000)
+      .map((row) => {
+        return {
+          code: row.getCell(1).value,
+          description: row.getCell(2).value,
+          amount: row.getCell(3).value,
+          measurement: row.getCell(4).value,
+          location: row.getCell(5).value,
+          clientId: 3,
+        };
+      })
+      .filter((item) => item.code)
+      .map((e) => ({ ...e, code: 'CSI-' + e.code }));
+
+    console.log(rows);
+    await sql.begin(async (sql) => {
+      for (const row of rows) {
+        await sql`update materials set location = ${row.location || ''} where code = ${row.code}`;
+      }
+    });
+
+    return rows;
+  }
+
+  async update() {
+    const materials = await sql`select id from materials`;
+    for (const material of materials) {
+      console.log(material.id);
+      await updateMaterialAmount(material.id);
     }
   }
 

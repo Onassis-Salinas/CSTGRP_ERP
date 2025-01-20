@@ -1,7 +1,15 @@
-import { Controller, Get, UseGuards, UseInterceptors } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { FunctionsService } from './functions.service';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/interceptors/auth/authorization.guard';
+import { File, FileInterceptor } from '@nest-lab/fastify-multer';
 
 @ApiTags('Functions')
 @Controller('functions')
@@ -38,15 +46,15 @@ export class FunctionsController {
     return this.functionsService.doAll();
   }
 
-  @Get('adjust')
-  @UseInterceptors()
-  adjustInventory() {
-    return this.functionsService.adjustInventory();
-  }
-
   @Get('update')
   @UseInterceptors()
   update() {
     return this.functionsService.update();
+  }
+
+  @Post('locations')
+  @UseInterceptors(FileInterceptor('files'))
+  convertImport(@UploadedFile() file: File) {
+    return this.functionsService.importLocations(file);
   }
 }
