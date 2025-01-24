@@ -464,14 +464,12 @@ export class MovementsService {
     const worksheet = workbook.addWorksheet('Inventario');
 
     const results = await sql`SELECT
-      materials.code, materials.description, materials.measurement, materials."clientId", materials."leftoverAmount", materials.amount as inventory, materialmovements.active, materialmovements.amount, materialmovements."realAmount", materialmovements.id, materialie.due, materialie.jobpo, materialie.programation, materialie.import, materialmovements.extra
+      materials.code, materials.description, materials.measurement, materials."clientId", materials."leftoverAmount", materials.amount as inventory, materialmovements.amount, materialmovements."realAmount", materialmovements.id, materialie.due, materialie.jobpo, materialie.programation
       FROM materialmovements
       JOIN materials on materials.id = materialmovements."materialId"
       JOIN materialie on materialie.id = materialmovements."movementId"
-      WHERE
-      materialmovements.active = false
-      ORDER BY materialie.due DESC, materialie.jobpo DESC, materials.code DESC, materialmovements.amount DESC, materialmovements.id DESC
-      LIMIT 150`;
+      WHERE materialmovements.active = false
+      ORDER BY materialie.due DESC, materialie.jobpo DESC, materials.code DESC, materialmovements.amount DESC, materialmovements.id DESC`;
 
     worksheet.columns = [
       { header: 'Programacion', key: 'programation', width: 16 },
