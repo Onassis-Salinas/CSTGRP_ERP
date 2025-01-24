@@ -51,6 +51,11 @@ export class MovementsController {
     return this.movementsService.getMovements(params);
   }
 
+  @Get('export-pending')
+  exportPending() {
+    return this.movementsService.exportPending();
+  }
+
   @Get('ie')
   getIE(@Query(new ZodPiPe(IEFilterSchema)) params) {
     return this.movementsService.getIE(params);

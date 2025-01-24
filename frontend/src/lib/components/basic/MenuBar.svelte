@@ -28,12 +28,12 @@
 			<slot name="right" />
 		</div>
 	</div>
-	<div class="hidden w-full justify-between lg:flex">
-		<div class="flex gap-2">
+	<div class="hidden w-full justify-between lg:flex gap-2">
+		<div class="flex gap-1">
 			<slot name="left"></slot>
 			<slot></slot>
 		</div>
-		<div class="flex gap-2">
+		<div class="flex gap-1">
 			<slot name="right"></slot>
 		</div>
 	</div>

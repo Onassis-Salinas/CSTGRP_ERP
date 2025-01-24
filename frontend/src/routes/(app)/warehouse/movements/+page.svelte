@@ -8,7 +8,7 @@
 	import { TableBody, TableCell, TableHead, TableHeader, TableRow } from '$lib/components/ui/table';
 	import api from '$lib/utils/server';
 	import { showSuccess } from '$lib/utils/showToast';
-	import { Pen, Search } from 'lucide-svelte';
+	import { FileDown, Pen, Search } from 'lucide-svelte';
 	import WarningPopUp from './WarningPopUp.svelte';
 	import { onMount } from 'svelte';
 	import ImportMovementsForm from './ImportMovementsForm.svelte';
@@ -19,6 +19,8 @@
 	import DropdownMenuItem from '$lib/components/ui/dropdown-menu/dropdown-menu-item.svelte';
 	import RepositionForm from './RepositionForm.svelte';
 	import ReturnForm from './returnForm.svelte';
+	import { es } from 'date-fns/locale';
+	import { format } from 'date-fns';
 
 	let show = false;
 	let show1 = false;
@@ -84,6 +86,26 @@
 		await getMovements();
 	}
 
+	async function exportUncheckedMovements() {
+		const response = await api.get('/materialmovements/export-pending', {
+			responseType: 'arraybuffer'
+		});
+
+		const blob = new Blob([response.data], {
+			type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+		});
+
+		const link = document.createElement('a');
+		link.href = URL.createObjectURL(blob);
+		link.download = `Pendientes ${format(new Date(), 'dd/MM/yyyy HH:mm', { locale: es })}.xlsx`;
+
+		document.body.appendChild(link);
+
+		link.click();
+
+		document.body.removeChild(link);
+	}
+
 	onMount(() => {
 		getMovements();
 		fetchClients();
@@ -91,7 +113,7 @@
 </script>
 
 <MenuBar>
-	<form class="flex gap-2 flex-col lg:flex-row" on:submit|preventDefault={getMovements} action={''}>
+	<form class="flex flex-col gap-1 lg:flex-row" on:submit|preventDefault={getMovements} action={''}>
 		<Input menu bind:value={filters.import} placeholder="Importacion" />
 		<Input menu bind:value={filters.programation} placeholder="Programacion" />
 		<Input menu bind:value={filters.jobpo} placeholder="Job" />
@@ -99,9 +121,11 @@
 		<Select menu items={checkStatus} bind:value={filters.checked} />
 		<Button type="submit"><Search class="mr-1.5 size-3.5" />Buscar</Button>
 	</form>
-	  <svelte:fragment slot="right">
+	<svelte:fragment slot="right">
+		<Button on:click={exportUncheckedMovements}><FileDown class="size-3.5" /></Button>
 		<DropdownMenu>
 			<DropdownMenuTrigger>
+
 				<Button><Pen class="mr-1.5 size-3.5" />Registrar</Button>
 				<DropdownMenuContent>
 					<DropdownMenuItem on:click={() => (show = true)}>Importacion</DropdownMenuItem>
@@ -111,7 +135,7 @@
 				</DropdownMenuContent>
 			</DropdownMenuTrigger>
 		</DropdownMenu>
-	  </svelte:fragment>
+	</svelte:fragment>
 </MenuBar>
 
 <CusTable>

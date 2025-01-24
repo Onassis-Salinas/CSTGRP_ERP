@@ -57,13 +57,11 @@ export class UsersService {
       res.setCookie(key, user[key], cookieConfig);
     });
 
-    await createRecord(
-      `${body.username} inicio sesion`,
-      {
-        action: 'update',
-        module: 'users',
-      },
-    );
+    await createRecord(`${body.username} inicio sesion`, {
+      action: 'update',
+      module: 'users',
+      user: user.id,
+    });
 
     res.send();
   }
