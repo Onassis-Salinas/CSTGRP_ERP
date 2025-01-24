@@ -5,7 +5,6 @@ import { VariousModule } from './various/various.module';
 import { MovementsModule } from './movements/movements.module';
 import { StatsModule } from './stats/stats.module';
 import { ClientMovementsModule } from './clients/movements/movements.module';
-import { RecordsModule } from './records/records.module';
 
 @Module({
   imports: [
@@ -14,7 +13,6 @@ import { RecordsModule } from './records/records.module';
     VariousModule,
     MovementsModule,
     StatsModule,
-    RecordsModule,
     ClientMovementsModule,
   ],
 })

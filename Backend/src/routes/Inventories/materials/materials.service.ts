@@ -29,7 +29,7 @@ export class MaterialsService {
     await sql.begin(async (sql) => {
       await sql`insert into materials ${sql({ ...body, image })} returning id`;
       await createRecord(
-        `creo el material ${body.code}`,
+        `Creo el material ${body.code}`,
         {
           action: 'create',
           module: 'inventory',

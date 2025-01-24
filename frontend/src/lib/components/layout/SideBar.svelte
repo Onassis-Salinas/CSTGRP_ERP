@@ -69,9 +69,6 @@
 						<AccordionOption href="/warehouse/po-imp">Po-Imp</AccordionOption>
 						<AccordionOption href="/warehouse/movements">Movimientos</AccordionOption>
 					{/if}
-					{#if hasAccess('users')}
-						<AccordionOption href="/warehouse/records">Historial</AccordionOption>
-					{/if}
 				</AccordionContent>
 			</AccordionItem>
 		{/if}
@@ -156,6 +153,7 @@
 
 				<AccordionContent>
 					<AccordionOption href="/admin/users">Usuarios</AccordionOption>
+					<AccordionOption href="/warehouse/records">Historial</AccordionOption>
 				</AccordionContent>
 			</AccordionItem>
 		{/if}
