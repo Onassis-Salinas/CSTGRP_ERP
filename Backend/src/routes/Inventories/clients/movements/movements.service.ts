@@ -64,7 +64,7 @@ LIMIT 300;
     const clientId = await getUserName(token, query);
 
     const inventory =
-      await sql`Select id, code, description,  measurement, (amount + "leftoverAmount") as amount from materials where "clientId" = ${clientId} order by code`;
+      await sql`Select id, code, description, location,  measurement, (amount + "leftoverAmount") as amount from materials where "clientId" = ${clientId} order by code`;
 
     return inventory;
   }
