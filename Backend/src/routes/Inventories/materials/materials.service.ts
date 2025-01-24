@@ -66,6 +66,7 @@ export class MaterialsService {
     await sql.begin(async (sql) => {
       [deletedObj] =
         await sql`delete from materials where id = ${body.id} returning image, code`;
+
       await createRecord(
         `Elimino el material ${deletedObj.code}`,
         {

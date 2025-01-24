@@ -13,7 +13,7 @@ export class RecordsService {
       ${query.text ? sql`AND "text" ILIKE ${'%' + query.text + '%'}` : sql``}
       ${query.user ? sql`AND "user" ILIKE ${'%' + query.user + '%'}` : sql``}
       ORDER BY id DESC
-      LIMIT 1000
+      LIMIT 500
     `;
 
     console.log(query);
