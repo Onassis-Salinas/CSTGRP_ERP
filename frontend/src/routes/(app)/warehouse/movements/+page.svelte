@@ -122,6 +122,7 @@
 		<TableHead>Codigo</TableHead>
 		<TableHead>Descripcion</TableHead>
 		<TableHead>Sobrante</TableHead>
+		<TableHead>Inventario</TableHead>
 		<TableHead>Cantidad</TableHead>
 		<TableHead>Cantidad Real</TableHead>
 		<TableHead>Medida</TableHead>
@@ -138,6 +139,7 @@
 				<TableCell class="w-full min-w-24 max-w-1 overflow-hidden">{movement.description}</TableCell
 				>
 				<TableCell><Badge color="gray">{movement.leftoverAmount}</Badge></TableCell>
+				<TableCell><Badge color="gray">{movement.inventory}</Badge></TableCell>
 				<TableCell
 					><Badge color={parseFloat(movement.amount) >= 0 ? 'green' : 'red'}
 						>{movement.amount}</Badge
