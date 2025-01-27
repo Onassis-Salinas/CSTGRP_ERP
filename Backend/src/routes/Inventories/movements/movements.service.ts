@@ -66,7 +66,7 @@ export class MovementsService {
 
   async getMaterialMovements(body: z.infer<typeof idSchema>) {
     const movements = await sql`SELECT
-        materialie.Due,
+        materialmovements."activeDate",
         materialie.programation,
         materialie.jobpo,
         materialie.import,
@@ -74,7 +74,7 @@ export class MovementsService {
         materialmovements.extra,
         materialmovements."realAmount",
         materialmovements.active,
-        SUM(materialmovements."realAmount") OVER (ORDER BY materialie.due ASC, materialmovements.id ASC) AS balance
+        SUM(materialmovements."realAmount") OVER (ORDER BY materialmovements."activeDate" ASC, materialmovements.id ASC) AS balance
         FROM
             materialmovements
         JOIN
@@ -82,11 +82,11 @@ export class MovementsService {
         JOIN
             materialie ON materialie.id = materialmovements."movementId"
         WHERE
-            materials.id = ${body.id} AND  materialmovements.active is true
+            materials.id = ${body.id} 
+            AND  materialmovements.active is true
             AND (materialie.location IS NULL OR materialie.location = 'At CST, Qtys verified' or materialie.import = 'Retorno')
-
         ORDER BY
-            materialie.due DESC,
+            materialmovements."activeDate" DESC,
             materialmovements.id DESC
         LIMIT 200`;
     return movements;
@@ -94,7 +94,7 @@ export class MovementsService {
 
   async getMaterialComparison(body: z.infer<typeof idSchema>) {
     const movements = await sql`SELECT
-    materialie.Due,
+    materialmovements."activeDate" as due,
     materialie.programation,
     materialie.jobpo,
     materialmovements.amount,
@@ -110,11 +110,12 @@ export class MovementsService {
     JOIN
         materialie ON materialie.id = materialmovements."movementId"
     WHERE
-        materials.id = ${body.id} AND materialmovements.active IS true
+        materials.id = ${body.id} 
+        AND materialmovements.active IS true
         AND materialie.jobpo IS NOT NULL
         AND materialmovements.extra = false
     ORDER BY
-        materialie.due DESC,
+        materialmovements."activeDate" DESC,
         materialmovements.id DESC
     LIMIT 300;`;
 
@@ -244,7 +245,7 @@ export class MovementsService {
       for (const material of body.materials) {
         const [movement] =
           await sql`insert into materialmovements ("materialId", "movementId", amount, "realAmount", active, "activeDate") values
-         ((select id from materials where code = ${material.code}),(select id from materialie where import = ${body.import}), ${Math.abs(parseFloat(material.amount))},${Math.abs(parseFloat(material.amount))}, true, ${new Date()}) returning "materialId"`;
+         ((select id from materials where code = ${material.code}),(select id from materialie where import = ${body.import}), ${Math.abs(parseFloat(material.amount))},${Math.abs(parseFloat(material.amount))}, true, ${body.due}) returning "materialId"`;
 
         await updateMaterialAmount(movement.materialId);
       }

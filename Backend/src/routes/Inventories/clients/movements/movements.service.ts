@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import { HttpException, Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import sql from 'src/utils/db';
-import { clientSchema, idSchema } from './movements.schema';
+import { clientSchema, idSchema, IEFilterSchema } from './movements.schema';
 
 @Injectable()
 export class MovementsService {
@@ -14,50 +14,54 @@ export class MovementsService {
     const clientId = await getUserName(token, query);
 
     const movements = await sql`SELECT 
-    materialie.Due,
-    materialie.import,
-    materialie.programation,
-    materialie.jobpo,
-    (
-        SELECT SUM(amount) 
-        FROM materialmovements AS m
-        WHERE m."materialId" = materialmovements."materialId" AND m."movementId" = materialmovements."movementId" AND m.extra = false
-    ) AS "amount",
-    (
-        SELECT SUM(amount) 
-        FROM materialmovements AS m
-        WHERE m."materialId" = materialmovements."materialId" AND m."movementId" = materialmovements."movementId"
-    ) AS "realAmount",
-    SUM((
-        SELECT SUM(amount) 
-        FROM materialmovements AS m
-        WHERE m."materialId" = materialmovements."materialId" AND m."movementId" = materialmovements."movementId"
-    )) OVER (ORDER BY materialie.due ASC, materialmovements.id ASC) AS balance
-FROM
-    materialmovements
-JOIN
-    materials ON materials.id = materialmovements."materialId"
-JOIN
-    materialie ON materialie.id = materialmovements."movementId"
-WHERE
-    materials.id = ${body.id}
-    AND materialmovements.id IN (
-        SELECT MAX(id)
-        FROM materialmovements
-        WHERE
-            "materialId" = ${body.id}
-            AND "clientId" = ${clientId}
-            AND active = true
-            AND extra = false
-        GROUP BY "movementId"
-    )
-    AND "clientId" = ${clientId}
-ORDER BY
-    materialie.due DESC,
-    materialmovements.id DESC
-LIMIT 300;
-`;
-    return movements;
+        materialmovements."activeDate" as due,
+        materialie.import,
+        materialie.programation,
+        materialie.jobpo,
+        (
+            SELECT SUM(amount) 
+            FROM materialmovements AS m
+            WHERE m."materialId" = materialmovements."materialId" AND m."movementId" = materialmovements."movementId" AND m.extra = false
+        ) AS "amount",
+        (
+            SELECT SUM(amount) 
+            FROM materialmovements AS m
+            WHERE m."materialId" = materialmovements."materialId" AND m."movementId" = materialmovements."movementId"
+        ) AS "realAmount",
+        SUM((
+            SELECT SUM(amount) 
+            FROM materialmovements AS m
+            WHERE m."materialId" = materialmovements."materialId" AND m."movementId" = materialmovements."movementId"
+        )) OVER (ORDER BY materialmovements."activeDate" ASC, materialmovements.id ASC) AS balance
+    FROM
+        materialmovements
+    JOIN
+        materials ON materials.id = materialmovements."materialId"
+    JOIN
+        materialie ON materialie.id = materialmovements."movementId"
+    WHERE
+        materials.id = ${body.id}
+        AND materialmovements.id IN (
+            SELECT MAX(id)
+            FROM materialmovements
+            WHERE
+                "materialId" = ${body.id}
+                AND "clientId" = ${clientId}
+                AND active = true
+                AND extra = false
+            GROUP BY "movementId"
+        )
+        AND "clientId" = ${clientId}
+    ORDER BY
+        materialmovements."activeDate" DESC,
+        materialmovements.id DESC
+    LIMIT 300;`;
+
+    let result = movements.filter(
+      (movement) =>
+        (movement.due as Date).toISOString() !== '2024-01-01T00:00:00.000Z',
+    );
+    return result;
   }
 
   async getInventory(token: string, query: z.infer<typeof clientSchema>) {
@@ -72,6 +76,56 @@ LIMIT 300;
   async getClients() {
     const rows = await sql`select name as value, name, color from clients`;
     return rows;
+  }
+
+  async getJobComparison(
+    body: z.infer<typeof idSchema>,
+    token: string,
+    query: z.infer<typeof clientSchema>,
+  ) {
+    const clientId = await getUserName(token, query);
+
+    const movements = await sql`SELECT
+    materials.code,
+    materials.measurement,
+    materialmovements.amount,
+    (
+        SELECT SUM(amount) 
+        FROM materialmovements AS m
+        WHERE m."materialId" = materialmovements."materialId" AND m."movementId" = materialmovements."movementId"
+    ) AS "realAmount"
+        FROM
+        materialmovements
+    JOIN
+        materials ON materials.id = materialmovements."materialId"
+    JOIN
+        materialie ON materialie.id = materialmovements."movementId"
+    WHERE
+        materialmovements."movementId" = ${body.id} 
+        AND materialmovements.active IS true
+        AND materials."clientId" = ${clientId}
+        AND materialmovements.extra = false
+    ORDER BY
+        materialie.due DESC;`;
+
+    return movements;
+  }
+
+  async getJobs(body: z.infer<typeof IEFilterSchema>) {
+    const movements = await sql`
+      SELECT jobpo, created_at, due, id
+      FROM materialie
+      WHERE jobpo ~ '^\\d{6}$'
+        ${
+          body.code
+            ? sql`AND (
+              "jobpo" ILIKE ${'%' + body.code + '%'} OR 
+              "programation" ILIKE ${'%' + body.code + '%'}
+            )`
+            : sql``
+        }
+      ORDER BY due DESC, created_at DESC, jobpo DESC`;
+    return movements;
   }
 }
 

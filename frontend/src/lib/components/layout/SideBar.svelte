@@ -133,12 +133,13 @@
 				<AccordionTrigger class="hover:bg-muted rounded-md p-2 text-sm hover:no-underline">
 					<span class="flex items-center gap-2">
 						<ShoppingBag class="size-4 text-[#5c5e63]" />
-						Clientes
+						Clients
 					</span>
 				</AccordionTrigger>
 
 				<AccordionContent>
-					<AccordionOption href="/clients/inventory">Inventario</AccordionOption>
+					<AccordionOption href="/clients/inventory">Inventory</AccordionOption>
+					<AccordionOption href="/clients/jobs">Jobs</AccordionOption>
 				</AccordionContent>
 			</AccordionItem>
 		{/if}
