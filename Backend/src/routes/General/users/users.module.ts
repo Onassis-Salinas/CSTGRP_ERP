@@ -5,6 +5,13 @@ import { ContextProvider } from 'src/interceptors/context.provider';
 
 @Module({
   controllers: [UsersController],
-  providers: [UsersService, ContextProvider],
+  providers: [
+    UsersService,
+    ContextProvider,
+    {
+      provide: 'MODULE',
+      useValue: 'users',
+    },
+  ],
 })
 export class UsersModule {}

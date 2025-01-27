@@ -232,4 +232,76 @@ export class FunctionsService {
     await this.checkAll();
     await this.processAllImports();
   }
+
+  async adjustInventory(file: File) {
+    const wb = new ExcelJS.Workbook();
+    await wb.xlsx.load(file.buffer);
+
+    const rows: any[] = wb
+      .getWorksheet(1)
+      .getRows(2, 10000)
+      .map((row) => {
+        let amount: any = row.getCell(8).result || row.getCell(8).value;
+        if (isNaN(amount)) amount = 0;
+
+        let rest: any = row.getCell(9).result || row.getCell(9).value;
+        if (isNaN(rest)) rest = 0;
+
+        return {
+          code: row.getCell(1).value,
+          amount,
+          rest,
+        };
+      })
+      .filter((item) => item.code);
+
+    let job: any;
+    let importRows: any;
+    let restRows: any;
+    await sql.begin(async (sql) => {
+      // Suma con una import
+      const [{ id: importId }] =
+        await sql`insert into materialie (import, due) values (4, '2024-01-01') returning id`;
+
+      for (const row of rows) {
+        if (!(row.amount > 0)) continue;
+
+        await sql`INSERT INTO materialmovements ("materialId", "movementId", amount, "realAmount", active) values
+          ((select id from materials where code = ${row.code}), ${importId}, ${row.amount}, ${row.amount}, true)`;
+      }
+
+      // Resta con un job
+      const [{ id: jobId }] =
+        await sql`Insert into materialie (jobpo, programation, due) values (5, 1, '2024-01-01' ) returning id`;
+
+      for (const row of rows) {
+        if (!(row.amount < 0)) continue;
+
+        await sql`INSERT INTO materialmovements ("materialId", "movementId", amount, "realAmount", active) values
+          ((select id from materials where code = ${row.code}), ${jobId}, ${row.amount}, ${row.amount}, true)`;
+      }
+
+      // Anade los sobrantes
+      const [{ id: restId }] =
+        await sql`Insert into materialie (jobpo, programation, due) values (6, 1, '2024-01-01' ) returning id`;
+
+      for (const row of rows) {
+        if (!row.rest) continue;
+
+        await sql`INSERT INTO materialmovements ("materialId", "movementId", amount, "realAmount", active) values
+          ((select id from materials where code = ${row.code}), ${restId}, ${0}, ${-row.rest}, true)`;
+      }
+
+      job =
+        await sql`select (select code from materials where id = "materialId") as code, amount from materialmovements where "movementId" = ${jobId}`;
+      importRows =
+        await sql`select (select code from materials where id = "materialId") as code, amount from materialmovements where "movementId" = ${importId}`;
+      restRows =
+        await sql`select (select code from materials where id = "materialId") as code, amount from materialmovements where "movementId" = ${importId}`;
+    });
+
+    await this.update();
+
+    return [job, importRows, restRows];
+  }
 }

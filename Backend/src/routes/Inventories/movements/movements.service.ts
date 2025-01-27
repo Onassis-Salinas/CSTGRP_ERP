@@ -17,7 +17,6 @@ import { updateMaterialAmount } from 'src/utils/functions';
 // import { sendEmail } from 'src/utils/emails';
 import exceljs from 'exceljs';
 import { ContextProvider } from 'src/interceptors/context.provider';
-import { createRecord } from 'src/utils/records';
 
 @Injectable()
 export class MovementsService {
@@ -167,15 +166,11 @@ export class MovementsService {
       const newObj = (
         await sql`update materialie set ${sql(body)} where id = ${body.id} returning import, location`
       )[0];
-      await createRecord(
+      await this.req.record(
         `Actualizo la importacion: ${previousObj?.import} con status: ${previousObj?.location} a ${newObj?.import}, ${newObj?.location}`,
-        {
-          action: 'update',
-          module: 'inventory',
-          user: this.req.getUserId(),
-        },
         sql,
       );
+
       const movements =
         await sql`select "materialId" from materialmovements where "movementId" = ${body.id}`;
 
@@ -198,13 +193,8 @@ export class MovementsService {
         await sql`update materialie set ${sql(body)} where id = ${body.id} returning jobpo, programation`
       )[0];
 
-      await createRecord(
+      await this.req.record(
         `Actualizo la exportacion: ${previousObj?.jobpo}, programacion: ${previousObj?.programation} a ${newObj?.jobpo}, ${newObj?.programation}`,
-        {
-          action: 'update',
-          module: 'inventory',
-          user: this.req.getUserId(),
-        },
         sql,
       );
     });
@@ -222,15 +212,10 @@ export class MovementsService {
 
       await updateMaterialAmount(result.materialId, sql);
 
-      await createRecord(
+      await this.req.record(
         movement.active
-          ? `Desactivo el movimiento del job ${movement.jobpo} y  material ${movement.code} `
-          : `Activo el movimiento del job ${movement.jobpo} y  material ${movement.code} `,
-        {
-          action: 'update',
-          module: 'inventory',
-          user: this.req.getUserId(),
-        },
+          ? `Desactivo el movimiento del job ${movement.jobpo} y material ${movement.code}`
+          : `Activo el movimiento del job ${movement.jobpo} y material ${movement.code}`,
         sql,
       );
     });
@@ -254,15 +239,7 @@ export class MovementsService {
 
       await sql`insert into materialie (import, due, location) values (${body.import},${body.due}, 'At M&M, In transit')`;
 
-      await createRecord(
-        `Registro la importacion: ${body.import}`,
-        {
-          action: 'create',
-          module: 'inventory',
-          user: this.req.getUserId(),
-        },
-        sql,
-      );
+      await this.req.record(`Registro la importación: ${body.import}`, sql);
 
       for (const material of body.materials) {
         const [movement] =
@@ -290,15 +267,7 @@ export class MovementsService {
 
       await sql`Insert into materialie (jobpo, programation, due) values (${body.jobpo}, ${body.programation}, ${body.due})`;
 
-      await createRecord(
-        `Registro el job: ${body.jobpo}`,
-        {
-          action: 'create',
-          module: 'inventory',
-          user: this.req.getUserId(),
-        },
-        sql,
-      );
+      await this.req.record(`Registro el job: ${body.jobpo}`, sql);
 
       for (const material of body.materials) {
         const [movement] =
@@ -332,14 +301,8 @@ export class MovementsService {
         true,
         ${new Date()},
         true)`;
-
-        await createRecord(
+        await this.req.record(
           `Hizo una reposicion de ${body.amount} ${body.code} para el job ${body.job}`,
-          {
-            action: 'create',
-            module: 'inventory',
-            user: this.req.getUserId(),
-          },
           sql,
         );
 
@@ -373,13 +336,8 @@ export class MovementsService {
 
           await updateMaterialAmount(material.id, sql);
 
-          await createRecord(
+          await this.req.record(
             `Hizo un retorno de ${body.amount} ${body.code} para el job ${body.job}`,
-            {
-              action: 'create',
-              module: 'inventory',
-              user: this.req.getUserId(),
-            },
             sql,
           );
         });
@@ -402,13 +360,8 @@ export class MovementsService {
 
           await updateMaterialAmount(material.id, sql);
 
-          await createRecord(
+          await this.req.record(
             `Hizo un retorno de ${body.amount} al material ${body.code}`,
-            {
-              action: 'create',
-              module: 'inventory',
-              user: this.req.getUserId(),
-            },
             sql,
           );
         });
@@ -445,13 +398,8 @@ export class MovementsService {
         await updateMaterialAmount(movement.materialId, sql);
       }
 
-      await createRecord(
+      await this.req.record(
         `Elimino ${deleted?.jobpo ? 'el job' : 'la importacion'} ${deleted?.jobpo || deleted?.import}`,
-        {
-          action: 'delete',
-          module: 'inventory',
-          user: this.req.getUserId(),
-        },
         sql,
       );
     });

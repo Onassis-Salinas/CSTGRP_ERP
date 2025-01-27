@@ -5,6 +5,13 @@ import { ContextProvider } from 'src/interceptors/context.provider';
 
 @Module({
   controllers: [MaterialsController],
-  providers: [MaterialsService, ContextProvider],
+  providers: [
+    MaterialsService,
+    ContextProvider,
+    {
+      provide: 'MODULE',
+      useValue: 'inventory',
+    },
+  ],
 })
 export class MaterialsModule {}

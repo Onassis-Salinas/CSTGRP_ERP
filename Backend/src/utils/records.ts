@@ -1,22 +1,23 @@
 import postgres from 'postgres';
 import sql from './db';
 
+export type module = 'inventory' | 'users';
+export type action = 'create' | 'delete' | 'update';
+
 export async function createRecord(
   text: string,
-  props: {
-    action: 'create' | 'delete' | 'update';
-    user?: string;
-    module: 'inventory' | 'users';
-  },
+  action: action,
+  user?: string,
+  module?: module,
   dbInstance?: postgres.Sql,
 ) {
   if (!dbInstance) dbInstance = sql;
 
-  if (props.user) {
+  if (user) {
     await dbInstance`insert into records (text, action, module, "user") values
-    (${text}, ${props.action}, ${props.module}, (select username from users where id = ${props.user}))`;
+    (${text}, ${action}, ${module}, (select username from users where id = ${user}))`;
   } else {
     await dbInstance`insert into records (text, action, module, "user") values
-      (${text}, ${props.action}, ${props.module}, 'Anonimo')`;
+      (${text}, ${action}, ${module}, 'Anonimo')`;
   }
 }

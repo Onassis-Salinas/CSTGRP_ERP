@@ -14,7 +14,6 @@ import { sendError } from 'src/utils/errors';
 import dotenv from 'dotenv';
 import { cookieConfig, httpCookieConfig } from 'src/utils/cookies';
 import { ContextProvider } from 'src/interceptors/context.provider';
-import { createRecord } from 'src/utils/records';
 
 dotenv.config();
 
@@ -26,24 +25,21 @@ export class UsersService {
     const [user] =
       await sql`select * from users where username = ${body.username}`;
     if (!user) {
-      await createRecord(
+      await this.req.record(
         `Login fallido, no existe el usuario: ${body.username}`,
-        {
-          action: 'update',
-          module: 'users',
-        },
+        null,
+        'delete',
       );
+
       return sendError('Usuario invalido', 400);
     }
 
     const match = await bcrypt.compare(body.password, user.password);
     if (!match) {
-      await createRecord(
+      this.req.record(
         `Login fallido de: ${body.username}, contraseña incorrecta`,
-        {
-          action: 'update',
-          module: 'users',
-        },
+        null,
+        'delete',
       );
       return sendError('Contraseña incorrecta', 400);
     }
@@ -56,12 +52,7 @@ export class UsersService {
     Object.keys(user).forEach((key) => {
       res.setCookie(key, user[key], cookieConfig);
     });
-
-    await createRecord(`${body.username} inicio sesion`, {
-      action: 'update',
-      module: 'users',
-      user: user.id,
-    });
+    await this.req.record(`${body.username} inicio sesion`);
 
     res.send();
   }
@@ -83,15 +74,7 @@ export class UsersService {
 
     await sql.begin(async (sql) => {
       await sql`insert into users ${sql({ ...body, password: hash })}`;
-      await createRecord(
-        `Creo el usuario ${body.username}`,
-        {
-          action: 'create',
-          module: 'users',
-          user: this.req.getUserId(),
-        },
-        sql,
-      );
+      await this.req.record(`Creo el usuario ${body.username}`, sql);
     });
     return;
   }
@@ -104,13 +87,8 @@ export class UsersService {
 
     await sql.begin(async (sql) => {
       await sql`update users set ${sql(body)} where id = ${body.id}`;
-      await createRecord(
+      await this.req.record(
         `Actualizo el usuario ${previousObj.username}`,
-        {
-          action: 'update',
-          module: 'users',
-          user: this.req.getUserId(),
-        },
         sql,
       );
     });
@@ -121,16 +99,7 @@ export class UsersService {
     await sql.begin(async (sql) => {
       const [deletedUser] =
         await sql`delete from users where id = ${body.id} returning username`;
-
-      await createRecord(
-        `Elimino el usuario ${deletedUser.username}`,
-        {
-          action: 'delete',
-          module: 'users',
-          user: this.req.getUserId(),
-        },
-        sql,
-      );
+      await this.req.record(`Elimino el usuario ${deletedUser.username}`, sql);
     });
 
     return;

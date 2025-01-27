@@ -53,8 +53,14 @@ export class FunctionsController {
   }
 
   @Post('locations')
-  @UseInterceptors(FileInterceptor('files'))
+  @UseInterceptors(FileInterceptor('file'))
   convertImport(@UploadedFile() file: File) {
     return this.functionsService.importLocations(file);
+  }
+
+  @Post('adjust')
+  @UseInterceptors(FileInterceptor('file'))
+  adjustInventory(@UploadedFile() file: File) {
+    return this.functionsService.adjustInventory(file);
   }
 }
