@@ -47,7 +47,6 @@
 			<Table>
 				<TableHeader class="sticky top-0 border-t">
 					<TableHead class="border-l">JOB</TableHead>
-					<TableHead>SCHEDULE</TableHead>
 					<TableHead>IMPORT NUMBER</TableHead>
 					<TableHead>MATERIAL NEEDED</TableHead>
 					<TableHead>ISSUED MATERIAL</TableHead>
@@ -58,7 +57,6 @@
 					{#each movements as row}
 						<TableRow>
 							<TableCell class="border-l">{row.jobpo || ''}</TableCell>
-							<TableCell>{row.programation || ''}</TableCell>
 							<TableCell>{row.import || ''}</TableCell>
 							<TableCell><Badge color={'gray'}>{row.amount}</Badge></TableCell>
 							<TableCell
