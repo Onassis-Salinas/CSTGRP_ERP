@@ -59,7 +59,7 @@ export class MovementsService {
 
     let result = movements.filter(
       (movement) =>
-        (movement.due as Date).toISOString() !== '2024-01-01T00:00:00.000Z',
+        (movement.due as Date)?.toISOString() !== '2024-01-01T00:00:00.000Z',
     );
     return result;
   }
