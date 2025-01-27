@@ -41,6 +41,7 @@ export class MovementsService {
         materialie ON materialie.id = materialmovements."movementId"
     WHERE
         materials.id = ${body.id}
+        AND (materialie.location IS NULL OR materialie.location = 'At CST, Qtys verified' or materialie.import = 'Retorno')
         AND materialmovements.id IN (
             SELECT MAX(id)
             FROM materialmovements
@@ -54,13 +55,10 @@ export class MovementsService {
         AND "clientId" = ${clientId}
     ORDER BY
         materialmovements."activeDate" DESC,
-        materialmovements.id DESC
-    LIMIT 300;`;
+        materialmovements.id DESC;`;
 
     let result = movements.filter((movement) =>
-      movement.due
-        ? (movement.due as Date)?.toISOString() !== '2024-01-01T00:00:00.000Z'
-        : false,
+      true
     );
     return result;
   }
