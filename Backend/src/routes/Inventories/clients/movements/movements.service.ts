@@ -57,9 +57,10 @@ export class MovementsService {
         materialmovements.id DESC
     LIMIT 300;`;
 
-    let result = movements.filter(
-      (movement) =>
-        (movement.due as Date)?.toISOString() !== '2024-01-01T00:00:00.000Z',
+    let result = movements.filter((movement) =>
+      movement.due
+        ? (movement.due as Date)?.toISOString() !== '2024-01-01T00:00:00.000Z'
+        : false,
     );
     return result;
   }
