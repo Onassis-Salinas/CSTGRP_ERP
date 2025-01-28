@@ -258,6 +258,7 @@ export class FunctionsService {
     let job: any;
     let importRows: any;
     let restRows: any;
+
     await sql.begin(async (sql) => {
       // Suma las cantidades
       const [{ id: importId }] =
@@ -287,8 +288,6 @@ export class FunctionsService {
         await sql`Insert into materialie (jobpo, programation, due) values (2, 1, '2024-01-01' ) returning id`;
 
       for (const row of rows) {
-        if (!row.rest) continue;
-
         const { leftoverAmount } = (
           await sql`select "leftoverAmount" from materials where code = ${row.code}`
         )[0];
