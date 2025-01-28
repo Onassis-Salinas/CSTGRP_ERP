@@ -295,8 +295,20 @@ export class FunctionsService {
 
         const difference = row.rest - leftoverAmount;
 
-        await sql`INSERT INTO materialmovements ("materialId", "movementId", amount, "realAmount", active) values
+        if (difference > 0) {
+          await sql`INSERT INTO materialmovements ("materialId", "movementId", amount, "realAmount", active) values
           ((select id from materials where code = ${row.code}), ${restId}, ${0}, ${-difference}, true)`;
+        }
+        if (difference < 0) {
+          await sql`insert into materialmovements ("materialId", "movementId", amount, "realAmount", active, "activeDate", extra) values
+          ((select id from materials where code = ${row.code}),
+          (select id from materialie where import = 'Retorno'),
+          ${Math.abs(difference)},
+          ${Math.abs(difference)},
+          true,
+          '2024-01-01',
+          true)`;
+        }
       }
 
       job =
