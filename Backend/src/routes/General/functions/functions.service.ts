@@ -267,7 +267,7 @@ export class FunctionsService {
 
       for (const row of rows) {
         const { amount } = (
-          await sql`select amount from materials where code = ${row.code}`
+          await sql`select ("leftoverAmount" + amount) as amount from materials where code = ${row.code}`
         )[0];
 
         const difference = row.amount + row.rest - amount;
