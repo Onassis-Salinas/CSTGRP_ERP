@@ -241,7 +241,7 @@ export class FunctionsService {
       .getWorksheet(1)
       .getRows(2, 10000)
       .map((row) => {
-        let amount: any = row.getCell(8).result || row.getCell(8).value;
+        let amount: any = row.getCell(7).result || row.getCell(7).value;
         if (isNaN(amount)) amount = 0;
 
         let rest: any = row.getCell(9).result || row.getCell(9).value;
@@ -249,8 +249,8 @@ export class FunctionsService {
 
         return {
           code: row.getCell(1).value,
-          amount,
-          rest,
+          amount: amount || 0,
+          rest: rest || 0,
         };
       })
       .filter((item) => item.code);
@@ -259,37 +259,44 @@ export class FunctionsService {
     let importRows: any;
     let restRows: any;
     await sql.begin(async (sql) => {
-      // Suma con una import
+      // Suma las cantidades
       const [{ id: importId }] =
-        await sql`insert into materialie (import, due) values (4, '2024-01-01') returning id`;
-
-      for (const row of rows) {
-        if (!(row.amount > 0)) continue;
-
-        await sql`INSERT INTO materialmovements ("materialId", "movementId", amount, "realAmount", active) values
-          ((select id from materials where code = ${row.code}), ${importId}, ${row.amount}, ${row.amount}, true)`;
-      }
-
-      // Resta con un job
+        await sql`insert into materialie (import, due) values (1, '2024-01-01') returning id`;
       const [{ id: jobId }] =
-        await sql`Insert into materialie (jobpo, programation, due) values (5, 1, '2024-01-01' ) returning id`;
+        await sql`Insert into materialie (jobpo, programation, due) values (1, 1, '2024-01-01' ) returning id`;
 
       for (const row of rows) {
-        if (!(row.amount < 0)) continue;
+        const { amount } = (
+          await sql`select amount from materials where code = ${row.code}`
+        )[0];
 
-        await sql`INSERT INTO materialmovements ("materialId", "movementId", amount, "realAmount", active) values
-          ((select id from materials where code = ${row.code}), ${jobId}, ${row.amount}, ${row.amount}, true)`;
+        const difference = row.amount + row.rest - amount;
+
+        if (difference > 0) {
+          await sql`INSERT INTO materialmovements ("materialId", "movementId", amount, "realAmount", active) values
+            ((select id from materials where code = ${row.code}), ${importId}, ${difference}, ${difference}, true)`;
+        }
+        if (difference < 0) {
+          await sql`INSERT INTO materialmovements ("materialId", "movementId", amount, "realAmount", active) values
+            ((select id from materials where code = ${row.code}), ${jobId}, ${difference}, ${difference}, true)`;
+        }
       }
 
       // Anade los sobrantes
       const [{ id: restId }] =
-        await sql`Insert into materialie (jobpo, programation, due) values (6, 1, '2024-01-01' ) returning id`;
+        await sql`Insert into materialie (jobpo, programation, due) values (2, 1, '2024-01-01' ) returning id`;
 
       for (const row of rows) {
         if (!row.rest) continue;
 
+        const { leftoverAmount } = (
+          await sql`select "leftoverAmount" from materials where code = ${row.code}`
+        )[0];
+
+        const difference = row.rest - leftoverAmount;
+
         await sql`INSERT INTO materialmovements ("materialId", "movementId", amount, "realAmount", active) values
-          ((select id from materials where code = ${row.code}), ${restId}, ${0}, ${-row.rest}, true)`;
+          ((select id from materials where code = ${row.code}), ${restId}, ${0}, ${-difference}, true)`;
       }
 
       job =
