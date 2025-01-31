@@ -47,8 +47,7 @@ export function processImport(text: string) {
       if (code.endsWith('-CA')) {
         code += linesArray[i + 2].replaceAll(' ', '');
       }
-      if (code.substring(0, 4
-      ) !== 'CSI-') return;
+      if (code.substring(0, 4) !== 'CSI-') return;
       if (code.includes('ZEN')) return;
       if (code.includes('EAL-')) return;
       if (code.includes('ZP-')) return;
@@ -87,14 +86,13 @@ export function processJob(text: string) {
   let jobpo = '';
   let linesArray = text.split(/\s{3,}| {2}/);
 
-  console.log(linesArray);
-
   const index = linesArray.findIndex((line: any) =>
     line.includes('RAW MATERIAL COMPONENTS:'),
   );
   const endIndex = linesArray.findIndex((line: any) =>
     line.includes('OPERATIONS'),
   );
+
   jobpo =
     linesArray[linesArray.findIndex((line: any) => line.includes('Job:')) + 1];
 
@@ -117,10 +115,7 @@ export function processJob(text: string) {
   let materialNumber = 0;
   linesArray.forEach((element: any, i: number) => {
     // Materiales
-    if (
-      element === String(materialNumber + 5) ||
-      element === String(materialNumber + 10)
-    ) {
+    if (/^\d{3}$/.test(element) && Number(element) > Number(materialNumber)) {
       materialNumber = parseInt(element);
       const excludedValues = ['PATTERN', 'SAMPLE', 'IS', 'FREIGHT', 'SCRN'];
       if (
@@ -150,6 +145,5 @@ export function processJob(text: string) {
       material.code[0] === 'P' ? 'CSI-' + material.code : material.code;
   });
 
-  console.log(materials);
   return { materials, jobpo, dueDate };
 }

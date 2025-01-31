@@ -274,12 +274,12 @@ export class FunctionsService {
         const difference = row.amount + row.rest - amount;
 
         if (difference > 0) {
-          await sql`INSERT INTO materialmovements ("materialId", "movementId", amount, "realAmount", active) values
-            ((select id from materials where code = ${row.code}), ${importId}, ${difference}, ${difference}, true)`;
+          await sql`INSERT INTO materialmovements ("materialId", "movementId", amount, "realAmount", active, "activeDate") values
+            ((select id from materials where code = ${row.code}), ${importId}, ${difference}, ${difference}, true, '2024-01-01')`;
         }
         if (difference < 0) {
-          await sql`INSERT INTO materialmovements ("materialId", "movementId", amount, "realAmount", active) values
-            ((select id from materials where code = ${row.code}), ${jobId}, ${difference}, ${difference}, true)`;
+          await sql`INSERT INTO materialmovements ("materialId", "movementId", amount, "realAmount", active, "activeDate") values
+            ((select id from materials where code = ${row.code}), ${jobId}, ${difference}, ${difference}, true, '2024-01-01')`;
         }
       }
 
@@ -295,8 +295,8 @@ export class FunctionsService {
         const difference = row.rest - leftoverAmount;
 
         if (difference > 0) {
-          await sql`INSERT INTO materialmovements ("materialId", "movementId", amount, "realAmount", active) values
-          ((select id from materials where code = ${row.code}), ${restId}, ${0}, ${-difference}, true)`;
+          await sql`INSERT INTO materialmovements ("materialId", "movementId", amount, "realAmount", active, "activeDate") values
+          ((select id from materials where code = ${row.code}), ${restId}, ${0}, ${-difference}, true, '2024-01-01')`;
         }
         if (difference < 0) {
           await sql`insert into materialmovements ("materialId", "movementId", amount, "realAmount", active, "activeDate", extra) values
