@@ -86,6 +86,9 @@ export function processJob(text: string) {
   let jobpo = '';
   let linesArray = text.split(/\s{3,}| {2}/);
 
+  // Debugging
+  // linesArray.forEach((line) => console.log(line));
+
   const index = linesArray.findIndex((line: any) =>
     line.includes('RAW MATERIAL COMPONENTS:'),
   );
@@ -115,7 +118,7 @@ export function processJob(text: string) {
   let materialNumber = 0;
   linesArray.forEach((element: any, i: number) => {
     // Materiales
-    if (/^\d{3}$/.test(element) && Number(element) > Number(materialNumber)) {
+    if (/^\d{2,3}$/.test(element) && Number(element) > Number(materialNumber)) {
       materialNumber = parseInt(element);
       const excludedValues = ['PATTERN', 'SAMPLE', 'IS', 'FREIGHT', 'SCRN'];
       if (
