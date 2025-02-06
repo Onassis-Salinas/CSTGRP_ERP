@@ -4,11 +4,12 @@ import { z } from 'zod';
 import sql from 'src/utils/db';
 import {
   exportSchema,
-  extraMovementSchema,
   idSchema,
   IEFilterSchema,
   importSchema,
   movementsFilterSchema,
+  repositionSchema,
+  returnSchema,
   updateAmountSchema,
   updateExportSchema,
   updateImportSchema,
@@ -282,7 +283,7 @@ export class MovementsService {
     return;
   }
 
-  async postReposition(body: z.infer<typeof extraMovementSchema>) {
+  async postReposition(body: z.infer<typeof repositionSchema>) {
     try {
       const [material] =
         await sql`select id, "leftoverAmount" from materials where code = ${body.code}`;
@@ -294,13 +295,14 @@ export class MovementsService {
 
       await sql.begin(async (sql) => {
         await sql`insert into materialmovements ("materialId", "movementId", amount, "realAmount", active, "activeDate", extra) values
-        ((select id from materials where code = ${body.code}),
-        (select id from materialie where jobpo = ${body.job}),
-        ${-Math.abs(parseFloat(body.amount))},
-        ${materialFromInventory},
-        true,
-        ${new Date()},
-        true)`;
+          ((select id from materials where code = ${body.code}),
+          (select id from materialie where jobpo = ${body.job}),
+          ${-Math.abs(parseFloat(body.amount))},
+          ${materialFromInventory},
+          true,
+          ${new Date()},
+          true) returning *`;
+
         await this.req.record(
           `Hizo una salida de ${body.amount} ${body.code} para el job ${body.job}`,
           sql,
@@ -318,7 +320,7 @@ export class MovementsService {
     return;
   }
 
-  async postReturn(body: z.infer<typeof extraMovementSchema>) {
+  async postReturn(body: z.infer<typeof returnSchema>) {
     try {
       const [material] =
         await sql`select id, "leftoverAmount" from materials where code = ${body.code}`;

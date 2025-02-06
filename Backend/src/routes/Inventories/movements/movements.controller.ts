@@ -16,11 +16,12 @@ import { AuthGuard } from 'src/interceptors/auth/authorization.guard';
 import { ZodPiPe } from 'src/interceptors/validation/validation.pipe';
 import {
   exportSchema,
-  extraMovementSchema,
   idSchema,
   IEFilterSchema,
   importSchema,
   movementsFilterSchema,
+  repositionSchema,
+  returnSchema,
   updateAmountSchema,
   updateExportSchema,
   updateImportSchema,
@@ -72,12 +73,12 @@ export class MovementsController {
   }
 
   @Post('reposition')
-  postReposition(@Body(new ZodPiPe(extraMovementSchema)) body) {
+  postReposition(@Body(new ZodPiPe(repositionSchema)) body) {
     return this.movementsService.postReposition(body);
   }
 
   @Post('return')
-  postReturn(@Body(new ZodPiPe(extraMovementSchema)) body) {
+  postReturn(@Body(new ZodPiPe(returnSchema)) body) {
     return this.movementsService.postReturn(body);
   }
 

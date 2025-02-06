@@ -59,7 +59,13 @@ export const updateExportSchema = z.object({
   programation: z.string(),
 });
 
-export const extraMovementSchema = z.object({
+export const repositionSchema = z.object({
+  code: z.string(),
+  amount: z.string(),
+  job: z.string(),
+});
+
+export const returnSchema = z.object({
   code: z.string(),
   amount: z.string(),
   job: z.string().optional().nullable(),
