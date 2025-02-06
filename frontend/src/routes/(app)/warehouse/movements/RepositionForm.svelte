@@ -25,14 +25,14 @@
 		await api.post('/materialmovements/reposition', formData);
 		reload();
 		show = false;
-		showSuccess(`Reposicion Registrada`);
+		showSuccess(`Salida Registrada`);
 	}
 </script>
 
 <Dialog bind:open={show}>
 	<DialogContent class="max-w-lg">
 		<DialogHeader>
-			<DialogTitle>Registrar reposicion</DialogTitle>
+			<DialogTitle>Registrar salida</DialogTitle>
 		</DialogHeader>
 		<DialogBody>
 			<div class="grid w-full gap-4">

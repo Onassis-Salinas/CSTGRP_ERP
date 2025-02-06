@@ -130,7 +130,7 @@
 				<DropdownMenuContent>
 					<DropdownMenuItem on:click={() => (show = true)}>Importacion</DropdownMenuItem>
 					<DropdownMenuItem on:click={() => (show1 = true)}>Job - PO</DropdownMenuItem>
-					<DropdownMenuItem on:click={() => (show3 = true)}>Reposicion</DropdownMenuItem>
+					<DropdownMenuItem on:click={() => (show3 = true)}>Salida</DropdownMenuItem>
 					<DropdownMenuItem on:click={() => (show4 = true)}>Retorno</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenuTrigger>

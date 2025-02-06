@@ -302,7 +302,7 @@ export class MovementsService {
         ${new Date()},
         true)`;
         await this.req.record(
-          `Hizo una reposicion de ${body.amount} ${body.code} para el job ${body.job}`,
+          `Hizo una salida de ${body.amount} ${body.code} para el job ${body.job}`,
           sql,
         );
 
