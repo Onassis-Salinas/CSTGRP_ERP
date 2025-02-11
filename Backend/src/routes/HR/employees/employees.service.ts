@@ -179,6 +179,7 @@ export class EmployeesService {
     });
 
     const buffer = await workbook.xlsx.writeBuffer();
+    console.log(buffer);
     return buffer;
   }
 }

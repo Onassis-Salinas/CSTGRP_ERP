@@ -1,4 +1,6 @@
 <script lang="ts">
+	import Label from '$lib/components/basic/Label.svelte';
+	import Select from '$lib/components/basic/Select.svelte';
 	import { Button } from '$lib/components/ui/button';
 	import {
 		Dialog,
@@ -13,8 +15,8 @@
 
 	export let show = false;
 	export let reload: any;
-	export let selectedPosition: position;
-	let formData: position;
+	export let selectedPosition: any;
+	let formData: any;
 
 	$: if (show || true) setFormData();
 
@@ -36,6 +38,20 @@
 		await reload();
 		show = false;
 	}
+
+	let colors = [
+		{ value: 'gray', name: 'Gris' },
+		{ value: 'red', name: 'Rojo' },
+		{ value: 'brown', name: 'Marrón' },
+		{ value: 'orange', name: 'Naranja' },
+		{ value: 'lime', name: 'Lima' },
+		{ value: 'green', name: 'Verde' },
+		{ value: 'cyan', name: 'Cian' },
+		{ value: 'blue', name: 'Azul' },
+		{ value: 'purple', name: 'Morado' },
+		{ value: 'yellow', name: 'Amarillo' },
+		{ value: 'pink', name: 'Rosa' }
+	];
 </script>
 
 <Dialog bind:open={show}>
@@ -48,10 +64,12 @@
 		<DialogBody>
 			<form on:submit|preventDefault={handleSubmit}>
 				<div class="grid w-full grid-cols-2 gap-4">
-					<div class="space-y-2">
-						<span>Nombre</span>
+					<Label name="Nombre">
 						<Input name="text" bind:value={formData.name} />
-					</div>
+					</Label>
+					<Label name="Color">
+						<Select class="mt-2" items={colors} bind:value={formData.color} />
+					</Label>
 				</div>
 
 				<Button type="submit" class="mt-4 w-full">Guardar cambios</Button>

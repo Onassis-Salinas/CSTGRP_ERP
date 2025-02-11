@@ -6,6 +6,7 @@ import {
   UseGuards,
   Put,
   Param,
+  Query,
 } from '@nestjs/common';
 import { AssistanceService } from './assistance.service';
 import { ApiTags } from '@nestjs/swagger';
@@ -39,8 +40,8 @@ export class AssistanceController {
     return this.employeesService.editSingle(body);
   }
 
-  @Post('export')
-  export(@Body(new ZodPiPe(weekSchema)) body) {
-    return this.employeesService.export(body);
+  @Get('export')
+  export(@Query(new ZodPiPe(weekSchema)) query) {
+    return this.employeesService.export(query);
   }
 }

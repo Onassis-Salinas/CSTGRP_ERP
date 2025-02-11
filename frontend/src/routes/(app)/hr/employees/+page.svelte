@@ -21,9 +21,9 @@
 	let show1: boolean;
 	let show2: boolean;
 	let show3: boolean;
-	let selectedEmployee: employee = {};
-	let employees: employee[] = [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}];
-	let filteredEmployees: employee[];
+	let selectedEmployee: any = {};
+	let employees: any[] = [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}];
+	let filteredEmployees: any[];
 	let searchParams = {
 		noEmpleado: '',
 		name: ''
@@ -50,11 +50,11 @@
 	async function fetchOptions() {
 		const areasArray = (await api.get('/hrvarious/areas')).data;
 		areasArray.forEach((area: any) => {
-			areas[area.value] = area.name;
+			areas[area.value] = { name: area.name, color: area.color };
 		});
 		const positionsArray = (await api.get('/hrvarious/positions')).data;
 		positionsArray.forEach((position: any) => {
-			positions[position.value] = position.name;
+			positions[position.value] = { name: position.name, color: position.color };
 		});
 	}
 
@@ -100,12 +100,11 @@
 		SCOTIABANK: 'red',
 		SANTANDER: 'red'
 	};
-	const genreColors: { [key: string]: 'purple' | 'blue' | 'gray' } = {
-		F: 'purple',
+	const genreColors: { [key: string]: 'pink' | 'blue' | 'gray' } = {
+		F: 'pink',
 		M: 'blue',
 		O: 'gray'
 	};
-	let group = 'active';
 
 	async function exportList() {
 		const response = await api.get('/employees/export', {
@@ -134,17 +133,17 @@
 </script>
 
 <MenuBar>
-	  <svelte:fragment slot="left">
+	<svelte:fragment slot="left">
 		<Input bind:value={searchParams.noEmpleado} placeholder="No. Empleado" />
 		<Input bind:value={searchParams.name} placeholder="Nombre" />
 
 		<Button on:click={() => (searchActive = true)} value={'active'}>Activos</Button>
 		<Button on:click={() => (searchActive = false)} value={'inactive'}>Inactivos</Button>
-	  </svelte:fragment>
-	  <svelte:fragment slot="right">
+	</svelte:fragment>
+	<svelte:fragment slot="right">
 		<Button on:click={exportList}><FileDown class="size-3.5" /></Button>
 		<Button on:click={createEmployee}><PlusCircle class="mr-1.5 size-3.5" />Añadir empleado</Button>
-	  </svelte:fragment>
+	</svelte:fragment>
 </MenuBar>
 
 <CusTable>
@@ -211,9 +210,15 @@
 				<TableCell class="whitespace-nowrap">{employee.name || ''}</TableCell>
 				<TableCell>{employee.paternalLastName || ''}</TableCell>
 				<TableCell>{employee.maternalLastName || ''}</TableCell>
-				<TableCell><Badge color="cyan">{areas[employee.areaId || '']}</Badge></TableCell>
 				<TableCell
-					><Badge color="purple">{positions[employee.positionId || ''] || ''}</Badge>
+					><Badge color={areas[employee.areaId || '']?.color}
+						>{areas[employee.areaId || '']?.name}</Badge
+					></TableCell
+				>
+				<TableCell
+					><Badge color={positions[employee.positionId || '']?.color}
+						>{positions[employee.positionId || '']?.name || ''}</Badge
+					>
 				</TableCell>
 				{#if !searchActive}
 					<TableCell>{employee.quitReason || ''}</TableCell>

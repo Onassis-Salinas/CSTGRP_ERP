@@ -11,12 +11,13 @@
 	import { onMount } from 'svelte';
 	import MenuBar from '$lib/components/basic/MenuBar.svelte';
 	import OptionsCell from '$lib/components/basic/OptionsCell.svelte';
+	import { Badge } from '$lib/components/ui/badge';
 
 	let show: boolean;
 	let show1: boolean;
-	let selectedArea: area = {};
+	let selectedArea: any = {};
 
-	let areas: area[] = [];
+	let areas: any[] = [];
 
 	async function getAreas() {
 		const result = await api.get('/areas');
@@ -42,9 +43,9 @@
 </script>
 
 <MenuBar>
-	  <svelte:fragment slot="right">
+	<svelte:fragment slot="right">
 		<Button on:click={createArea}><PlusCircle class="mr-1.5 size-3.5" />Añadir area</Button>
-	  </svelte:fragment>
+	</svelte:fragment>
 </MenuBar>
 
 <CusTable>
@@ -52,6 +53,7 @@
 		<TableHead></TableHead>
 		<TableHead class="w-full">Nombre</TableHead>
 		<TableHead>Captura</TableHead>
+		<TableHead>Color</TableHead>
 	</TableHeader>
 	<TableBody>
 		{#each areas as area, i}
@@ -63,6 +65,7 @@
 						<Check />
 					{/if}
 				</TableCell>
+				<TableCell><Badge color={area.color}>{area.color}</Badge></TableCell>
 			</TableRow>
 		{/each}
 	</TableBody>

@@ -95,7 +95,7 @@
 		});
 		const positionsArray = (await api.get('/hrvarious/positions')).data;
 		positionsArray.forEach((position: any) => {
-			positions[position.value] = position.name;
+			positions[position.value] = { name: position.name, color: position.color };
 		});
 		const incidencesArray = (await api.get('/hrvarious/incidences')).data;
 		incidencesArray.forEach((incidence: any) => {
@@ -118,7 +118,7 @@
 </script>
 
 <MenuBar>
-	  <svelte:fragment slot="left">
+	<svelte:fragment slot="left">
 		<Input type="date" bind:value={dateSelected} on:change={getProductivity} />
 		{#if viewComplete}
 			<Button class="flex-none" on:click={() => (viewComplete = !viewComplete)}
@@ -129,11 +129,11 @@
 				><BookOpen class="mr-1.5 size-3.5" />Ver todo</Button
 			>
 		{/if}
-	  </svelte:fragment>
-	  <svelte:fragment slot="right">
+	</svelte:fragment>
+	<svelte:fragment slot="right">
 		<Button on:click={() => (show = true)}><Pen class="mr-1.5 size-3.5" />Capturar</Button>
 		<!-- <ExportProductivity productivity={separatedProductivity} {areas} {positions} {weekDays} /> -->
-	  </svelte:fragment>
+	</svelte:fragment>
 </MenuBar>
 
 <CusTable>
@@ -214,7 +214,9 @@
 					<TableCell>{row.noEmpleado}</TableCell>
 					<TableCell>{row.name}</TableCell>
 					<TableCell
-						><Badge color="purple">{positions[row.positionId || ''] || ''}</Badge></TableCell
+						><Badge color={positions[row.positionId || '']?.color}
+							>{positions[row.positionId || '']?.name || ''}</Badge
+						></TableCell
 					>
 
 					{#each weekDays as day, j}

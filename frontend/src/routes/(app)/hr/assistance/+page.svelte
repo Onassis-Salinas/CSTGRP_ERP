@@ -4,16 +4,15 @@
 	import { Input } from '$lib/components/ui/input';
 	import api from '$lib/utils/server';
 	import { showSuccess } from '$lib/utils/showToast';
-
 	import Cookies from 'js-cookie';
-	import { PlusCircle } from 'lucide-svelte';
+	import { FileDown, PlusCircle } from 'lucide-svelte';
 	import CusTable from '$lib/components/basic/CusTable.svelte';
 	import { TableBody, TableCell, TableHead, TableHeader, TableRow } from '$lib/components/ui/table';
 	import { Badge } from '$lib/components/ui/badge';
 	import { onMount } from 'svelte';
 	import MenuBar from '$lib/components/basic/MenuBar.svelte';
 
-	let assistances: assistance[] = [];
+	let assistances: any[] = [];
 	let areas: any = {};
 	let positions: any = {};
 	let incidences: any = {};
@@ -33,7 +32,7 @@
 		});
 		const positionsArray = (await api.get('/hrvarious/positions')).data;
 		positionsArray.forEach((position: any) => {
-			positions[position.value] = position.name;
+			positions[position.value] = { name: position.name, color: position.color };
 		});
 		const incidencesArray = (await api.get('/hrvarious/incidences')).data;
 		incidencesArray.forEach((incidence: any) => {
@@ -72,6 +71,30 @@
 		getAssistance();
 	}
 
+	async function exportList() {
+		const response = await api.get('/assistance/export', {
+			responseType: 'arraybuffer',
+			params: {
+				date: dateSelected
+			}
+		});
+
+		const blob = new Blob([response.data], {
+			type: 'application/pdf'
+		});
+
+		const link = document.createElement('a');
+		link.href = URL.createObjectURL(blob);
+		link.target = "_blank"
+		// link.download = 'Lista de asistencia.pdf';
+
+		document.body.appendChild(link);
+
+		link.click();
+
+		document.body.removeChild(link);
+	}
+
 	onMount(() => {
 		getAssistance();
 		fetchOptions();
@@ -79,16 +102,17 @@
 </script>
 
 <MenuBar>
-	  <svelte:fragment slot="left">
+	<svelte:fragment slot="left">
 		<Select class="w-72" placeholder="Eligir Area" items={areasList} bind:value={areaSelected} />
 		<Input type="date" bind:value={dateSelected} on:change={getAssistance} />
-	  </svelte:fragment>
-	  <svelte:fragment slot="right">
+	</svelte:fragment>
+	<svelte:fragment slot="right">
 		{#if Cookies.get('perm_assistance_areas') === 'Todas'}
 			<!-- <ExportAssistance date={dateSelected} /> -->
+			<Button on:click={exportList}><FileDown class="size-3.5" /></Button>
 			<Button on:click={createWeek}><PlusCircle class="mr-1.5 size-3.5" />Generar semana</Button>
 		{/if}
-	  </svelte:fragment>
+	</svelte:fragment>
 </MenuBar>
 
 <CusTable>
@@ -109,7 +133,9 @@
 				<TableCell>{assistance.name}</TableCell>
 
 				<TableCell
-					><Badge color="purple">{positions[assistance.positionId || ''] || ''}</Badge></TableCell
+					><Badge color={positions[assistance.positionId || ''].color}
+						>{positions[assistance.positionId || ''].name || ''}</Badge
+					></TableCell
 				>
 				<TableCell class="px-1">
 					<Select

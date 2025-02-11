@@ -16,6 +16,7 @@
 	import { onMount } from 'svelte';
 	import MenuBar from '$lib/components/basic/MenuBar.svelte';
 	import OptionsCell from '$lib/components/basic/OptionsCell.svelte';
+	import Badge from '$lib/components/ui/badge/badge.svelte';
 
 	let show: boolean;
 	let show1: boolean;
@@ -47,21 +48,23 @@
 </script>
 
 <MenuBar>
-	  <svelte:fragment slot="right">
+	<svelte:fragment slot="right">
 		<Button on:click={createPosition}><PlusCircle class="mr-1.5 size-3.5" />Añadir posicion</Button>
-	  </svelte:fragment>
+	</svelte:fragment>
 </MenuBar>
 
 <CusTable>
 	<TableHeader>
 		<TableHead class="fixed left-0 z-30 bg-inherit p-1"></TableHead>
 		<TableHead class="w-full">Nombre</TableHead>
+		<TableHead>Color</TableHead>
 	</TableHeader>
 	<TableBody>
 		{#each positions as position, i}
 			<TableRow>
 				<OptionsCell editFunc={() => editPosition(i)} deleteFunc={() => deletePosition(i)} />
 				<TableCell>{position.name}</TableCell>
+				<TableCell><Badge color={position.color}>{position.color}</Badge></TableCell>
 			</TableRow>
 		{/each}
 	</TableBody>

@@ -87,11 +87,11 @@
 					{#if hasAccess('employees')}
 						<AccordionOption href="/hr/employees">Empleados</AccordionOption>
 					{/if}
-					{#if hasAccess('productivity')}
-						<AccordionOption href="/hr/productivity">Productividad</AccordionOption>
-					{/if}
 					{#if hasAccess('assistance')}
 						<AccordionOption href="/hr/assistance">Asistencia</AccordionOption>
+					{/if}
+					{#if hasAccess('productivity')}
+						<AccordionOption href="/hr/productivity">Productividad</AccordionOption>
 					{/if}
 				</AccordionContent>
 			</AccordionItem>
