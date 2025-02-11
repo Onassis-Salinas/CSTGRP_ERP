@@ -334,7 +334,7 @@ export class MovementsService {
         await updateMaterialAmount(material.id, sql);
 
         await this.req.record(
-          `Retiro ${body.amount} de scrap de ${body.code}`,
+          `Retiro ${body.amount} de insumos de ${body.code}`,
           sql,
         );
       });
