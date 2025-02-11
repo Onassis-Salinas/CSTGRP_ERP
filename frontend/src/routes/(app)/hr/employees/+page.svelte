@@ -22,8 +22,9 @@
 	let show2: boolean;
 	let show3: boolean;
 	let selectedEmployee: any = {};
-	let employees: any[] = [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}];
+	let employees: any[] = [];
 	let filteredEmployees: any[];
+	1;
 	let searchParams = {
 		noEmpleado: '',
 		name: ''
@@ -126,8 +127,8 @@
 		document.body.removeChild(link);
 	}
 
-	onMount(() => {
-		fetchOptions();
+	onMount(async () => {
+		await fetchOptions();
 		getEmployees();
 	});
 </script>

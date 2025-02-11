@@ -46,23 +46,25 @@ export class MovementsService {
       SELECT * 
       FROM materialie
       WHERE 
-        ${
-          body.type === 'imports'
-            ? sql`"import" IS NOT NULL`
-            : body.type === 'exports'
-              ? sql`"jobpo" IS NOT NULL`
-              : sql`TRUE`
+      ${
+        body.type === 'imports'
+        ? sql`"import" IS NOT NULL`
+        : body.type === 'exports'
+        ? sql`"jobpo" IS NOT NULL`
+        : sql`TRUE`
+      }
+      ${
+        body.code
+        ? sql`AND (
+          "import" ILIKE ${'%' + body.code + '%'} OR 
+          "jobpo" ILIKE ${'%' + body.code + '%'} OR 
+          "programation" ILIKE ${'%' + body.code + '%'}
+          )`
+          : sql``
         }
-        ${
-          body.code
-            ? sql`AND (
-              "import" ILIKE ${'%' + body.code + '%'} OR 
-              "jobpo" ILIKE ${'%' + body.code + '%'} OR 
-              "programation" ILIKE ${'%' + body.code + '%'}
-            )`
-            : sql``
-        }
+      AND due <> '2024-01-01' AND due <> '2024-01-02'
       ORDER BY due DESC, jobpo DESC, import DESC`;
+
     return movements;
   }
 

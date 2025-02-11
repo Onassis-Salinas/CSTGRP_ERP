@@ -2,12 +2,15 @@ import { z } from 'zod';
 
 const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
 const rfcRegex =
-  /^([A-ZÑ\x26]{4}([0-9]{2})(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])[A-Z|\d]{3})$/; // homoclave requerida
+  /^([A-ZÑ\x26]{4}([0-9]{2})(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])[A-ZÑ|\d]{3})$/; // homoclave requerida
 const curpRegex =
-  /^([A-Z][AEIOUX][A-Z]{2}\d{2}(?:0\d|1[0-2])(?:[0-2]\d|3[01])[HM](?:AS|B[CS]|C[CLMSH]|D[FG]|G[TR]|HG|JC|M[CNS]|N[ETL]|OC|PL|Q[TR]|S[PLR]|T[CSL]|VZ|YN|ZS)[B-DF-HJ-NP-TV-Z]{3}[A-Z\d])(\d)$/;
-const bloodRegex = /^[AO][B]?[+-]$/;
+  /^([A-Z][AEIOUX][A-ZÑ]{2}\d{2}(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])[HMX](AS|B[CS]|C[CLMSH]|D[FG]|G[TR]|HG|JC|M[CNS]|N[ETL]|OC|PL|Q[TR]|S[PLR]|T[CSL]|VZ|YN|ZS)[BCDFGHJKLMNPQRSTVWXYZÑ]{3}[A-ZÑ\d])(\d)$/;
+const bloodRegex = /^(A|B|AB|O)[+-]$/;
 const nssRegex = /^[0-9]{11}$/;
-const accountRegex = /^[0-9]{10}$/;
+const accountRegex = /^[0-9]{10}$/; //Actualizar cantidad de digitos
+const phoneRegex = /^((\+\d{1,2}\d{10})|(\d{10}))$/;
+//Infonavit
+//Telefono
 
 export const createSchema = z.object({
   noEmpleado: z.number().min(10000).max(99999),
@@ -41,7 +44,12 @@ export const createSchema = z.object({
     .optional()
     .nullable(),
   emergencyContact: z.string().min(1).optional().nullable(),
-  emergencyNumber: z.string().min(1).optional().nullable(),
+  emergencyNumber: z
+    .string()
+    .refine((v) => phoneRegex.test(v.replaceAll(' ', '')))
+    .transform((v) => v.replaceAll(' ', ''))
+    .optional()
+    .nullable(),
   admissionDate: z.string().refine((value) => dateRegex.test(value)),
   bornLocation: z.string().min(1).optional().nullable(),
   genre: z.string().min(1).optional().nullable(),
@@ -49,7 +57,12 @@ export const createSchema = z.object({
   vacations: z.number().optional().nullable(),
   clinicNo: z.string().min(1).optional().nullable(),
   email: z.string().email().optional().nullable(),
-  number: z.string().min(1).optional().nullable(),
+  number: z
+    .string()
+    .refine((v) => phoneRegex.test(v.replaceAll(' ', '')))
+    .transform((v) => v.replaceAll(' ', ''))
+    .optional()
+    .nullable(),
   direction: z.string().min(1).optional().nullable(),
   bank: z.string().min(1).optional().nullable(),
   infonavitNo: z.string().min(1).optional().nullable(),
@@ -107,7 +120,12 @@ export const editSchema = z.object({
     .optional()
     .nullable(),
   emergencyContact: z.string().min(1).optional().nullable(),
-  emergencyNumber: z.string().min(1).optional().nullable(),
+  emergencyNumber: z
+    .string()
+    .refine((v) => phoneRegex.test(v.replaceAll(' ', '')))
+    .transform((v) => v.replaceAll(' ', ''))
+    .optional()
+    .nullable(),
   admissionDate: z
     .string()
     .refine((value) => dateRegex.test(value))
@@ -119,7 +137,12 @@ export const editSchema = z.object({
   vacations: z.number().optional().nullable(),
   clinicNo: z.string().min(1).optional().nullable(),
   email: z.string().email().optional().nullable(),
-  number: z.string().min(1).optional().nullable(),
+  number: z
+    .string()
+    .refine((v) => phoneRegex.test(v.replaceAll(' ', '')))
+    .transform((v) => v.replaceAll(' ', ''))
+    .optional()
+    .nullable(),
   direction: z.string().min(1).optional().nullable(),
   bank: z.string().min(1).optional().nullable(),
   infonavitNo: z.string().min(1).optional().nullable(),
