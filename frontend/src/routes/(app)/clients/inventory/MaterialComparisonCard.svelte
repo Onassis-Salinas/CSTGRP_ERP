@@ -56,9 +56,15 @@
 				<TableBody>
 					{#each movements as row}
 						<TableRow>
-							<TableCell class="border-l"
-								>{row.jobpo?.[0] === '.' ? 'SCRAP' : row.jobpo || ''}</TableCell
-							>
+							<TableCell class="border-l">
+								{#if row.jobpo === 'Scrap'}
+									SCRAP
+								{:else if row.jobpo === 'Insumo'}
+									{''}
+								{:else}
+									{row.jobpo || ''}
+								{/if}
+							</TableCell>
 							<TableCell>{row.import || ''}</TableCell>
 							<TableCell><Badge color={'gray'}>{row.amount}</Badge></TableCell>
 							<TableCell

@@ -10,6 +10,8 @@ import {
   movementsFilterSchema,
   repositionSchema,
   returnSchema,
+  scrapSchema,
+  suppliesSchema,
   updateAmountSchema,
   updateExportSchema,
   updateImportSchema,
@@ -74,7 +76,8 @@ export class MovementsService {
         materialmovements.extra,
         materialmovements."realAmount",
         materialmovements.active,
-        SUM(materialmovements."realAmount") OVER (ORDER BY materialmovements."activeDate" ASC, materialmovements.id ASC) AS balance
+        SUM(materialmovements."realAmount") OVER (ORDER BY materialmovements."activeDate" ASC, materialmovements.id ASC) AS balance,
+        SUM(materialmovements."amount") OVER (ORDER BY materialmovements."activeDate" ASC, materialmovements.id ASC) AS "totalBalance"
         FROM
             materialmovements
         JOIN
@@ -84,7 +87,7 @@ export class MovementsService {
         WHERE
             materials.id = ${body.id} 
             AND  materialmovements.active is true
-            AND (materialie.location IS NULL OR materialie.location = 'At CST, Qtys verified' or materialie.import = 'Retorno')
+            AND (materialie.location IS NULL OR materialie.location = 'At CST, Qtys verified')
         ORDER BY
             materialmovements."activeDate" DESC,
             materialmovements.id DESC
@@ -209,14 +212,14 @@ export class MovementsService {
 
     await sql.begin(async (sql) => {
       const [result] =
-        await sql`UPDATE materialmovements SET active = NOT active, "activeDate" = ${movement.active ? null : new Date()} WHERE id = ${body.id} returning "materialId"`;
+        await sql`UPDATE materialmovements SET active = NOT active, "activeDate" = ${movement.active ? null : new Date()} WHERE id = ${body.id} returning "materialId", "realAmount"`;
 
       await updateMaterialAmount(result.materialId, sql);
 
       await this.req.record(
         movement.active
-          ? `Desactivo el movimiento del job ${movement.jobpo} y material ${movement.code}`
-          : `Activo el movimiento del job ${movement.jobpo} y material ${movement.code}`,
+          ? `Desactivo el movimiento del job ${movement.jobpo} y ${result.realAmount} ${movement.code}`
+          : `Activo el movimiento del job ${movement.jobpo} y ${result.realAmount} ${movement.code}`,
         sql,
       );
     });
@@ -279,6 +282,66 @@ export class MovementsService {
           await updateMaterialAmount(movement.materialId, sql);
       }
     });
+
+    return;
+  }
+
+  async postScrap(body: z.infer<typeof scrapSchema>) {
+    try {
+      const [material] =
+        await sql`select id from materials where code = ${body.code}`;
+
+      await sql.begin(async (sql) => {
+        await sql`insert into materialmovements ("materialId", "movementId", amount, "realAmount", active, "activeDate", extra) values
+            ((select id from materials where code = ${body.code}),
+            (select id from materialie where jobpo = 'Scrap'),
+            ${-Math.abs(parseFloat(body.amount))},
+            ${-Math.abs(parseFloat(body.amount))},
+            true,
+            ${new Date()},
+            false)`;
+
+        await updateMaterialAmount(material.id, sql);
+
+        await this.req.record(
+          `Retiro ${body.amount} de scrap de ${body.code}`,
+          sql,
+        );
+      });
+    } catch (err) {
+      if (err.column_name === 'materialId')
+        throw new HttpException(`El material ${body.code} no existe.`, 400);
+    }
+
+    return;
+  }
+
+  async postSupplies(body: z.infer<typeof suppliesSchema>) {
+    try {
+      const [material] =
+        await sql`select id from materials where code = ${body.code}`;
+
+      await sql.begin(async (sql) => {
+        await sql`insert into materialmovements ("materialId", "movementId", amount, "realAmount", active, "activeDate", extra) values
+            ((select id from materials where code = ${body.code}),
+            (select id from materialie where jobpo = 'Insumo'),
+            ${-Math.abs(parseFloat(body.amount))},
+            ${-Math.abs(parseFloat(body.amount))},
+            true,
+            ${new Date()},
+            false)`;
+
+        await updateMaterialAmount(material.id, sql);
+
+        await this.req.record(
+          `Retiro ${body.amount} de scrap de ${body.code}`,
+          sql,
+        );
+      });
+    } catch (err) {
+      if (err.column_name === 'materialId')
+        throw new HttpException(`El material ${body.code} no existe.`, 400);
+    }
 
     return;
   }

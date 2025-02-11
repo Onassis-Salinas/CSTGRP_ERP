@@ -52,6 +52,7 @@
 					<TableHead>Cantidad real</TableHead>
 					<TableHead>Fecha</TableHead>
 					<TableHead>Balance</TableHead>
+					<TableHead>Balance total</TableHead>
 				</TableHeader>
 				<TableBody>
 					{#each movements as row}
@@ -71,6 +72,10 @@
 							<TableCell>{formatDate(row.due)}</TableCell>
 							<TableCell
 								><Badge color={parseFloat(row.balance) > 0 ? 'green' : 'red'}>{row.balance}</Badge
+								></TableCell
+							>
+							<TableCell
+								><Badge color={parseFloat(row.balance) > 0 ? 'green' : 'red'}>{row.totalBalance}</Badge
 								></TableCell
 							>
 						</TableRow>

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { Image } from 'lucide-svelte';
 	import { Badge } from '$lib/components/ui/badge';
 	import {
 		Dialog,

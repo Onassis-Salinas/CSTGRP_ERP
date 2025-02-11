@@ -11,22 +11,15 @@
 	import { FileDown, Pen, Search } from 'lucide-svelte';
 	import WarningPopUp from './WarningPopUp.svelte';
 	import { onMount } from 'svelte';
-	import ImportMovementsForm from './ImportMovementsForm.svelte';
-	import ExportMovementsForm from './ExportMovementsForm.svelte';
 	import MenuBar from '$lib/components/basic/MenuBar.svelte';
-	import { DropdownMenu, DropdownMenuTrigger } from '$lib/components/ui/dropdown-menu';
-	import DropdownMenuContent from '$lib/components/ui/dropdown-menu/dropdown-menu-content.svelte';
-	import DropdownMenuItem from '$lib/components/ui/dropdown-menu/dropdown-menu-item.svelte';
-	import RepositionForm from './RepositionForm.svelte';
-	import ReturnForm from './returnForm.svelte';
-	import { es } from 'date-fns/locale';
 	import { format } from 'date-fns';
+	import MovementsMenu from './MovementsMenu.svelte';
+	import { es } from 'date-fns/locale';
 
 	let show = false;
 	let show1 = false;
 	let show2 = false;
 	let show3 = false;
-	let show4 = false;
 	let movementI = 0;
 
 	let clients: any = {};
@@ -123,18 +116,8 @@
 	</form>
 	<svelte:fragment slot="right">
 		<Button on:click={exportUncheckedMovements}><FileDown class="size-3.5" /></Button>
-		<DropdownMenu>
-			<DropdownMenuTrigger>
 
-				<Button><Pen class="mr-1.5 size-3.5" />Registrar</Button>
-				<DropdownMenuContent>
-					<DropdownMenuItem on:click={() => (show = true)}>Importacion</DropdownMenuItem>
-					<DropdownMenuItem on:click={() => (show1 = true)}>Job - PO</DropdownMenuItem>
-					<DropdownMenuItem on:click={() => (show3 = true)}>Salida</DropdownMenuItem>
-					<DropdownMenuItem on:click={() => (show4 = true)}>Retorno</DropdownMenuItem>
-				</DropdownMenuContent>
-			</DropdownMenuTrigger>
-		</DropdownMenu>
+		<Button on:click={() => (show3 = true)}><Pen class="mr-1.5 size-3.5" />Registrar</Button>
 	</svelte:fragment>
 </MenuBar>
 
@@ -200,12 +183,9 @@
 	</TableBody>
 </CusTable>
 
-<ImportMovementsForm bind:show reload={getMovements} />
-<ExportMovementsForm bind:show={show1} reload={getMovements} />
 <WarningPopUp
 	bind:show={show2}
 	action={checkMovement}
 	text={`Seguro que quieres surtir ${movements[movementI]?.realAmount} ${movements[movementI]?.measurement} del material ${movements[movementI]?.code} ?`}
 />
-<RepositionForm bind:show={show3} reload={getMovements} />
-<ReturnForm bind:show={show4} reload={getMovements} />
+<MovementsMenu bind:show={show3} reload={getMovements} />

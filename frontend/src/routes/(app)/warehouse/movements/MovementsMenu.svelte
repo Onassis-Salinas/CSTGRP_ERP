@@ -1,28 +1,23 @@
 <script lang="ts">
+	import * as Tabs from '$lib/components/ui/tabs/index.js';
 	import Label from '$lib/components/basic/Label.svelte';
 	import MaterialInput from '$lib/components/basic/MaterialInput.svelte';
 	import { Button } from '$lib/components/ui/button';
-	import {
-		Dialog,
-		DialogBody,
-		DialogContent,
-		DialogHeader,
-		DialogTitle
-	} from '$lib/components/ui/dialog';
+	import { Dialog, DialogBody, DialogContent, DialogHeader } from '$lib/components/ui/dialog';
 	import { Input } from '$lib/components/ui/input';
-
 	import api from '$lib/utils/server';
 	import { showSuccess } from '$lib/utils/showToast';
 
 	export let show: boolean;
 	export let reload: any;
 
+	let selected = '';
 	let formData: any = {};
 
 	$: if (!show) formData = {};
 
-	async function handleSubmit() {
-		await api.post('/materialmovements/reposition', formData);
+	async function submit() {
+		await api.post(`/materialmovements/${selected}`, formData);
 		reload();
 		show = false;
 		showSuccess(`Salida Registrada`);
@@ -32,13 +27,23 @@
 <Dialog bind:open={show}>
 	<DialogContent class="max-w-lg">
 		<DialogHeader>
-			<DialogTitle>Registrar salida</DialogTitle>
+			<Tabs.Root bind:value={selected} class="w-full">
+				<Tabs.List class="grid w-full grid-cols-4">
+					<Tabs.Trigger value="reposition">Reposicion</Tabs.Trigger>
+					<Tabs.Trigger value="scrap">Scrap</Tabs.Trigger>
+					<Tabs.Trigger value="return">Retorno</Tabs.Trigger>
+					<Tabs.Trigger value="supplies">Insumos</Tabs.Trigger>
+				</Tabs.List>
+			</Tabs.Root>
 		</DialogHeader>
+
 		<DialogBody>
 			<div class="grid w-full gap-4">
-				<Label name="Job - PO">
-					<Input bind:value={formData.job} />
-				</Label>
+				{#if selected === 'reposition' || selected === 'return'}
+					<Label name="Job - PO">
+						<Input bind:value={formData.job} />
+					</Label>
+				{/if}
 				<Label name="Codigo">
 					<MaterialInput normal bind:value={formData.code} />
 				</Label>
@@ -47,7 +52,7 @@
 				</Label>
 			</div>
 
-			<Button on:click={handleSubmit} variant="default" class="mt-4 w-full">Guardar cambios</Button>
+			<Button on:click={submit} variant="default" class="mt-4 w-full">Guardar cambios</Button>
 		</DialogBody>
 	</DialogContent>
 </Dialog>

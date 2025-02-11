@@ -22,6 +22,8 @@ import {
   movementsFilterSchema,
   repositionSchema,
   returnSchema,
+  scrapSchema,
+  suppliesSchema,
   updateAmountSchema,
   updateExportSchema,
   updateImportSchema,
@@ -70,6 +72,16 @@ export class MovementsController {
   @Post('export')
   exportMaterials(@Body(new ZodPiPe(exportSchema)) body) {
     return this.movementsService.postExport(body);
+  }
+
+  @Post('scrap')
+  postScrap(@Body(new ZodPiPe(scrapSchema)) body) {
+    return this.movementsService.postScrap(body);
+  }
+
+  @Post('supplies')
+  postSupplies(@Body(new ZodPiPe(suppliesSchema)) body) {
+    return this.movementsService.postSupplies(body);
   }
 
   @Post('reposition')

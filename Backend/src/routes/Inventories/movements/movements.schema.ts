@@ -59,6 +59,16 @@ export const updateExportSchema = z.object({
   programation: z.string(),
 });
 
+export const scrapSchema = z.object({
+  code: z.string(),
+  amount: z.string(),
+});
+
+export const suppliesSchema = z.object({
+  code: z.string(),
+  amount: z.string(),
+});
+
 export const repositionSchema = z.object({
   code: z.string(),
   amount: z.string(),

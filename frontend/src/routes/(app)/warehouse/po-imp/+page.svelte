@@ -1,4 +1,5 @@
 <script lang="ts">
+	import ExportMovementsForm from './ExportMovementsForm.svelte';
 	import CusTable from '$lib/components/basic/CusTable.svelte';
 	import Select from '$lib/components/basic/Select.svelte';
 	import { Input } from '$lib/components/ui/input';
@@ -11,14 +12,24 @@
 	import JobPoForm from './JobPOForm.svelte';
 	import ImportForm from './ImportForm.svelte';
 	import JobComparisonCard from './JobComparisonCard.svelte';
-	import { Ruler } from 'lucide-svelte';
+	import { Pen, Ruler } from 'lucide-svelte';
 	import DeletePopUp from '$lib/components/complex/DeletePopUp.svelte';
 	import { showSuccess } from '$lib/utils/showToast';
+	import {
+		DropdownMenu,
+		DropdownMenuContent,
+		DropdownMenuItem,
+		DropdownMenuTrigger
+	} from '$lib/components/ui/dropdown-menu';
+	import { Button } from '$lib/components/ui/button';
+	import ImportMovementsForm from './ImportMovementsForm.svelte';
 
 	let show = false;
 	let show1 = false;
 	let show2 = false;
 	let show3 = false;
+	let show4 = false;
+	let show5 = false;
 
 	let filters = {
 		type: 'both',
@@ -84,6 +95,17 @@
 		/>
 		<Input menu bind:value={filters.code} placeholder="Identificador" />
 	</form>
+	<svelte:fragment slot="right">
+		<DropdownMenu>
+			<DropdownMenuTrigger>
+				<Button><Pen class="mr-1.5 size-3.5" />Registrar</Button>
+				<DropdownMenuContent>
+					<DropdownMenuItem on:click={() => (show4 = true)}>Importacion</DropdownMenuItem>
+					<DropdownMenuItem on:click={() => (show5 = true)}>Job - PO</DropdownMenuItem>
+				</DropdownMenuContent>
+			</DropdownMenuTrigger>
+		</DropdownMenu>
+	</svelte:fragment>
 </MenuBar>
 
 <CusTable>
@@ -123,3 +145,5 @@
 	text="¿Estás seguro de que quieres eliminar este movimiento?"
 	deleteFunc={handleDelete}
 />
+<ImportMovementsForm bind:show={show4} reload={getMovements} />
+<ExportMovementsForm bind:show={show5} reload={getMovements} />

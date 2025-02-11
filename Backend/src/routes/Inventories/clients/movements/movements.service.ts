@@ -41,7 +41,7 @@ export class MovementsService {
         materialie ON materialie.id = materialmovements."movementId"
     WHERE
         materials.id = ${body.id}
-        AND (materialie.location IS NULL OR materialie.location = 'At CST, Qtys verified' OR materialie.import = 'Retorno')
+        AND (materialie.location IS NULL OR materialie.location = 'At CST, Qtys verified')
         AND materialmovements.id IN (
             SELECT MAX(id)
             FROM materialmovements
