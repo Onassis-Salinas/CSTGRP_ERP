@@ -65,8 +65,6 @@ export class AssistanceService {
     }
 
     const [firstDate, lastDate] = getWeekDays(body.date);
-    console.log(body.date);
-    console.log(firstDate, lastDate);
 
     const weekDays = [];
     const areas: any = {};
