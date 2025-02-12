@@ -6,12 +6,15 @@
 	import { onDestroy, onMount } from 'svelte';
 	import '../../app.css';
 	import { browser } from '$app/environment';
+	import { goto } from '$app/navigation';
+	import Cookies from 'js-cookie';
 
 	function handleUnhandledRejection(e: PromiseRejectionEvent) {
 		if (e.reason.name === 'AxiosError') showError(e.reason);
 	}
 
 	onMount(() => {
+		if (!Cookies.get('username')) goto('/login');
 		window.addEventListener('unhandledrejection', handleUnhandledRejection);
 	});
 

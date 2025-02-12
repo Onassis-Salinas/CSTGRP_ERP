@@ -3,9 +3,19 @@ import { promises as fs } from 'fs';
 import { createWriteStream } from 'fs';
 import path from 'path';
 
+type folderType = 'employees' | 'inventory';
+
+export const getFile = async (
+  folder: folderType,
+  fileName?: string,
+): null | Promise<any> => {
+  const filePath = join(__dirname, '..', '..', 'public', folder, fileName);
+  const file = await fs.readFile(filePath);
+  return file;
+};
 export const saveFile = async (
   file: any,
-  folder: 'hr' | 'inventory',
+  folder: folderType,
   fileName?: string,
 ): null | Promise<string> => {
   if (fileName) {
@@ -14,8 +24,8 @@ export const saveFile = async (
 
   if (!file.buffer) return null;
 
-  fileName = `${folder}_${Date.now()}${path.extname(file.originalname)}`;
-  const filePath = join(__dirname, '..', '..', 'public', fileName);
+  fileName = `${Date.now()}${path.extname(file.originalname)}`;
+  const filePath = join(__dirname, '..', '..', 'public', folder, fileName);
 
   await new Promise<void>((resolve, reject) => {
     const stream = createWriteStream(filePath);
@@ -27,7 +37,7 @@ export const saveFile = async (
     stream.on('error', reject);
   });
 
-  return fileName;
+  return folder + '/' + fileName;
 };
 
 export const deleteFile = async (fileName: string): Promise<string | null> => {

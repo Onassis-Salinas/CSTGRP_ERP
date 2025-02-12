@@ -10,8 +10,6 @@ import fastifyCookie from '@fastify/cookie';
 import multipart from 'fastify-multipart';
 import { DBFilter } from './interceptors/db/db.filter';
 import dotenv from 'dotenv';
-import fastifyStatic from '@fastify/static';
-import { join } from 'path';
 
 dotenv.config();
 async function bootstrap() {
@@ -33,12 +31,6 @@ async function bootstrap() {
   //Middleware
   await app.register(fastifyCookie);
   await app.register(multipart);
-
-  //Static files
-  app.register(fastifyStatic, {
-    root: join(__dirname, '..', 'public'),
-    prefix: '/static/',
-  });
 
   //Swagger implementation
   const config = new DocumentBuilder()

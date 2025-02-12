@@ -5,11 +5,11 @@
 	import DialogHeader from '$lib/components/ui/dialog/dialog-header.svelte';
 	import { Input } from '$lib/components/ui/input';
 	import { Table, TableCell, TableHead, TableRow } from '$lib/components/ui/table';
-	import { formatDate } from '$lib/utils/functions';
+	import { formatDate, getImage } from '$lib/utils/functions';
 	import api from '$lib/utils/server';
 
 	export let show = false;
-	export let selectedEmployee: employee;
+	export let selectedEmployee: any;
 	export let areas;
 	export let positions;
 
@@ -88,7 +88,7 @@
 		<DialogBody>
 			<img
 				class="border-primary-500 mx-auto aspect-square w-52 rounded-full border-4 object-cover object-top"
-				src={`http://192.168.0.38/Servidor_Recursos_Humanos/RECURSOS%20HUMANOS%202024/CREDENCIALES/FOTOS%20PARA%20CREDENCIALES/Foto%20Sin%20fondo/${selectedEmployee.noEmpleado}.png`}
+				src={getImage(selectedEmployee.photo)}
 				alt=""
 			/>
 

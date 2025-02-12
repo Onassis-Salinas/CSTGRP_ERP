@@ -42,12 +42,12 @@ export class EmployeesService {
   }
 
   async getActiveEmployees() {
-    const employees = await sql`select * from employees where active`;
+    const employees = await sql`select * from employees where active order by "noEmpleado" DESC`;
     return employees;
   }
 
   async getInactiveEmployees() {
-    const employees = await sql`select * from employees where active = false`;
+    const employees = await sql`select * from employees where active = false order by "noEmpleado" DESC`;
     return employees;
   }
 
