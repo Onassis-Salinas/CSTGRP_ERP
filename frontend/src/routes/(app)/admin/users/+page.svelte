@@ -20,11 +20,11 @@
 
 	let show: boolean;
 	let show1: boolean;
-	let selectedUser: user = {
+	let selectedUser = {
 		id: '',
 		username: '',
 		password: '',
-		perm_assistance_areas: undefined,
+		perm_assistance_areas: '',
 		perm_users: 0,
 		perm_materials: 0,
 		perm_assistance: 0,
@@ -32,9 +32,10 @@
 		perm_employees: 0,
 		perm_inventory: 0,
 		perm_structure: 0,
-		perm_it: 0
+		perm_it: 0,
+		perm_requisitions: 0
 	};
-	let users: user[] = [];
+	let users: (typeof selectedUser)[] = [];
 	let areas: any = {};
 
 	async function getUsers() {
@@ -55,7 +56,7 @@
 			id: '',
 			username: '',
 			password: '',
-			perm_assistance_areas: undefined,
+			perm_assistance_areas: '',
 			perm_users: 0,
 			perm_materials: 0,
 			perm_assistance: 0,
@@ -63,6 +64,7 @@
 			perm_employees: 0,
 			perm_inventory: 0,
 			perm_structure: 0,
+			perm_requisitions: 0,
 			perm_it: 0
 		};
 		show = true;
@@ -79,7 +81,7 @@
 			id: '',
 			username: '',
 			password: '',
-			perm_assistance_areas: undefined,
+			perm_assistance_areas: '',
 			perm_users: 0,
 			perm_materials: 0,
 			perm_assistance: 0,
@@ -87,6 +89,7 @@
 			perm_employees: 0,
 			perm_inventory: 0,
 			perm_structure: 0,
+			perm_requisitions: 0,
 			perm_it: 0
 		};
 		showSuccess('Usuario eliminado');
@@ -109,11 +112,11 @@
 </script>
 
 <MenuBar>
-	  <svelte:fragment slot="right">
+	<svelte:fragment slot="right">
 		<Button on:click={createUser}
 			><PlusCircle class="ml-auto mr-1.5 size-3.5" />Añadir Usuario</Button
 		>
-	  </svelte:fragment>
+	</svelte:fragment>
 </MenuBar>
 
 <CusTable>
@@ -128,6 +131,7 @@
 		<TableHead class="w-[12.5%]">Estructura</TableHead>
 		<TableHead class="w-[12.5%]">Sistemas</TableHead>
 		<TableHead class="w-[12.5%]">Materiales</TableHead>
+		<TableHead class="w-[12.5%]">Requisiciones</TableHead>
 		<TableHead class="w-[12.5%]">Areas</TableHead>
 	</TableHeader>
 	<TableBody>
@@ -171,6 +175,11 @@
 				<TableCell
 					><Badge color={getBadgeColor(user.perm_materials)}
 						>{badgeTexts[user.perm_materials]}</Badge
+					></TableCell
+				>
+				<TableCell
+					><Badge color={getBadgeColor(user.perm_requisitions)}
+						>{badgeTexts[user.perm_requisitions]}</Badge
 					></TableCell
 				>
 				<TableCell class="px-2 py-0">

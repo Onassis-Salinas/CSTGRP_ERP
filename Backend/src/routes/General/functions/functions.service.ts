@@ -157,9 +157,9 @@ export class FunctionsService {
         }
       }
 
-      await sql.begin(async (sql) => {
-        await sql`Select id from materials where code in (${materials})`;
+      await sql`Select id from materials where code in (${sql(materials)})`;
 
+      await sql.begin(async (sql) => {
         await sql`Insert into materialie (jobpo, programation, due) values (${body.jobpo}, ${1}, ${body.dueDate})`;
 
         for (const material of body.materials) {

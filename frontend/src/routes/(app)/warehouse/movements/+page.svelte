@@ -126,6 +126,7 @@
 		<TableHead>Importacion</TableHead>
 		<TableHead>Programacion</TableHead>
 		<TableHead>Job-PO</TableHead>
+		<TableHead>Req</TableHead>
 		<TableHead>Codigo</TableHead>
 		<TableHead>Descripcion</TableHead>
 		<TableHead>Inventario</TableHead>
@@ -142,6 +143,7 @@
 				<TableCell>{movement.import || ''}</TableCell>
 				<TableCell>{movement.programation || ''}</TableCell>
 				<TableCell>{(movement.jobpo || '') + (movement.extra ? ' -R' : '')}</TableCell>
+				<TableCell>{movement.req || ''}</TableCell>
 				<TableCell>{movement.code}</TableCell>
 				<TableCell class="w-full min-w-24 max-w-1 overflow-hidden">{movement.description}</TableCell
 				>

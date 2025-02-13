@@ -132,6 +132,9 @@
 					<Label name="Perm. Materiales">
 						<Select items={permissions} bind:value={formData.perm_materials} />
 					</Label>
+					<Label name="Perm. Requisiciones">
+						<Select items={permissions} bind:value={formData.perm_requisitions} />
+					</Label>
 					<Label name="Areas">
 						<DropdownMenu>
 							<DropdownMenuTrigger>

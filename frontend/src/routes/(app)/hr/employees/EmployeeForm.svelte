@@ -15,9 +15,9 @@
 	import Label from '$lib/components/basic/Label.svelte';
 
 	export let show = false;
-	export let selectedEmployee: employee;
+	export let selectedEmployee: any;
 	export let reload: any;
-	let formData: employee;
+	let formData: any;
 
 	$: if (show || true) setFormData();
 

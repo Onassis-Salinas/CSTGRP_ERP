@@ -69,6 +69,9 @@
 						<AccordionOption href="/warehouse/po-imp">Po-Imp</AccordionOption>
 						<AccordionOption href="/warehouse/movements">Movimientos</AccordionOption>
 					{/if}
+					{#if hasAccess('requisitions')}
+						<AccordionOption href="/warehouse/requisitions">Requisiciones</AccordionOption>
+					{/if}
 				</AccordionContent>
 			</AccordionItem>
 		{/if}

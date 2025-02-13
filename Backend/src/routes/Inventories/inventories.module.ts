@@ -5,6 +5,7 @@ import { VariousModule } from './various/various.module';
 import { MovementsModule } from './movements/movements.module';
 import { StatsModule } from './stats/stats.module';
 import { ClientMovementsModule } from './clients/movements/movements.module';
+import { RequisitionsModule } from './requisitions/requsitions.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { ClientMovementsModule } from './clients/movements/movements.module';
     MovementsModule,
     StatsModule,
     ClientMovementsModule,
+    RequisitionsModule,
   ],
 })
 export class InventoriesModule {}

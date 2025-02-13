@@ -26,7 +26,8 @@ export class MovementsService {
 
   async getMovements(body: z.infer<typeof movementsFilterSchema>) {
     const movements = await sql`SELECT
-      materials.code, materials.description, materials.measurement, materials."clientId", materials."leftoverAmount", materials.amount as inventory, materialmovements.active, materialmovements.amount, materialmovements."realAmount", materialmovements.id, materialie.due, materialie.jobpo, materialie.programation, materialie.import, materialmovements.extra
+      materials.code, materials.description, materials.measurement, materials."clientId", materials."leftoverAmount", materials.amount as inventory, materialmovements.active, materialmovements.amount, materialmovements."realAmount", materialmovements.id, materialie.due, materialie.jobpo, materialie.programation, materialie.import, materialmovements.extra,
+      (select folio from requisitions where jobs LIKE CONCAT('%', materialie.jobpo, '%') and materialie.jobpo is not null and not materialmovements.active and requisitions."materialId" = materials.id) as req
       FROM materialmovements
       JOIN materials on materials.id = materialmovements."materialId"
       JOIN materialie on materialie.id = materialmovements."movementId"
@@ -48,20 +49,20 @@ export class MovementsService {
       WHERE 
       ${
         body.type === 'imports'
-        ? sql`"import" IS NOT NULL`
-        : body.type === 'exports'
-        ? sql`"jobpo" IS NOT NULL`
-        : sql`TRUE`
+          ? sql`"import" IS NOT NULL`
+          : body.type === 'exports'
+            ? sql`"jobpo" IS NOT NULL`
+            : sql`TRUE`
       }
       ${
         body.code
-        ? sql`AND (
+          ? sql`AND (
           "import" ILIKE ${'%' + body.code + '%'} OR 
           "jobpo" ILIKE ${'%' + body.code + '%'} OR 
           "programation" ILIKE ${'%' + body.code + '%'}
           )`
           : sql``
-        }
+      }
       AND due <> '2024-01-01' AND due <> '2024-01-02'
       ORDER BY due DESC, jobpo DESC, import DESC`;
 
