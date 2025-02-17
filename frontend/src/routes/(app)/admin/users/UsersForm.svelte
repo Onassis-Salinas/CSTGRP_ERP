@@ -129,8 +129,8 @@
 					<Label name="Perm. Sistemas">
 						<Select items={permissions} bind:value={formData.perm_it} />
 					</Label>
-					<Label name="Perm. Materiales">
-						<Select items={permissions} bind:value={formData.perm_materials} />
+					<Label name="Perm. Movimientos">
+						<Select items={permissions} bind:value={formData.perm_materialmovements} />
 					</Label>
 					<Label name="Perm. Requisiciones">
 						<Select items={permissions} bind:value={formData.perm_requisitions} />

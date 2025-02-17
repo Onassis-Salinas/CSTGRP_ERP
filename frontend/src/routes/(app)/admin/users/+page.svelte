@@ -26,7 +26,7 @@
 		password: '',
 		perm_assistance_areas: '',
 		perm_users: 0,
-		perm_materials: 0,
+		perm_materialmovements: 0,
 		perm_assistance: 0,
 		perm_productivity: 0,
 		perm_employees: 0,
@@ -58,7 +58,7 @@
 			password: '',
 			perm_assistance_areas: '',
 			perm_users: 0,
-			perm_materials: 0,
+			perm_materialmovements: 0,
 			perm_assistance: 0,
 			perm_productivity: 0,
 			perm_employees: 0,
@@ -83,7 +83,7 @@
 			password: '',
 			perm_assistance_areas: '',
 			perm_users: 0,
-			perm_materials: 0,
+			perm_materialmovements: 0,
 			perm_assistance: 0,
 			perm_productivity: 0,
 			perm_employees: 0,
@@ -130,7 +130,7 @@
 		<TableHead class="w-[12.5%]">Usuarios</TableHead>
 		<TableHead class="w-[12.5%]">Estructura</TableHead>
 		<TableHead class="w-[12.5%]">Sistemas</TableHead>
-		<TableHead class="w-[12.5%]">Materiales</TableHead>
+		<TableHead class="w-[12.5%]">Movimientos</TableHead>
 		<TableHead class="w-[12.5%]">Requisiciones</TableHead>
 		<TableHead class="w-[12.5%]">Areas</TableHead>
 	</TableHeader>
@@ -173,8 +173,8 @@
 					><Badge color={getBadgeColor(user.perm_it)}>{badgeTexts[user.perm_it]}</Badge></TableCell
 				>
 				<TableCell
-					><Badge color={getBadgeColor(user.perm_materials)}
-						>{badgeTexts[user.perm_materials]}</Badge
+					><Badge color={getBadgeColor(user.perm_materialmovements)}
+						>{badgeTexts[user.perm_materialmovements]}</Badge
 					></TableCell
 				>
 				<TableCell

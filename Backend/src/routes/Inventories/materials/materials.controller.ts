@@ -18,7 +18,7 @@ import { FileInterceptor, File } from '@nest-lab/fastify-multer';
 
 @ApiTags('Materials')
 @Controller('materials')
-@UseGuards(new AuthGuard('materials'))
+@UseGuards(new AuthGuard('inventory'))
 export class MaterialsController {
   constructor(private readonly materialsService: MaterialsService) {}
 
@@ -33,7 +33,6 @@ export class MaterialsController {
     const validatedBody = new ZodPiPe(createSchema).transform(
       JSON.parse(body.json),
     );
-
     return this.materialsService.createMaterial(validatedBody, file);
   }
 

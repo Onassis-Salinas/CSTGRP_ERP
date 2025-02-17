@@ -53,7 +53,7 @@
 	</a>
 
 	<Accordion class="space-y-1 px-2 pt-2">
-		{#if hasAccess('inventory') || hasAccess('materials')}
+		{#if hasAccess('inventory') || hasAccess('materialmovements') || hasAccess('requisitions')}
 			<AccordionItem value="1" class="border-none">
 				<AccordionTrigger class="hover:bg-muted rounded-md p-2 text-sm hover:no-underline">
 					<span class="flex items-center gap-2">
@@ -62,10 +62,13 @@
 					</span>
 				</AccordionTrigger>
 				<AccordionContent>
-					<AccordionOption href="/warehouse/dashboard">Resumenes</AccordionOption>
-
-					<AccordionOption href="/warehouse/inventory">Inventario</AccordionOption>
+					{#if hasAccess('materialmovements')}
+						<AccordionOption href="/warehouse/dashboard">Resumenes</AccordionOption>
+					{/if}
 					{#if hasAccess('inventory')}
+						<AccordionOption href="/warehouse/inventory">Inventario</AccordionOption>
+					{/if}
+					{#if hasAccess('materialmovements')}
 						<AccordionOption href="/warehouse/po-imp">Po-Imp</AccordionOption>
 						<AccordionOption href="/warehouse/movements">Movimientos</AccordionOption>
 					{/if}
@@ -131,7 +134,7 @@
 				</AccordionContent>
 			</AccordionItem>
 		{/if}
-		{#if !hasAccess('inventory') && !hasAccess('users') && !hasAccess('structure') && !hasAccess('it') && !hasAccess('assistance') && !hasAccess('productivity') && !hasAccess('employees') && !hasAccess('materials')}
+		{#if !hasAccess('inventory') && !hasAccess('users') && !hasAccess('structure') && !hasAccess('it') && !hasAccess('assistance') && !hasAccess('productivity') && !hasAccess('employees') && !hasAccess('materialmovements')}
 			<AccordionItem value="9" class="border-none">
 				<AccordionTrigger class="hover:bg-muted rounded-md p-2 text-sm hover:no-underline">
 					<span class="flex items-center gap-2">

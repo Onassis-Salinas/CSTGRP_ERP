@@ -31,7 +31,7 @@ import {
 
 @ApiTags('Material Movements')
 @Controller('materialmovements')
-@UseGuards(new AuthGuard('inventory'))
+@UseGuards(new AuthGuard('materialmovements'))
 export class MovementsController {
   constructor(private readonly movementsService: MovementsService) {}
   @Get('material/:id')
