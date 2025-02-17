@@ -18,11 +18,9 @@ export const saveFile = async (
   folder: folderType,
   fileName?: string,
 ): null | Promise<string> => {
-  if (fileName) {
-    await deleteFile(fileName);
-  }
+  if (!file.buffer) return fileName || null;
 
-  if (!file.buffer) return null;
+  if (fileName) await deleteFile(fileName);
 
   fileName = `${Date.now()}${path.extname(file.originalname)}`;
   const filePath = join(__dirname, '..', '..', 'public', folder, fileName);

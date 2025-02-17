@@ -50,7 +50,6 @@
 			})
 		);
 		if (files) form.append('file', files[0]);
-
 		if (selectedMaterial.id) {
 			await api.put('materials', form);
 			showSuccess('Material actualizado');

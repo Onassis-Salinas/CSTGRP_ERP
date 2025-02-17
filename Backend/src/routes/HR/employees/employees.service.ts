@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { File } from '@nest-lab/fastify-multer';
 import {
   createSchema,
   editSchema,
@@ -10,6 +11,7 @@ import { z } from 'zod';
 import sql from 'src/utils/db';
 import { getWeekDays } from 'src/utils/functions';
 import exceljs from 'exceljs';
+import { saveFile } from 'src/utils/storage';
 
 @Injectable()
 export class EmployeesService {
@@ -42,18 +44,22 @@ export class EmployeesService {
   }
 
   async getActiveEmployees() {
-    const employees = await sql`select * from employees where active order by "noEmpleado" DESC`;
+    const employees =
+      await sql`select * from employees where active order by "noEmpleado" DESC`;
     return employees;
   }
 
   async getInactiveEmployees() {
-    const employees = await sql`select * from employees where active = false order by "noEmpleado" DESC`;
+    const employees =
+      await sql`select * from employees where active = false order by "noEmpleado" DESC`;
     return employees;
   }
 
-  async registerEmployee(body: z.infer<typeof createSchema>) {
+  async registerEmployee(body: z.infer<typeof createSchema>, file: File) {
+    const image = await saveFile(file, 'employees');
+
     const employee: any = (
-      await sql`insert into employees ${sql(body)} returning id, "areaId", "positionId", "admissionDate"`
+      await sql`insert into employees ${sql({ ...body, photo: image })} returning id, "areaId", "positionId", "admissionDate"`
     )[0];
 
     //Generate assistance for the week
@@ -76,8 +82,11 @@ export class EmployeesService {
     return;
   }
 
-  async editEmployee(body: z.infer<typeof editSchema>) {
-    await sql`update "employees" SET ${sql(body)} where id = ${body.id}`;
+  async editEmployee(body: z.infer<typeof editSchema>, file: File) {
+    const [previousObj] =
+      await sql`select photo from employees where id = ${body.id}`;
+    const image = await saveFile(file, 'employees', previousObj.image);
+    await sql`update "employees" SET ${sql({ ...body, photo: image })} where id = ${body.id}`;
     return;
   }
 

@@ -8,6 +8,8 @@ import {
   Put,
   Header,
   Param,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { EmployeesService } from './employees.service';
 import { ApiTags } from '@nestjs/swagger';
@@ -21,6 +23,8 @@ import {
   reactivateSchema,
   templateSchema,
 } from './employees.schema';
+import { FileInterceptor } from '@nest-lab/fastify-multer';
+import { File } from '@nest-lab/fastify-multer';
 
 @ApiTags('Employees')
 @Controller('employees')
@@ -49,13 +53,21 @@ export class EmployeesController {
   }
 
   @Post()
-  create(@Body(new ZodPiPe(createSchema)) body) {
-    return this.employeesService.registerEmployee(body);
+  @UseInterceptors(FileInterceptor('file'))
+  create(@Body() body, @UploadedFile() file: File) {
+    const validatedBody = new ZodPiPe(createSchema).transform(
+      JSON.parse(body.json),
+    );
+    return this.employeesService.registerEmployee(validatedBody, file);
   }
 
   @Put()
-  Edit(@Body(new ZodPiPe(editSchema)) body) {
-    return this.employeesService.editEmployee(body);
+  @UseInterceptors(FileInterceptor('file'))
+  edit(@Body() body, @UploadedFile() file: File) {
+    const validatedBody = new ZodPiPe(editSchema).transform(
+      JSON.parse(body.json),
+    );
+    return this.employeesService.editEmployee(validatedBody, file);
   }
 
   @Put('reactivate')
