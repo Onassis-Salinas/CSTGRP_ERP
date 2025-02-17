@@ -85,7 +85,7 @@ export class EmployeesService {
   async editEmployee(body: z.infer<typeof editSchema>, file: File) {
     const [previousObj] =
       await sql`select photo from employees where id = ${body.id}`;
-    const image = await saveFile(file, 'employees', previousObj.image);
+    const image = await saveFile(file, 'employees', previousObj.photo);
     await sql`update "employees" SET ${sql({ ...body, photo: image })} where id = ${body.id}`;
     return;
   }
