@@ -1,7 +1,9 @@
-import { Controller, Get, Header, UseGuards } from '@nestjs/common';
+import { Controller, Get, Header, Param, UseGuards } from '@nestjs/common';
 import { InventoryService } from './inventory.service';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/interceptors/auth/authorization.guard';
+import { ZodPiPe } from 'src/interceptors/validation/validation.pipe';
+import { idSchema } from './inventory.schema';
 
 @ApiTags('Inventory')
 @Controller('inventory')
@@ -12,6 +14,16 @@ export class InventoryController {
   @Get()
   get() {
     return this.inventoryService.getInventory();
+  }
+
+  @Get('history/:id')
+  getMaterialMovements(@Param(new ZodPiPe(idSchema)) params) {
+    return this.inventoryService.getMaterialMovements(params);
+  }
+
+  @Get('comparison/:id')
+  getMaterialComparison(@Param(new ZodPiPe(idSchema)) params) {
+    return this.inventoryService.getMaterialComparison(params);
   }
 
   @Get('export')

@@ -69,65 +69,6 @@ export class MovementsService {
     return movements;
   }
 
-  async getMaterialMovements(body: z.infer<typeof idSchema>) {
-    const movements = await sql`SELECT
-        materialmovements."activeDate",
-        materialie.programation,
-        materialie.jobpo,
-        materialie.import,
-        materialmovements.amount,
-        materialmovements.extra,
-        materialmovements."realAmount",
-        materialmovements.active,
-        SUM(materialmovements."realAmount") OVER (ORDER BY materialmovements."activeDate" ASC, materialmovements.id ASC) AS balance,
-        SUM(materialmovements."amount") OVER (ORDER BY materialmovements."activeDate" ASC, materialmovements.id ASC) AS "totalBalance"
-        FROM
-            materialmovements
-        JOIN
-            materials ON materials.id = materialmovements."materialId"
-        JOIN
-            materialie ON materialie.id = materialmovements."movementId"
-        WHERE
-            materials.id = ${body.id} 
-            AND  materialmovements.active is true
-            AND (materialie.location IS NULL OR materialie.location = 'At CST, Qtys verified')
-        ORDER BY
-            materialmovements."activeDate" DESC,
-            materialmovements.id DESC
-        LIMIT 200`;
-    return movements;
-  }
-
-  async getMaterialComparison(body: z.infer<typeof idSchema>) {
-    const movements = await sql`SELECT
-    materialmovements."activeDate" as due,
-    materialie.programation,
-    materialie.jobpo,
-    materialmovements.amount,
-    (
-        SELECT SUM(amount) 
-        FROM materialmovements AS m
-        WHERE m."materialId" = materialmovements."materialId" AND m."movementId" = materialmovements."movementId"
-    ) AS "realAmount"
-        FROM
-        materialmovements
-    JOIN
-        materials ON materials.id = materialmovements."materialId"
-    JOIN
-        materialie ON materialie.id = materialmovements."movementId"
-    WHERE
-        materials.id = ${body.id} 
-        AND materialmovements.active IS true
-        AND materialie.jobpo IS NOT NULL
-        AND materialmovements.extra = false
-    ORDER BY
-        materialmovements."activeDate" DESC,
-        materialmovements.id DESC
-    LIMIT 300;`;
-
-    return movements;
-  }
-
   async getJobComparison(body: z.infer<typeof idSchema>) {
     const movements = await sql`SELECT
     materials.code,

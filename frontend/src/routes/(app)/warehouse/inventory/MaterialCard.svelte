@@ -25,7 +25,7 @@
 	let movements: any[] = [];
 
 	async function fetchData() {
-		movements = (await api.get('/materialmovements/material/' + selectedMaterial.id)).data;
+		movements = (await api.get('/inventory/history/' + selectedMaterial.id)).data;
 	}
 	$: if (selectedMaterial.id) {
 		fetchData();
@@ -75,7 +75,8 @@
 								></TableCell
 							>
 							<TableCell
-								><Badge color={parseFloat(row.balance) > 0 ? 'green' : 'red'}>{row.totalBalance}</Badge
+								><Badge color={parseFloat(row.balance) > 0 ? 'green' : 'red'}
+									>{row.totalBalance}</Badge
 								></TableCell
 							>
 						</TableRow>

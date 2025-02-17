@@ -34,16 +34,6 @@ import {
 @UseGuards(new AuthGuard('materialmovements'))
 export class MovementsController {
   constructor(private readonly movementsService: MovementsService) {}
-  @Get('material/:id')
-  getMaterialMovements(@Param(new ZodPiPe(idSchema)) params) {
-    return this.movementsService.getMaterialMovements(params);
-  }
-
-  @Get('material/comparison/:id')
-  getMaterialComparison(@Param(new ZodPiPe(idSchema)) params) {
-    return this.movementsService.getMaterialComparison(params);
-  }
-
   @Get('job/comparison/:id')
   getJobComparison(@Param(new ZodPiPe(idSchema)) params) {
     return this.movementsService.getJobComparison(params);

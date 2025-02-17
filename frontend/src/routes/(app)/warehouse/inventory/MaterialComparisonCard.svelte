@@ -24,7 +24,7 @@
 	let movements: any[] = [];
 
 	async function fetchData() {
-		movements = (await api.get('/materialmovements/material/comparison/' + selectedMaterial.id))
+		movements = (await api.get('/inventory/comparison/' + selectedMaterial.id))
 			.data;
 	}
 	$: if (selectedMaterial.id) {

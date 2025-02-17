@@ -5,3 +5,7 @@ export const editSchema = z.object({
   name: z.string().optional(),
   captured: z.boolean().optional(),
 });
+
+export const idSchema = z.object({
+  id: z.string(),
+});
