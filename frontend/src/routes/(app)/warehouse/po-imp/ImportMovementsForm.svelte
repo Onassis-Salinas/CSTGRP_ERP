@@ -1,5 +1,6 @@
 <script lang="ts">
 	import MaterialInput from '$lib/components/basic/MaterialInput.svelte';
+	import Select from '$lib/components/basic/Select.svelte';
 	import { Button } from '$lib/components/ui/button';
 	import {
 		Dialog,
@@ -23,7 +24,7 @@
 
 	export let show: boolean;
 	export let reload: any;
-
+	export let selectedMovement: any = {};
 	interface material {
 		code: string;
 		amount: string;
@@ -31,20 +32,30 @@
 	}
 
 	let materials: material[] = [];
-	let formData: importMovement = {};
+	let formData: any = {};
 	let files: any;
 	$: inputDisabled = !!files;
 	$: if (files) processPDF();
-	$: if (!show) cleanData();
+	$: if (!show || show) cleanData();
+	$: if (selectedMovement.id) getData();
 
 	async function handleSubmit() {
-		await api.post('/materialmovements/import', {
-			...formData,
-			materials
-		});
+		if (selectedMovement.id) {
+			await api.put('/materialmovements/import', {
+				...formData,
+				materials
+			});
+		} else {
+			await api.post('/materialmovements/import', {
+				...formData,
+				materials
+			});
+		}
+
 		reload();
+
 		show = false;
-		showSuccess(`Importacion ${formData.import} Registrada`);
+		showSuccess(selectedMovement.id ? 'Importacion actualizada' : `Importacion Registrada`);
 	}
 
 	async function processPDF() {
@@ -72,18 +83,39 @@
 		files = null;
 		inputDisabled = false;
 	}
+
+	async function getData() {
+		cleanData();
+		const { data } = await api.get('/materialmovements/ie/' + selectedMovement.id);
+		materials = data.materials;
+		formData = { id: data.id, import: data.import, location: data.location, due: data.due };
+		files = null;
+		inputDisabled = false;
+	}
+
+	let options = [
+		{ value: 'At M&M, In transit', name: 'En transito' },
+		{ value: 'At CST, In revision', name: 'En revisión' },
+		{ value: 'At CST, Qtys verified', name: 'Listo' }
+	];
 </script>
 
 <Dialog bind:open={show}>
 	<DialogContent class="max-w-2xl">
 		<DialogHeader>
-			<DialogTitle>Registrar importacion</DialogTitle>
+			<DialogTitle
+				>{selectedMovement.id ? 'Actualizar importacion' : 'Registrar importacion'}</DialogTitle
+			>
 		</DialogHeader>
 		<DialogBody>
-			<div class="grid w-full grid-cols-2 gap-4">
+			<div class="grid w-full grid-cols-3 gap-4">
 				<div class="space-y-2">
 					<span>Importacion</span>
 					<Input disabled={inputDisabled} name="text" bind:value={formData.import} />
+				</div>
+				<div class="space-y-2">
+					<span>Ubicacion</span>
+					<Select items={options} bind:value={formData.location} />
 				</div>
 				<div class="space-y-2">
 					<span>Fecha</span>

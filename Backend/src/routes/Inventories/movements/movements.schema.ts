@@ -25,6 +25,7 @@ export const updateAmountSchema = z.object({
 export const importSchema = z.object({
   import: z.string(),
   due: z.string(),
+  location: z.string(),
   materials: z.array(
     z.object({
       code: z.string(),
@@ -49,8 +50,10 @@ export const exportSchema = z.object({
 
 export const updateImportSchema = z.object({
   id: z.string(),
+  due: z.string(),
   import: z.string(),
   location: z.string(),
+  materials: z.array(z.any()),
 });
 
 export const updateExportSchema = z.object({

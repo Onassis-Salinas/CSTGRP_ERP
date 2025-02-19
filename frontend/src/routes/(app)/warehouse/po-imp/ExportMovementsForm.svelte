@@ -39,7 +39,7 @@
 	let files: any;
 	$: inputDisabled = !!files;
 	$: if (files) processPDF();
-	$: if (!show) cleanData();
+	$: if (!show || show) cleanData();
 	$: if (selectedMovement.id) getData();
 
 	async function handleSubmit() {
@@ -65,13 +65,13 @@
 		form.append('file', files[0]);
 
 		let result;
-		const fileName = form.get('file').name;
+		const fileName = form.get('file')?.name;
 		if (fileName?.includes('.pdf')) {
 			result = (await api.post('/inventoryvarious/jobpdf', form)).data;
 			formData.jobpo = result.jobpo;
 			formData.due = result.dueDate;
 
-			result.materials = result.materials.map((obj) => ({ ...obj, active: false }));
+			result.materials = result.materials.map((obj: any) => ({ ...obj, active: false }));
 
 			materials = structuredClone(result.materials);
 			console.log(materials);

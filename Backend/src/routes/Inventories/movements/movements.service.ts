@@ -121,6 +121,25 @@ export class MovementsService {
         403,
       );
 
+    const materials = [];
+    for (const movement of body.materials) {
+      const [material] =
+        await sql`select id from materials where code = ${movement.code}`;
+
+      if (!material) throw new HttpException('Material no existente', 400);
+
+      materials.push({
+        amount: Math.abs(parseFloat(movement.amount)),
+        realAmount: Math.abs(parseFloat(movement.amount)),
+        active: true,
+        materialId: material.id,
+        movementId: body.id,
+        activeDate: body.due,
+      });
+    }
+
+    delete body.materials;
+
     await sql.begin(async (sql) => {
       const previousObj = (
         await sql`select import, location from materialie where id = ${body.id}`
@@ -129,17 +148,26 @@ export class MovementsService {
       const newObj = (
         await sql`update materialie set ${sql(body)} where id = ${body.id} returning import, location`
       )[0];
+
+      const prevMaterials =
+        await sql`delete from materialmovements where "movementId" = ${body.id} and not extra returning "materialId"`;
+
+      const newMaterials =
+        await sql`insert into materialmovements ${sql(materials)} returning "materialId"`;
+
+      const filteredIds = [
+        ...new Set(
+          [...prevMaterials, ...newMaterials].map((v) => v.materialId),
+        ),
+      ];
+
+      for (const id of filteredIds) {
+        await updateMaterialAmount(id, sql);
+      }
+
       await this.req.record(
         `Actualizo la importacion: ${previousObj?.import} con status: ${previousObj?.location} a ${newObj?.import}, ${newObj?.location}`,
         sql,
-      );
-
-      const movements =
-        await sql`select "materialId" from materialmovements where "movementId" = ${body.id}`;
-
-      movements.forEach(
-        async (movement) =>
-          await updateMaterialAmount(movement.materialId, sql),
       );
     });
 
@@ -186,7 +214,7 @@ export class MovementsService {
         await sql`delete from materialmovements where "movementId" = ${body.id} and not extra returning "materialId"`;
 
       const newMaterials =
-        await sql`insert into materialmovements ${sql(materials)}`;
+        await sql`insert into materialmovements ${sql(materials)} returning "materialId"`;
 
       const filteredIds = [
         ...new Set(
@@ -242,7 +270,7 @@ export class MovementsService {
           400,
         );
 
-      await sql`insert into materialie (import, due, location) values (${body.import},${body.due}, 'At M&M, In transit')`;
+      await sql`insert into materialie (import, due, location) values (${body.import},${body.due}, ${body.location})`;
 
       await this.req.record(`Registro la importación: ${body.import}`, sql);
 

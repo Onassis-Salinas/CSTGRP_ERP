@@ -149,5 +149,5 @@
 	text="¿Estás seguro de que quieres eliminar este movimiento?"
 	deleteFunc={handleDelete}
 />
-<ImportMovementsForm bind:show={show4} reload={getMovements} />
+<ImportMovementsForm bind:show={show4} reload={getMovements} {selectedMovement} />
 <ExportMovementsForm bind:show={show5} reload={getMovements} {selectedMovement} />
