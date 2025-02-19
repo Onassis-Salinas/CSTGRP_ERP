@@ -149,8 +149,8 @@ export class MovementsService {
       if (!material) throw new HttpException('Material no existente', 400);
 
       materials.push({
-        amount: movement.amount,
-        realAmount: movement.realAmount,
+        amount: -Math.abs(parseFloat(movement.amount)),
+        realAmount: -Math.abs(parseFloat(movement.realAmount)),
         active: movement.active,
         materialId: material.id,
         movementId: body.id,
@@ -264,7 +264,7 @@ export class MovementsService {
       for (const material of body.materials) {
         const [movement] =
           await sql`insert into materialmovements ("materialId", "movementId", amount, "realAmount", active, "activeDate") values
-         ((select Id from materials where code = ${material.code}),(select id from materialie where jobpo = ${body.jobpo}),${-Math.abs(parseFloat(material.amount))},${-Math.abs(parseFloat(material.amount))}, ${material.active}, ${material.active ? new Date() : null}) returning "materialId"`;
+         ((select Id from materials where code = ${material.code}),(select id from materialie where jobpo = ${body.jobpo}),${-Math.abs(parseFloat(material.amount))},${-Math.abs(parseFloat(material.realAmount))}, ${material.active}, ${material.active ? new Date() : null}) returning "materialId"`;
 
         if (material.active)
           await updateMaterialAmount(movement.materialId, sql);

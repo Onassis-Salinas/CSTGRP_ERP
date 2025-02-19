@@ -41,6 +41,7 @@ export const exportSchema = z.object({
     z.object({
       code: z.string(),
       amount: z.string(),
+      realAmount: z.string(),
       active: z.boolean(),
     }),
   ),
