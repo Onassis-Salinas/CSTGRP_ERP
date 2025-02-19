@@ -74,7 +74,6 @@ export class MovementsService {
     const materials =
       await sql`select (select code from materials where id = "materialId"), amount, "realAmount", active from materialmovements where "movementId" = ${body.id} and NOT extra`;
 
-    console.log(materials);
     return { ...data, due: data.due.toISOString().split('T')[0], materials };
   }
 
@@ -114,7 +113,14 @@ export class MovementsService {
     return;
   }
 
-  async updateImport(body: z.infer<typeof updateImportSchema>) {
+  async updateImport(body: z.infer<typeof updateImportSchema>, token: string) {
+    const user: any = await jwt.verify(token, process.env.JWT_SECRET);
+    if (user.username !== 'juan' && user.username !== 'admin')
+      throw new HttpException(
+        'No tienes permisos para eliminar movimientos',
+        403,
+      );
+
     await sql.begin(async (sql) => {
       const previousObj = (
         await sql`select import, location from materialie where id = ${body.id}`
@@ -140,7 +146,14 @@ export class MovementsService {
     return;
   }
 
-  async updateExport(body: z.infer<typeof updateExportSchema>) {
+  async updateExport(body: z.infer<typeof updateExportSchema>, token: string) {
+    const user: any = await jwt.verify(token, process.env.JWT_SECRET);
+    if (user.username !== 'juan' && user.username !== 'admin')
+      throw new HttpException(
+        'No tienes permisos para eliminar movimientos',
+        403,
+      );
+
     const materials = [];
     for (const movement of body.materials) {
       const [material] =

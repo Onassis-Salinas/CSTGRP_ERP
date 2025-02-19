@@ -95,13 +95,13 @@ export class MovementsController {
   }
 
   @Put('import')
-  updateImport(@Body(new ZodPiPe(updateImportSchema)) body) {
-    return this.movementsService.updateImport(body);
+  updateImport(@Body(new ZodPiPe(updateImportSchema)) body, @Req() req) {
+    return this.movementsService.updateImport(body, req.cookies.token);
   }
 
   @Put('export')
-  updateExport(@Body(new ZodPiPe(updateExportSchema)) body) {
-    return this.movementsService.updateExport(body);
+  updateExport(@Body(new ZodPiPe(updateExportSchema)) body, @Req() req) {
+    return this.movementsService.updateExport(body, req.cookies.token);
   }
 
   @Put('realamount')
