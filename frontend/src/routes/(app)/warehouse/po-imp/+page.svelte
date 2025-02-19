@@ -9,8 +9,6 @@
 	import MenuBar from '$lib/components/basic/MenuBar.svelte';
 	import OptionsCell from '$lib/components/basic/OptionsCell.svelte';
 	import { formatDate } from '$lib/utils/functions';
-	import JobPoForm from './JobPOForm.svelte';
-	import ImportForm from './ImportForm.svelte';
 	import JobComparisonCard from './JobComparisonCard.svelte';
 	import { Pen, Ruler } from 'lucide-svelte';
 	import DeletePopUp from '$lib/components/complex/DeletePopUp.svelte';
@@ -24,8 +22,6 @@
 	import { Button } from '$lib/components/ui/button';
 	import ImportMovementsForm from './ImportMovementsForm.svelte';
 
-	let show = false;
-	let show1 = false;
 	let show2 = false;
 	let show3 = false;
 	let show4 = false;
@@ -56,7 +52,7 @@
 
 	function editImport(i: number) {
 		selectedMovement = movements[i];
-		show1 = true;
+		show4 = true;
 	}
 	function deleteIE(i: number) {
 		selectedMovement = movements[i];
@@ -64,7 +60,7 @@
 	}
 	function editJobPO(i: number) {
 		selectedMovement = movements[i];
-		show = true;
+		show5 = true;
 	}
 	function compareJob(i: number) {
 		selectedMovement = movements[i];
@@ -100,8 +96,18 @@
 			<DropdownMenuTrigger>
 				<Button><Pen class="mr-1.5 size-3.5" />Registrar</Button>
 				<DropdownMenuContent>
-					<DropdownMenuItem on:click={() => (show4 = true)}>Importacion</DropdownMenuItem>
-					<DropdownMenuItem on:click={() => (show5 = true)}>Job - PO</DropdownMenuItem>
+					<DropdownMenuItem
+						on:click={() => {
+							selectedMovement = {};
+							show4 = true;
+						}}>Importacion</DropdownMenuItem
+					>
+					<DropdownMenuItem
+						on:click={() => {
+							selectedMovement = {};
+							show5 = true;
+						}}>Job - PO</DropdownMenuItem
+					>
 				</DropdownMenuContent>
 			</DropdownMenuTrigger>
 		</DropdownMenu>
@@ -137,8 +143,6 @@
 	</TableBody>
 </CusTable>
 
-<JobPoForm bind:show reload={getMovements} {selectedMovement} />
-<ImportForm bind:show={show1} reload={getMovements} {selectedMovement} />
 <JobComparisonCard bind:show={show2} bind:selectedJob={selectedMovement} />
 <DeletePopUp
 	bind:show={show3}
@@ -146,4 +150,4 @@
 	deleteFunc={handleDelete}
 />
 <ImportMovementsForm bind:show={show4} reload={getMovements} />
-<ExportMovementsForm bind:show={show5} reload={getMovements} />
+<ExportMovementsForm bind:show={show5} reload={getMovements} {selectedMovement} />

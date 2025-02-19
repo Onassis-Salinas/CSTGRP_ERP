@@ -24,28 +24,40 @@
 
 	export let show: boolean;
 	export let reload: any;
+	export let selectedMovement: any = {};
+
 	interface material {
 		code: string;
 		amount: string;
+		realAmount: string;
 		measurement: string;
 		active: boolean;
 	}
 
 	let materials: material[] = [];
-	let formData: exportMovement = {};
+	let formData: any = {};
 	let files: any;
 	$: inputDisabled = !!files;
 	$: if (files) processPDF();
 	$: if (!show) cleanData();
+	$: if (selectedMovement.id) getData();
 
 	async function handleSubmit() {
-		await api.post('/materialmovements/export', {
-			...formData,
-			materials
-		});
+		if (selectedMovement.id) {
+			await api.put('/materialmovements/export', {
+				...formData,
+				materials
+			});
+		} else {
+			await api.post('/materialmovements/export', {
+				...formData,
+				materials
+			});
+		}
+
 		reload();
 		show = false;
-		showSuccess(`Salida Registrada`);
+		showSuccess(selectedMovement.id ? 'Salida actualizada' : `Salida Registrada`);
 	}
 
 	async function processPDF() {
@@ -72,7 +84,7 @@
 	}
 
 	function addMaterial() {
-		materials.push({ code: '', measurement: '', amount: '', active: false });
+		materials.push({ code: '', measurement: '', amount: '', active: false, realAmount: '' });
 		materials = materials;
 	}
 	function deleteMaterial(i: number) {
@@ -80,21 +92,27 @@
 		materials = materials;
 	}
 	function cleanData() {
-		materials = [{ code: '', measurement: '', amount: '', active: false }];
+		materials = [{ code: '', measurement: '', amount: '', active: false, realAmount: '' }];
 		formData = {};
 		files = null;
 		inputDisabled = false;
 	}
 
-	// $: console.log(materials);
+	async function getData() {
+		const { data } = await api.get('/materialmovements/ie/' + selectedMovement.id);
+		materials = data.materials;
+		formData = { id: data.id, jobpo: data.jobpo, programation: data.programation, due: data.due };
+		files = null;
+		inputDisabled = false;
+	}
 </script>
 
 <Dialog bind:open={show}>
-	<DialogContent class="max-w-2xl">
+	<DialogContent class="max-w-3xl ">
 		<DialogHeader>
-			<DialogTitle>Registrar job o po</DialogTitle>
+			<DialogTitle>{selectedMovement.id ? 'Actualizar job-po' : 'Registrar job-po'}</DialogTitle>
 		</DialogHeader>
-		<DialogBody>
+		<DialogBody class="h-[85lvh]">
 			<div class="grid w-full grid-cols-3 gap-4">
 				<div class="space-y-2">
 					<span>Programacion</span>
@@ -120,6 +138,7 @@
 				<TableHeader>
 					<TableHead>Codigo</TableHead>
 					<TableHead>Cantidad</TableHead>
+					<TableHead>Real</TableHead>
 					<TableHead>Medida</TableHead>
 					<TableHead class="w-1">Surtido</TableHead>
 					<TableHead class="w-1 p-0"></TableHead>
@@ -139,6 +158,13 @@
 									class="rounded-none border-none !opacity-100"
 									type="number"
 									bind:value={materials[i].amount}
+								/></TableCell
+							>
+							<TableCell class="p-0"
+								><Input
+									class="rounded-none border-none !opacity-100"
+									type="number"
+									bind:value={materials[i].realAmount}
 								/></TableCell
 							>
 							<TableCell class="w-5">{materials[i].measurement}</TableCell>

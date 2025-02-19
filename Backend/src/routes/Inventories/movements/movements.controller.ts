@@ -54,6 +54,11 @@ export class MovementsController {
     return this.movementsService.getIE(params);
   }
 
+  @Get('ie/:id')
+  getOneIE(@Param(new ZodPiPe(idSchema)) params) {
+    return this.movementsService.getOneIE(params);
+  }
+
   @Post('import')
   importMaterials(@Body(new ZodPiPe(importSchema)) body) {
     return this.movementsService.postInput(body);

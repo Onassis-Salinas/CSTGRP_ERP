@@ -9,20 +9,74 @@
 	import { formatDate, getImage } from '$lib/utils/functions';
 	import api from '$lib/utils/server';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
+	import DisplayInput from '$lib/components/ui/input/display-input.svelte';
+	import { Button } from '$lib/components/ui/button';
+	import { Check, Edit2Icon } from 'lucide-svelte';
+	import { onMount } from 'svelte';
+	import { showSuccess } from '$lib/utils/showToast';
+	import Select from '$lib/components/basic/Select.svelte';
 
 	export let show = false;
-	export let selectedEmployee: any;
-	export let areas;
-	export let positions;
+	export let employee: any;
+	export let reload: any;
+	let edit = false;
+	let formData: any;
+	let files: FileList | undefined;
 
-	$: if (selectedEmployee.id) if (browser) fetchData();
+	$: if (show || true) setFormData();
+
+	let banks = [
+		{ value: 'SCOTIABANK', name: 'SCOTIABANK' },
+		{ value: 'HSBC', name: 'HSBC' },
+		{ value: 'BBVA', name: 'BBVA' }
+	];
+	let status = [
+		{ value: 'RECONTRATABLE', name: 'Recontratable' },
+		{ value: 'NO RECONTRATABLE', name: 'No recontratable' },
+		{ value: 'A CONSIDERAR', name: 'A considerar' }
+	];
+
+	let genres = [
+		{ value: 'F', name: 'Femenino' },
+		{ value: 'M', name: 'Masculino' },
+		{ value: 'O', name: 'Otro' }
+	];
+
+	let civilStatus = [
+		{ value: 'Casado(a)', name: 'Casado(a)' },
+		{ value: 'Soltero(a)', name: 'Soltero(a)' },
+		{ value: 'Divorciado(a)', name: 'Divorciado(a)' },
+		{ value: 'Viudo(a)', name: 'Viudo(a)' },
+		{ value: 'Separado(a)', name: 'Separado(a)' },
+		{ value: 'Concubinato', name: 'Concubinato' },
+		{ value: 'Unión Libre', name: 'Unión Libre' },
+		{ value: 'Sociedad de Convivencia', name: 'Sociedad de Convivencia' }
+	];
+
+	let areas: any;
+	let positions: any;
+	let areasDisplay: any = {};
+	let positionsDisplay: any = {};
+
+	async function fetchOptions() {
+		areas = (await api.get('/hrvarious/areas')).data;
+		positions = (await api.get('/hrvarious/positions')).data;
+		areas.forEach((area: any) => {
+			areasDisplay[area.value] = { name: area.name, color: area.color };
+		});
+		positions.forEach((position: any) => {
+			positionsDisplay[position.value] = { name: position.name, color: position.color };
+		});
+	}
+
+	$: if (employee.id) fetchData();
 
 	let assistance: any[] = [];
 	let productivity: any[] = [];
 
 	const fetchData = async () => {
-		assistance = (await api.get(`/employees/assistance/${selectedEmployee.id}`)).data;
-		const productivityInfo = (await api.get(`/employees/productivity/${selectedEmployee.id}`)).data;
+		assistance = (await api.get(`/employees/assistance/${formData.id}`)).data;
+		const productivityInfo = (await api.get(`/employees/productivity/${formData.id}`)).data;
 
 		productivity = [];
 		productivityInfo.forEach((e: any) => {
@@ -77,6 +131,51 @@
 			});
 		});
 	};
+
+	function setFormData() {
+		formData = {
+			...employee,
+			admissionDate: employee.admissionDate?.split('T')[0],
+			bornDate: employee.bornDate?.split('T')[0],
+			quitDate: employee.quitDate?.split('T')[0],
+			cim: employee.cim?.split('T')[0],
+			infonavitFee: employee.infonavitFee?.toString(),
+			infonavitDiscount: employee.infonavitDiscount?.toString()
+		};
+	}
+
+	async function handleSubmit() {
+		const form = new FormData();
+		form.append(
+			'json',
+			JSON.stringify({
+				...formData,
+				id: parseInt(formData.id || ''),
+				noEmpleado: parseInt(formData.noEmpleado || ''),
+				areaId: parseInt(formData.areaId || ''),
+				positionId: parseInt(formData.positionId || ''),
+				sons: parseInt(formData.sons || ''),
+				vacations: parseInt(formData.vacations || '')
+			})
+		);
+
+		if (files) form.append('file', files[0]);
+
+		if (employee.id) {
+			await api.put('employees', form);
+			showSuccess('Informacion actualizada');
+		} else {
+			await api.post('employees', form);
+			showSuccess('Empleado registrado');
+		}
+
+		reload();
+		edit = false;
+	}
+
+	onMount(() => {
+		fetchOptions();
+	});
 </script>
 
 <Dialog bind:open={show}>
@@ -96,43 +195,52 @@
 				<div class="mb-8 grid grid-cols-[auto_1fr] grid-rows-2 items-center gap-x-6">
 					<img
 						class="border-muted row-span-2 aspect-square w-24 rounded-xl border-2 object-cover object-top"
-						src={getImage(selectedEmployee.photo)}
+						src={getImage(employee.photo)}
 						alt=""
 					/>
 					<div class="flex gap-2">
 						<p class="text-lg font-semibold">
-							{`${selectedEmployee.name} ${selectedEmployee.paternalLastName || ''} ${selectedEmployee.maternalLastName || ''}`}
+							{`${formData.name} ${formData.paternalLastName || ''} ${formData.maternalLastName || ''}`}
 						</p>
-						<p class="text-lg font-semibold">{selectedEmployee.noEmpleado}</p>
+						<p class="text-lg font-semibold">{formData.noEmpleado}</p>
+						{#if edit}
+							<Button size="icon" variant="ghost" class="size-7" on:click={handleSubmit}
+								><Check class="size-3.5" /></Button
+							>
+						{:else}
+							<Button size="icon" variant="ghost" class="size-7" on:click={() => (edit = true)}
+								><Edit2Icon class="size-3.5" /></Button
+							>
+						{/if}
 					</div>
 					<div class="mb-auto flex gap-2">
-						<Badge color={areas[selectedEmployee.areaId || '']?.color}
-							>{areas[selectedEmployee.areaId || '']?.name}</Badge
+						<Badge color={areasDisplay[employee.areaId || '']?.color}
+							>{areasDisplay[employee.areaId || '']?.name}</Badge
 						>
-						<Badge color={positions[selectedEmployee.positionId || '']?.color}
-							>{positions[selectedEmployee.positionId || '']?.name}</Badge
+						<Badge color={positionsDisplay[employee.positionId || '']?.color}
+							>{positionsDisplay[employee.positionId || '']?.name}</Badge
 						>
 					</div>
 				</div>
 				<TabsContent value="info">
-					{#if !selectedEmployee.active}
+					{#if !employee.active}
 						<div class="border-primary-500 my-2 w-full border-b">Informacion de baja</div>
 						<div class="grid w-full grid-cols-2 gap-2">
 							<div>
 								<p class=" min-w-36">Razón de Salida</p>
-								<Input readonly value={selectedEmployee.quitReason}></Input>
+								<Input readonly value={formData.quitReason}></Input>
 							</div>
 							<div>
 								<p class=" min-w-36">Estatus de Salida</p>
-								<Input readonly value={selectedEmployee.quitStatus}></Input>
+								<Input readonly value={formData.quitStatus}></Input>
 							</div>
 							<div>
 								<p class=" min-w-36">Notas de Salida</p>
-								<Input readonly value={selectedEmployee.quitNotes}></Input>
+								<Input readonly value={formData.quitNotes}></Input>
 							</div>
 							<div>
 								<p class=" min-w-36">Fecha de Salida</p>
-								<Input readonly value={formatDate(selectedEmployee.quitDate)}></Input>
+								<Input readonly value={formatDate(employee.quitDate)}></Input>
 							</div>
 						</div>
 					{/if}
@@ -141,15 +249,15 @@
 						<div class="bg-background absolute -top-5 left-8 my-2 px-2 font-semibold">Contacto</div>
 						<div>
 							<p class="text-muted-foreground text-xs">Correo Electrónico:</p>
-							<p class="text-sm">{selectedEmployee.email || '-'}</p>
+							<DisplayInput bind:value={formData.email} {edit} />
 						</div>
 						<div>
 							<p class="text-muted-foreground text-xs">Número de Teléfono:</p>
-							<p class="text-sm">{selectedEmployee.number || '-'}</p>
+							<DisplayInput bind:value={formData.number} {edit} />
 						</div>
 						<div>
 							<p class="text-muted-foreground text-xs">Dirección:</p>
-							<p class="text-sm">{selectedEmployee.direction || '-'}</p>
+							<DisplayInput bind:value={formData.direction} {edit} />
 						</div>
 					</div>
 
@@ -157,35 +265,39 @@
 						<div class="bg-background absolute -top-5 left-8 my-2 px-2 font-semibold">Personal</div>
 						<div>
 							<p class="text-muted-foreground text-xs">Nacionalidad:</p>
-							<p class="text-sm">{selectedEmployee.nationality || '-'}</p>
+							<DisplayInput bind:value={formData.nationality} {edit} />
 						</div>
 						<div>
 							<p class="text-muted-foreground text-xs">Estado Civil:</p>
-							<p class="text-sm">{selectedEmployee.civilStatus || '-'}</p>
+							<DisplayInput value={formData.civilStatus} {edit}>
+								<Select items={civilStatus} bind:value={formData.civilStatus} />
+							</DisplayInput>
 						</div>
 						<div>
 							<p class="text-muted-foreground text-xs">Fecha de Nacimiento:</p>
-							<p class="text-sm">{formatDate(selectedEmployee.bornDate) || '-'}</p>
+							<!-- <IDisplayInput bind:value={formatDate(employee.bornDate)} /> -->
 						</div>
 						<div>
 							<p class="text-muted-foreground text-xs">Estudios:</p>
-							<p class="text-sm">{selectedEmployee.studies || '-'}</p>
+							<DisplayInput bind:value={formData.studies} {edit} />
 						</div>
 						<div>
 							<p class="text-muted-foreground text-xs">Género:</p>
-							<p class="text-sm">{selectedEmployee.genre || '-'}</p>
+							<DisplayInput bind:value={formData.genre} {edit}>
+								<Select items={genres} bind:value={formData.genre} />
+							</DisplayInput>
 						</div>
 						<div>
 							<p class="text-muted-foreground text-xs">Número de Hijos:</p>
-							<p class="text-sm">{selectedEmployee.sons || '-'}</p>
+							<DisplayInput bind:value={formData.sons} {edit} />
 						</div>
 						<div>
 							<p class="text-muted-foreground text-xs">Lugar de Nacimiento:</p>
-							<p class="text-sm">{selectedEmployee.bornLocation || '-'}</p>
+							<DisplayInput bind:value={formData.bornLocation} {edit} />
 						</div>
 						<div>
 							<p class="text-muted-foreground text-xs">Tipo de Sangre:</p>
-							<p class="text-sm">{selectedEmployee.blood || '-'}</p>
+							<DisplayInput bind:value={formData.blood} {edit} />
 						</div>
 					</div>
 
@@ -193,43 +305,45 @@
 						<div class="bg-background absolute -top-5 left-8 my-2 px-2 font-semibold">Legal</div>
 						<div>
 							<p class="text-muted-foreground text-xs">NSS:</p>
-							<p class="text-sm">{selectedEmployee.nss || '-'}</p>
+							<DisplayInput bind:value={formData.nss} {edit} />
 						</div>
 						<div>
 							<p class="text-muted-foreground text-xs">CURP:</p>
-							<p class="text-sm">{selectedEmployee.curp || '-'}</p>
+							<DisplayInput bind:value={formData.curp} {edit} />
 						</div>
 						<div>
 							<p class="text-muted-foreground text-xs">RFC:</p>
-							<p class="text-sm">{selectedEmployee.rfc || '-'}</p>
+							<DisplayInput bind:value={formData.rfc} {edit} />
 						</div>
 						<div>
 							<p class="text-muted-foreground text-xs">Cuenta Bancaria:</p>
-							<p class="text-sm">{selectedEmployee.account || '-'}</p>
+							<DisplayInput bind:value={formData.account} {edit} />
 						</div>
 						<div>
 							<p class="text-muted-foreground text-xs">Banco:</p>
-							<p class="text-sm">{selectedEmployee.bank || '-'}</p>
+							<DisplayInput bind:value={formData.bank} {edit}>
+								<Select items={banks} bind:value={formData.bank} />
+							</DisplayInput>
 						</div>
 						<div>
 							<p class="text-muted-foreground text-xs">Número de Infonavit:</p>
-							<p class="text-sm">{selectedEmployee.infonavitNo || '-'}</p>
+							<DisplayInput bind:value={formData.infonavitNo} {edit} />
 						</div>
 						<div>
 							<p class="text-muted-foreground text-xs">Descuento de Infonavit:</p>
-							<p class="text-sm">{selectedEmployee.infonavitDiscount || '-'}</p>
+							<DisplayInput bind:value={formData.infonavitDiscount} {edit} />
 						</div>
 						<div>
 							<p class="text-muted-foreground text-xs">Salario de Nómina:</p>
-							<p class="text-sm">{selectedEmployee.nominaSalary || '-'}</p>
+							<DisplayInput bind:value={formData.nominaSalary} {edit} />
 						</div>
 						<div>
 							<p class="text-muted-foreground text-xs">Número de Clínica:</p>
-							<p class="text-sm">{selectedEmployee.clinicNo || '-'}</p>
+							<DisplayInput bind:value={formData.clinicNo} {edit} />
 						</div>
 						<div>
 							<p class="text-muted-foreground text-xs">Salario de IMSS:</p>
-							<p class="text-sm">{selectedEmployee.immsSalary || '-'}</p>
+							<DisplayInput bind:value={formData.immsSalary} {edit} />
 						</div>
 					</div>
 
@@ -237,23 +351,23 @@
 						<div class="bg-background absolute -top-5 left-8 my-2 px-2 font-semibold">Empresa</div>
 						<div>
 							<p class="text-muted-foreground text-xs">Fecha de Admisión:</p>
-							<p class="text-sm">{formatDate(selectedEmployee.admissionDate) || '-'}</p>
+							<!-- <IDisplayInput bind:value={formatDate(employee.admissionDate)} /> -->
 						</div>
 						<div>
 							<p class="text-muted-foreground text-xs">Fecha de CIM:</p>
-							<p class="text-sm">{formatDate(selectedEmployee.cim) || '-'}</p>
+							<!-- <IDisplayInput bind:value={formatDate(employee.cim)} /> -->
 						</div>
 						<div>
 							<p class="text-muted-foreground text-xs">Tipo de Posición:</p>
-							<p class="text-sm">{selectedEmployee.positionType || '-'}</p>
+							<DisplayInput bind:value={formData.positionType} {edit} />
 						</div>
 						<div>
 							<p class="text-muted-foreground text-xs">Turno:</p>
-							<p class="text-sm">{selectedEmployee.shift || '-'}</p>
+							<DisplayInput bind:value={formData.shift} {edit} />
 						</div>
 						<div>
 							<p class="text-muted-foreground text-xs">Dias de vacaciones:</p>
-							<p class="text-sm">{selectedEmployee.vacations || '-'}</p>
+							<DisplayInput bind:value={formData.vacations} {edit} />
 						</div>
 					</div>
 
@@ -263,11 +377,11 @@
 						</div>
 						<div>
 							<p class="text-muted-foreground text-xs">Contacto de Emergencia:</p>
-							<p class="text-sm">{selectedEmployee.emmergencyContact || '-'}</p>
+							<DisplayInput bind:value={formData.emmergencyContact} {edit} />
 						</div>
 						<div>
 							<p class="text-muted-foreground text-xs">Número de Emergencia:</p>
-							<p class="text-sm">{selectedEmployee.emmergencyNumber || '-'}</p>
+							<DisplayInput bind:value={formData.emmergencyNumber} {edit} />
 						</div>
 					</div>
 				</TabsContent>
@@ -296,7 +410,7 @@
 
 					<div class="border-primary-500 my-2 w-full border-b">Productividad</div>
 					<div class="h-36">
-						<!-- <LineChart name="" data={productivity || []} /> -->
+						<!-- <ILineChart name="" data={productivity || []} /> -->
 					</div>
 				</TabsContent>
 				<TabsContent value="docs"></TabsContent>

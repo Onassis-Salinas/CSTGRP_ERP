@@ -57,6 +57,7 @@ export const updateExportSchema = z.object({
   due: z.string(),
   jobpo: z.string(),
   programation: z.string(),
+  materials: z.array(z.any()),
 });
 
 export const scrapSchema = z.object({

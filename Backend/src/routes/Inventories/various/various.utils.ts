@@ -126,7 +126,11 @@ export function processJob(text: string) {
           linesArray[i + 1].includes(substring),
         )
       ) {
-        const material = { code: linesArray[i + 1], amount: '' };
+        const material = {
+          code: linesArray[i + 1],
+          amount: '',
+          realAmount: '',
+        };
 
         for (let j = 2; j < 9; j++) {
           if (
@@ -134,6 +138,7 @@ export function processJob(text: string) {
             !/\d/.test(linesArray[i + j + 1])
           ) {
             material.amount = linesArray[i + j].replace(/,/g, '');
+            material.realAmount = material.amount;
             break;
           }
         }

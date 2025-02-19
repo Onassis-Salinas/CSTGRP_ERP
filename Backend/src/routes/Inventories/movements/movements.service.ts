@@ -37,7 +37,7 @@ export class MovementsService {
       ${body.programation ? sql`materialie.programation = ${body.programation}` : sql`TRUE`} AND
       ${body.code ? sql`materials.code LIKE ${'%' + body.code + '%'}` : sql`TRUE`} AND
       ${body.checked !== null ? sql`materialmovements.active = ${body.checked === 'true'}` : sql`TRUE`}
-      ORDER BY materialie.due DESC, materialie.jobpo DESC, materials.code DESC, materialmovements.amount DESC, materialmovements.id DESC
+      ORDER BY materialmovements.active, materialie.due DESC, materialie.jobpo DESC, materials.code DESC, materialmovements.amount DESC, materialmovements.id DESC
       LIMIT 150`;
     return movements;
   }
@@ -67,6 +67,15 @@ export class MovementsService {
       ORDER BY due DESC, jobpo DESC, import DESC`;
 
     return movements;
+  }
+
+  async getOneIE(body: z.infer<typeof idSchema>) {
+    const [data] = await sql`select * from materialie where id = ${body.id}`;
+    const materials =
+      await sql`select (select code from materials where id = "materialId"), amount, "realAmount", active from materialmovements where "movementId" = ${body.id} and NOT extra`;
+
+    console.log(materials);
+    return { ...data, due: data.due.toISOString().split('T')[0], materials };
   }
 
   async getJobComparison(body: z.infer<typeof idSchema>) {
@@ -132,6 +141,25 @@ export class MovementsService {
   }
 
   async updateExport(body: z.infer<typeof updateExportSchema>) {
+    const materials = [];
+    for (const movement of body.materials) {
+      const [material] =
+        await sql`select id from materials where code = ${movement.code}`;
+
+      if (!material) throw new HttpException('Material no existente', 400);
+
+      materials.push({
+        amount: movement.amount,
+        realAmount: movement.realAmount,
+        active: movement.active,
+        materialId: material.id,
+        movementId: body.id,
+        activeDate: movement.active ? new Date() : null,
+      });
+    }
+
+    delete body.materials;
+
     await sql.begin(async (sql) => {
       const previousObj = (
         await sql`select jobpo, programation from materialie where id = ${body.id}`
@@ -140,6 +168,22 @@ export class MovementsService {
       const newObj = (
         await sql`update materialie set ${sql(body)} where id = ${body.id} returning jobpo, programation`
       )[0];
+
+      const prevMaterials =
+        await sql`delete from materialmovements where "movementId" = ${body.id} and not extra returning "materialId"`;
+
+      const newMaterials =
+        await sql`insert into materialmovements ${sql(materials)}`;
+
+      const filteredIds = [
+        ...new Set(
+          [...prevMaterials, ...newMaterials].map((v) => v.materialId),
+        ),
+      ];
+
+      for (const id of filteredIds) {
+        await updateMaterialAmount(id, sql);
+      }
 
       await this.req.record(
         `Actualizo la exportacion: ${previousObj?.jobpo}, programacion: ${previousObj?.programation} a ${newObj?.jobpo}, ${newObj?.programation}`,

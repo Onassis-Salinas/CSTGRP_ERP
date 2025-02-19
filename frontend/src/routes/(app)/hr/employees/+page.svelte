@@ -273,6 +273,6 @@
 </CusTable>
 
 <EmployeeForm bind:show bind:selectedEmployee reload={getEmployees} />
-<EmployeeCard bind:show={show1} bind:selectedEmployee {positions} {areas} />
+<EmployeeCard bind:show={show1} bind:employee={selectedEmployee} reload={getEmployees} />
 <QuitEmployeeForm bind:show={show2} bind:selectedEmployee reload={getEmployees} />
 <ReactivateForm bind:show={show3} bind:selectedEmployee reload={getEmployees} />
