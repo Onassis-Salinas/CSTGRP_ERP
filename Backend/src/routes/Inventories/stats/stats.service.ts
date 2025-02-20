@@ -15,7 +15,8 @@ export class StatsService {
     )   
 
     SELECT 
-        DISTINCT(materials.code), 
+        DISTINCT(materials.code),
+        materials.description,
         materials.measurement, 
         (materials.amount + materials."leftoverAmount") as balance,
         (
@@ -32,7 +33,7 @@ export class StatsService {
     WHERE materials.amount + materials."leftoverAmount" + ms.total_amount < 0`;
 
     const secondMovements = await sql`SELECT 
-    code, materialie.jobpo, measurement, 
+    code, materialie.jobpo, measurement, description,
     (materials.amount + materials."leftoverAmount") AS missing
     FROM materialmovements JOIN materials ON materials.id = materialmovements."materialId"
     JOIN materialie ON materialie.id = materialmovements."movementId"
@@ -56,7 +57,7 @@ export class StatsService {
 
   async getMaterialWarnings() {
     const materials =
-      await sql`select code, amount, "minAmount",measurement from materials where amount <= "minAmount" and "minAmount" > 0 order by code desc`;
+      await sql`select code, amount, description, "minAmount" , measurement from materials where amount <= "minAmount" and "minAmount" > 0 order by code desc`;
     return materials;
   }
 }

@@ -59,14 +59,13 @@
 </MenuBar>
 
 <div class="grid flex-1 grid-cols-3 place-items-stretch gap-4 overflow-auto p-4">
-	<Card class="col-span-3 flex h-[80lvh] w-full max-w-full flex-col">
-		<CardHeader>
-			<CardTitle>Material faltante para completar ordenes</CardTitle>
-		</CardHeader>
-		<CardContent class="overflow-y-auto">
+	<Card class="col-span-3 flex h-[85lvh] w-full max-w-full flex-col border-none shadow-none">
+		<CardTitle class="pb-3 pl-1">Material faltante para completar ordenes</CardTitle>
+		<CardContent class="overflow-y-auto border p-0">
 			<Table class="w-full">
 				<TableHeader class="sticky top-0 border-t">
 					<TableHead class="border-l">Codigo</TableHead>
+					<TableHead>Descripcion</TableHead>
 					<TableHead class="w-min">Job</TableHead>
 					<TableHead>Requerido</TableHead>
 					<TableHead>Inventario</TableHead>
@@ -77,6 +76,9 @@
 					{#each outOfStock as row}
 						<TableRow>
 							<TableCell class="border-l">{row.code || ''}</TableCell>
+							<TableCell class="whitespace-hidden max-w-64 overflow-hidden"
+								>{row.description || ''}</TableCell
+							>
 							<TableCell class="w-full whitespace-normal">{row.jobpo || ''}</TableCell>
 							<TableCell><Badge color="gray">{row.amount || ''}</Badge></TableCell>
 							<TableCell><Badge color="gray">{row.balance || ''}</Badge></TableCell>
@@ -88,11 +90,9 @@
 			</Table>
 		</CardContent>
 	</Card>
-	<Card class="col-span-3 flex h-[30rem] w-full max-w-full flex-col">
-		<CardHeader>
-			<CardTitle>En minimos</CardTitle>
-		</CardHeader>
-		<CardContent class="overflow-auto">
+	<Card class="col-span-3 flex h-[30rem] w-full max-w-full flex-col border-none shadow-none">
+		<CardTitle class="pb-3 pl-1">En minimos</CardTitle>
+		<CardContent class="overflow-auto border p-0">
 			<Table>
 				<TableHeader class="sticky top-0 border-t">
 					<TableHead class="border-l">Codigo</TableHead>
