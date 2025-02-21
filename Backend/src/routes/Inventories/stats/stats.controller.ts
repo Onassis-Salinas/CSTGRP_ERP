@@ -5,7 +5,7 @@ import { AuthGuard } from 'src/interceptors/auth/authorization.guard';
 
 @ApiTags('Inventory Stats')
 @Controller('inventorystats')
-@UseGuards(new AuthGuard('inventory'))
+@UseGuards(new AuthGuard('inventorystats'))
 export class StatsController {
   constructor(private readonly statsService: StatsService) {}
 

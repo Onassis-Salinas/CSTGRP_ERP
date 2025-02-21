@@ -24,8 +24,8 @@
 
 	export let show = false;
 	export let reload: any;
-	export let selectedUser: user;
-	let formData: user;
+	export let selectedUser: any;
+	let formData: any;
 
 	$: if (show || true) setFormData();
 	function setFormData() {
@@ -131,6 +131,9 @@
 					</Label>
 					<Label name="Perm. Movimientos">
 						<Select items={permissions} bind:value={formData.perm_materialmovements} />
+					</Label>
+					<Label name="Perm. Movimientos">
+						<Select items={permissions} bind:value={formData.perm_inventorystats} />
 					</Label>
 					<Label name="Perm. Requisiciones">
 						<Select items={permissions} bind:value={formData.perm_requisitions} />

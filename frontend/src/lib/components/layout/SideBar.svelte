@@ -62,7 +62,7 @@
 					</span>
 				</AccordionTrigger>
 				<AccordionContent>
-					{#if hasAccess('materialmovements')}
+					{#if hasAccess('inventorystats')}
 						<AccordionOption href="/warehouse/dashboard">Resumenes</AccordionOption>
 					{/if}
 					{#if hasAccess('inventory')}

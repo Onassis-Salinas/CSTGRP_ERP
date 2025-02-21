@@ -33,6 +33,7 @@
 		perm_inventory: 0,
 		perm_structure: 0,
 		perm_it: 0,
+		perm_inventorystats: 0,
 		perm_requisitions: 0
 	};
 	let users: (typeof selectedUser)[] = [];
@@ -64,6 +65,7 @@
 			perm_employees: 0,
 			perm_inventory: 0,
 			perm_structure: 0,
+			perm_inventorystats: 0,
 			perm_requisitions: 0,
 			perm_it: 0
 		};
@@ -90,7 +92,8 @@
 			perm_inventory: 0,
 			perm_structure: 0,
 			perm_requisitions: 0,
-			perm_it: 0
+			perm_it: 0,
+			perm_inventorystats: 0
 		};
 		showSuccess('Usuario eliminado');
 		await getUsers();
@@ -131,6 +134,7 @@
 		<TableHead class="w-[12.5%]">Estructura</TableHead>
 		<TableHead class="w-[12.5%]">Sistemas</TableHead>
 		<TableHead class="w-[12.5%]">Movimientos</TableHead>
+		<TableHead class="w-[12.5%]">Dashboard</TableHead>
 		<TableHead class="w-[12.5%]">Requisiciones</TableHead>
 		<TableHead class="w-[12.5%]">Areas</TableHead>
 	</TableHeader>
@@ -175,6 +179,11 @@
 				<TableCell
 					><Badge color={getBadgeColor(user.perm_materialmovements)}
 						>{badgeTexts[user.perm_materialmovements]}</Badge
+					></TableCell
+				>
+				<TableCell
+					><Badge color={getBadgeColor(user.perm_inventorystats)}
+						>{badgeTexts[user.perm_inventorystats]}</Badge
 					></TableCell
 				>
 				<TableCell
