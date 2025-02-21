@@ -22,15 +22,25 @@ export class UsersService {
   constructor(private readonly req: ContextProvider) {}
 
   async loginUser(body: z.infer<typeof loginSchema>, res, ip) {
+    let location = '';
+    try {
+      const response = await fetch(`https://ipinfo.io/${ip}/json`);
+      if (response.ok) {
+        const data = await response.json();
+        location = `${data.city}, ${data.region}, ${data.country}`;
+      }
+    } catch (error) {
+      console.error('Error obteniendo localización:', error);
+    }
+
     const [user] =
       await sql`select * from users where username = ${body.username}`;
     if (!user) {
       await this.req.record(
-        `Login fallido, no existe el usuario: ${body.username}, IP: ${ip}`,
+        `Login fallido, no existe el usuario: ${body.username}, IP: ${ip}, ${location}`,
         null,
         'delete',
       );
-
       return sendError('Usuario invalido', 400);
     }
 
@@ -43,17 +53,19 @@ export class UsersService {
       );
       return sendError('Contraseña incorrecta', 400);
     }
+
     const secret: Secret = process.env.JWT_SECRET || 'sin secreto';
     const token = jwt.sign(user, secret, { expiresIn: '200h' });
 
     res.setCookie('token', token, httpCookieConfig);
-
     delete user.password;
     Object.keys(user).forEach((key) => {
       res.setCookie(key, user[key], cookieConfig);
     });
-    await this.req.record(`${body.username} inicio sesion, IP: ${ip}`);
 
+    await this.req.record(
+      `${body.username} inicio sesion, IP: ${ip}, ${location}`,
+    );
     res.send();
   }
 

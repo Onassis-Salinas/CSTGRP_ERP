@@ -39,12 +39,10 @@ export class UsersController {
     @Res() res,
     @Req() req: FastifyRequest,
   ) {
-    console.log(req.ip);
-    console.log(req.headers['x-forwarded-for']);
     return this.usersService.loginUser(
       body,
       res,
-      req.headers['x-forwarded-for'] || req.ip,
+      req.headers['x-forwarded-for'],
     );
   }
 
