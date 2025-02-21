@@ -96,15 +96,15 @@
 				<Label name="Area:">
 					<Select items={areas} bind:value={formData.areaId} />
 				</Label>
-				<Label name="Requerido:">
-					<Input bind:value={formData.requested} />
-				</Label>
-				<Label name="Necesario:" class="col-span-2">
+				<Label name="Material necesario total:">
 					<Input
 						disabled
 						value={formData.necessary + ' ' + formData.measurement}
 						class="disabled:opacity-100"
 					/>
+				</Label>
+				<Label name="Material requerido:" class="col-span-2">
+					<Input bind:value={formData.requested} />
 				</Label>
 			</div>
 
