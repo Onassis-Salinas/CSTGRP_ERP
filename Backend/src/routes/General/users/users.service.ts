@@ -47,7 +47,7 @@ export class UsersService {
     const match = await bcrypt.compare(body.password, user.password);
     if (!match) {
       this.req.record(
-        `Login fallido de: ${body.username}, contraseña incorrecta`,
+        `Login fallido de: ${body.username}, contraseña incorrecta, IP: ${ip}, ${location}`,
         null,
         'delete',
       );
