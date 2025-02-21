@@ -1,15 +1,17 @@
 <script lang="ts">
+	import { format } from 'date-fns';
 	import CusTable from '$lib/components/basic/CusTable.svelte';
 	import { Badge } from '$lib/components/ui/badge';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { TableBody, TableCell, TableHead, TableHeader, TableRow } from '$lib/components/ui/table';
 	import api from '$lib/utils/server';
-	import { FilePlus2, Search } from 'lucide-svelte';
+	import { FileDown, FilePlus2, Search } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 	import MenuBar from '$lib/components/basic/MenuBar.svelte';
 	import OptionsCell from '$lib/components/basic/OptionsCell.svelte';
 	import RequisitionForm from './RequisitionForm.svelte';
+	import { es } from 'date-fns/locale';
 
 	let clients: any = {};
 	let show = false;
@@ -44,6 +46,26 @@
 		selectedMovement = movements[i];
 	}
 
+	async function exportUncheckedMovements() {
+		const response = await api.get('/requisitions/export-pending', {
+			responseType: 'arraybuffer'
+		});
+
+		const blob = new Blob([response.data], {
+			type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+		});
+
+		const link = document.createElement('a');
+		link.href = URL.createObjectURL(blob);
+		link.download = `Pendientes ${format(new Date(), 'dd/MM/yyyy HH:mm', { locale: es })}.xlsx`;
+
+		document.body.appendChild(link);
+
+		link.click();
+
+		document.body.removeChild(link);
+	}
+
 	onMount(() => {
 		getMovements();
 		fetchClients();
@@ -57,6 +79,10 @@
 		<Input menu bind:value={filters.code} placeholder="Material" />
 		<Button type="submit"><Search class="mr-1.5 size-3.5" />Buscar</Button>
 	</form>
+
+	<svelte:fragment slot="right">
+		<Button on:click={exportUncheckedMovements}><FileDown class="size-3.5" /></Button>
+	</svelte:fragment>
 </MenuBar>
 
 <CusTable>

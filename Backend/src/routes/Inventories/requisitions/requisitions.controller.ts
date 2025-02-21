@@ -43,4 +43,9 @@ export class RequisitionsController {
   delete(@Body(new ZodPiPe(idSchema)) body) {
     return this.requisitionsService.deleteRequisition(body);
   }
+
+  @Get('export-pending')
+  exportPending() {
+    return this.requisitionsService.exportPending();
+  }
 }

@@ -32,6 +32,7 @@
 		productivity: 'Productividad',
 		employees: 'Empleados',
 		warehouse: 'Inventario',
+		requisitions: 'Requisiciones',
 		it: 'Sistemas',
 		positions: 'Posiciones',
 		areas: 'Areas',

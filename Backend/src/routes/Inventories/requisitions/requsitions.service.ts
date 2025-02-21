@@ -1,4 +1,5 @@
 import { HttpException, Injectable } from '@nestjs/common';
+import exceljs from 'exceljs';
 import { z } from 'zod';
 import sql from 'src/utils/db';
 import {
@@ -26,7 +27,7 @@ export class RequisitionsService {
       ${body.programation ? sql`materialie.programation = ${body.programation}` : sql`TRUE`} AND
       ${body.code ? sql`materials.code LIKE ${'%' + body.code + '%'}` : sql`TRUE`}
       ORDER BY materialie.due DESC, materialie.jobpo DESC, materials.code DESC, materialmovements.amount DESC, materialmovements.id DESC
-      LIMIT 150`;
+      LIMIT 300`;
     return movements;
   }
 
@@ -83,5 +84,38 @@ export class RequisitionsService {
       await this.req.record(`Elimino el material ${deletedObj.code}`, sql);
     });
     return;
+  }
+
+  async exportPending() {
+    const workbook = new exceljs.Workbook();
+    const worksheet = workbook.addWorksheet('Inventario');
+
+    const results = await sql`SELECT
+      materials.code, materials.description, materials.measurement, materials."clientId", materials."leftoverAmount", materials.amount as inventory, materialmovements.amount, materialmovements."realAmount", materialmovements.id, materialie.due, materialie.jobpo, materialie.programation
+      FROM materialmovements
+      JOIN materials on materials.id = materialmovements."materialId"
+      JOIN materialie on materialie.id = materialmovements."movementId"
+      WHERE materialmovements.active = false
+      ORDER BY materialie.due DESC, materialie.jobpo DESC, materials.code DESC, materialmovements.amount DESC, materialmovements.id DESC`;
+
+    worksheet.columns = [
+      { header: 'Programacion', key: 'programation', width: 16 },
+      { header: 'Job', key: 'jobpo', width: 12 },
+      { header: 'Material', key: 'code', width: 22 },
+      { header: 'Descripcion', key: 'description', width: 22 },
+      { header: 'Cantidad', key: 'amount', width: 15 },
+      { header: 'Inventario', key: 'inventory', width: 20 },
+      { header: 'En area', key: 'leftoverAmount', width: 20 },
+      { header: 'Medida', key: 'measurement', width: 14 },
+    ];
+
+    worksheet.addRows(results);
+
+    worksheet.getRow(1).eachCell((cell) => {
+      cell.style = { font: { bold: true } };
+    });
+
+    const buffer = await workbook.xlsx.writeBuffer();
+    return buffer;
   }
 }
