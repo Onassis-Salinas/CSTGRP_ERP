@@ -1,5 +1,11 @@
 <script lang="ts">
 	import { Input } from '$lib/components/ui/input';
+	import {
+		DropdownMenu,
+		DropdownMenuContent,
+		DropdownMenuItem,
+		DropdownMenuTrigger
+	} from '$lib/components/ui/dropdown-menu';
 	import api from '$lib/utils/server';
 	import { onMount } from 'svelte';
 	import EmployeeCard from './EmployeeCard.svelte';
@@ -11,9 +17,7 @@
 	import { RotateCcw, FileDown, PlusCircle } from 'lucide-svelte';
 	import { TableBody, TableCell, TableHead, TableHeader, TableRow } from '$lib/components/ui/table';
 	import { Badge } from '$lib/components/ui/badge';
-	import { formatDate } from '$lib/utils/functions';
 	import { browser } from '$app/environment';
-	import DropdownMenuItem from '$lib/components/ui/dropdown-menu/dropdown-menu-item.svelte';
 	import MenuBar from '$lib/components/basic/MenuBar.svelte';
 	import OptionsCell from '$lib/components/basic/OptionsCell.svelte';
 
@@ -107,8 +111,9 @@
 		O: 'gray'
 	};
 
-	async function exportList() {
-		const response = await api.get('/employees/export', {
+	async function exportList(mode?: 'full') {
+		const url = mode === 'full' ? '/employees/export' : '/employees/export-basic';
+		const response = await api.get(url, {
 			responseType: 'arraybuffer'
 		});
 
@@ -142,7 +147,15 @@
 		<Button on:click={() => (searchActive = false)} value={'inactive'}>Inactivos</Button>
 	</svelte:fragment>
 	<svelte:fragment slot="right">
-		<Button on:click={exportList}><FileDown class="size-3.5" /></Button>
+		<DropdownMenu>
+			<DropdownMenuTrigger class="h-7">
+				<Button><FileDown class="size-3.5" /></Button>
+				<DropdownMenuContent>
+					<DropdownMenuItem on:click={() => exportList()}>Basico</DropdownMenuItem>
+					<DropdownMenuItem on:click={() => exportList('full')}>Completo</DropdownMenuItem>
+				</DropdownMenuContent>
+			</DropdownMenuTrigger>
+		</DropdownMenu>
 		<Button on:click={createEmployee}><PlusCircle class="mr-1.5 size-3.5" />Añadir empleado</Button>
 	</svelte:fragment>
 </MenuBar>
