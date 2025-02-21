@@ -20,10 +20,8 @@
 	export let employee: any;
 	export let reload: any;
 	let edit = false;
-	let formData: any;
+	let formData: any = {};
 	let files: FileList | undefined;
-
-	$: if (show || true) setFormData();
 
 	let banks = [
 		{ value: 'SCOTIABANK', name: 'SCOTIABANK' },
@@ -69,7 +67,7 @@
 		});
 	}
 
-	$: if (employee.id) fetchData();
+	$: if (employee.id) setFormData();
 
 	let assistance: any[] = [];
 	let productivity: any[] = [];
@@ -132,9 +130,10 @@
 		});
 	};
 
-	function setFormData() {
+	async function setFormData() {
+		const [employeeData] = (await api.get(`/employees/${employee.id}`)).data;
 		formData = {
-			...employee,
+			...employeeData,
 			admissionDate: employee.admissionDate?.split('T')[0],
 			bornDate: employee.bornDate?.split('T')[0],
 			quitDate: employee.quitDate?.split('T')[0],
@@ -142,6 +141,8 @@
 			infonavitFee: employee.infonavitFee?.toString(),
 			infonavitDiscount: employee.infonavitDiscount?.toString()
 		};
+		console.log(formData);
+		fetchData();
 	}
 
 	async function handleSubmit() {
@@ -187,6 +188,7 @@
 					<TabsTrigger class="data-[state=active]:bg-muted" value="statics"
 						>Estadisticas</TabsTrigger
 					>
+					<TabsTrigger class="data-[state=active]:bg-muted" value="history">Historial</TabsTrigger>
 					<TabsTrigger class="data-[state=active]:bg-muted" value="docs">Documentos</TabsTrigger>
 				</TabsList>
 			</DialogHeader>
@@ -377,11 +379,11 @@
 						</div>
 						<div>
 							<p class="text-muted-foreground text-xs">Contacto de Emergencia:</p>
-							<DisplayInput bind:value={formData.emmergencyContact} {edit} />
+							<DisplayInput bind:value={formData.emergencyContact} {edit} />
 						</div>
 						<div>
 							<p class="text-muted-foreground text-xs">Número de Emergencia:</p>
-							<DisplayInput bind:value={formData.emmergencyNumber} {edit} />
+							<DisplayInput bind:value={formData.emergencyNumber} {edit} />
 						</div>
 					</div>
 				</TabsContent>

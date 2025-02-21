@@ -3,6 +3,7 @@ import { File } from '@nest-lab/fastify-multer';
 import {
   createSchema,
   editSchema,
+  idSchema,
   quitSchema,
   reactivateSchema,
   templateSchema,
@@ -45,8 +46,12 @@ export class EmployeesService {
 
   async getActiveEmployees() {
     const employees =
-      await sql`select * from employees where active order by "noEmpleado" DESC`;
+      await sql`select id, name, "paternalLastName" "maternalLastName", "noEmpleado", "areaId", "positionId" from employees where active order by "noEmpleado" DESC`;
     return employees;
+  }
+
+  async getEmployee(body: z.infer<typeof idSchema>) {
+    return await sql`select * from employees where id = ${body.id}`;
   }
 
   async getInactiveEmployees() {
@@ -171,8 +176,8 @@ export class EmployeesService {
       { header: 'RFC', key: 'rfc', width: 25 },
       { header: 'Tipo de Sangre', key: 'blood', width: 25 },
       { header: 'Cuenta Bancaria', key: 'account', width: 25 },
-      { header: 'Contacto de Emergencia', key: 'emmergencyContact', width: 25 },
-      { header: 'Número de Emergencia', key: 'emmergencyNumber', width: 25 },
+      { header: 'Contacto de Emergencia', key: 'emergencyContact', width: 25 },
+      { header: 'Número de Emergencia', key: 'emergencyNumber', width: 25 },
       { header: 'Lugar de Nacimiento', key: 'bornLocation', width: 25 },
       { header: 'Género', key: 'genre', width: 25 },
       { header: 'No. de Clínica', key: 'clinicNo', width: 25 },

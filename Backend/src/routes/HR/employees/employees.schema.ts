@@ -7,9 +7,9 @@ const curpRegex =
   /^([A-Z][AEIOUX][A-ZÑ]{2}\d{2}(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])[HMX](AS|B[CS]|C[CLMSH]|D[FG]|G[TR]|HG|JC|M[CNS]|N[ETL]|OC|PL|Q[TR]|S[PLR]|T[CSL]|VZ|YN|ZS)[BCDFGHJKLMNPQRSTVWXYZÑ]{3}[A-ZÑ\d])(\d)$/;
 const bloodRegex = /^(A|B|AB|O)[+-]$/;
 const nssRegex = /^[0-9]{11}$/;
+const infonavitRegex = /^[0-9]{10}$/;
 const accountRegex = /^[0-9]{10}$/; //Actualizar cantidad de digitos
 const phoneRegex = /^((\+\d{1,2}\d{10})|(\d{10}))$/;
-//Infonavit
 //Telefono
 
 export const createSchema = z.object({
@@ -65,7 +65,11 @@ export const createSchema = z.object({
     .nullable(),
   direction: z.string().min(1).optional().nullable(),
   bank: z.string().min(1).optional().nullable(),
-  infonavitNo: z.string().min(1).optional().nullable(),
+  infonavitNo: z
+    .string()
+    .refine((value) => infonavitRegex.test(value))
+    .optional()
+    .nullable(),
   infonavitFee: z.string().min(1).optional().nullable(),
   infonavitDiscount: z.string().min(1).optional().nullable(),
   positionType: z.string().min(1).optional().nullable(),
@@ -145,7 +149,11 @@ export const editSchema = z.object({
     .nullable(),
   direction: z.string().min(1).optional().nullable(),
   bank: z.string().min(1).optional().nullable(),
-  infonavitNo: z.string().min(1).optional().nullable(),
+  infonavitNo: z
+    .string()
+    .refine((value) => infonavitRegex.test(value))
+    .optional()
+    .nullable(),
   infonavitFee: z.string().min(1).optional().nullable(),
   infonavitDiscount: z.string().min(1).optional().nullable(),
   positionType: z.string().min(1).optional().nullable(),

@@ -151,46 +151,12 @@
 	<TableHeader>
 		<TableRow>
 			<TableHead class="fixed left-0 z-30 bg-inherit p-1"></TableHead>
-			<TableHead>No. Empleado</TableHead>
-			<TableHead>Nombre</TableHead>
-			<TableHead>Apellido Paterno</TableHead>
-			<TableHead>Apellido Materno</TableHead>
+			<TableHead>No. empleado</TableHead>
+			<TableHead class="w-1/4">Nombre</TableHead>
+			<TableHead class="w-1/4">Apellido Paterno</TableHead>
+			<TableHead class="w-1/4">Apellido Materno</TableHead>
 			<TableHead>Área</TableHead>
 			<TableHead>Posición</TableHead>
-			{#if !searchActive}
-				<TableHead>Razón de Salida</TableHead>
-				<TableHead>Estatus de Salida</TableHead>
-				<TableHead>Fecha de Salida</TableHead>
-				<TableHead>Notas de Salida</TableHead>
-			{/if}
-			<TableHead>NSS</TableHead>
-			<TableHead>CURP</TableHead>
-			<TableHead>RFC</TableHead>
-			<TableHead>Vacaciones</TableHead>
-			<TableHead>Tipo de Sangre</TableHead>
-			<TableHead>Cuenta Bancaria</TableHead>
-			<TableHead>Contacto de Emergencia</TableHead>
-			<TableHead>Fecha de Admisión</TableHead>
-			<TableHead>Número de Emergencia</TableHead>
-			<TableHead>Lugar de Nacimiento</TableHead>
-			<TableHead>Género</TableHead>
-			<TableHead>Número de Hijos</TableHead>
-			<TableHead>Número de Clínica</TableHead>
-			<TableHead>Correo Electrónico</TableHead>
-			<TableHead>Número de Teléfono</TableHead>
-			<TableHead>Dirección</TableHead>
-			<TableHead>Banco</TableHead>
-			<TableHead>Número de Infonavit</TableHead>
-			<TableHead>Descuento de Infonavit</TableHead>
-			<TableHead>Tipo de Posición</TableHead>
-			<TableHead>Fecha de CIM</TableHead>
-			<TableHead>Turno</TableHead>
-			<TableHead>Salario de Nómina</TableHead>
-			<TableHead>Salario de IMSS</TableHead>
-			<TableHead>Nacionalidad</TableHead>
-			<TableHead>Estado Civil</TableHead>
-			<TableHead>Fecha de Nacimiento</TableHead>
-			<TableHead>Estudios</TableHead>
 		</TableRow>
 	</TableHeader>
 	<TableBody>
@@ -221,52 +187,6 @@
 						>{positions[employee.positionId || '']?.name || ''}</Badge
 					>
 				</TableCell>
-				{#if !searchActive}
-					<TableCell>{employee.quitReason || ''}</TableCell>
-					<TableCell
-						><Badge color={statusColors[employee.quitStatus?.toUpperCase() || '']}
-							>{employee.quitStatus || ''}</Badge
-						></TableCell
-					>
-					<TableCell>{formatDate(employee.quitDate)}</TableCell>
-					<TableCell>{employee.quitNotes || ''}</TableCell>
-				{/if}
-				<TableCell>{employee.nss || ''}</TableCell>
-				<TableCell>{employee.curp || ''}</TableCell>
-				<TableCell>{employee.rfc || ''}</TableCell>
-				<TableCell>{employee.vacations || ''}</TableCell>
-				<TableCell>{employee.blood || ''}</TableCell>
-				<TableCell>{employee.account || ''}</TableCell>
-				<TableCell>{employee.emmergencyContact || ''}</TableCell>
-				<TableCell>{formatDate(employee.admissionDate)}</TableCell>
-				<TableCell>{employee.emmergencyNumber || ''}</TableCell>
-				<TableCell>{employee.bornLocation || ''}</TableCell>
-				<TableCell
-					><Badge color={genreColors[employee.genre?.toUpperCase() || 'gray']}
-						>{employee.genre || ''}</Badge
-					></TableCell
-				>
-				<TableCell>{employee.sons || ''}</TableCell>
-				<TableCell>{employee.clinicNo || ''}</TableCell>
-				<TableCell>{employee.email || ''}</TableCell>
-				<TableCell>{employee.number || ''}</TableCell>
-				<TableCell>{employee.direction || ''}</TableCell>
-				<TableCell
-					><Badge color={banksColors[employee.bank?.toUpperCase() || 'gray']}
-						>{employee.bank || ''}</Badge
-					></TableCell
-				>
-				<TableCell>{employee.infonavitNo || ''}</TableCell>
-				<TableCell>{employee.infonavitDiscount || ''}</TableCell>
-				<TableCell>{employee.positionType || ''}</TableCell>
-				<TableCell>{formatDate(employee.cim || '')}</TableCell>
-				<TableCell>{employee.shift || ''}</TableCell>
-				<TableCell>{employee.nominaSalary || ''}</TableCell>
-				<TableCell>{employee.immsSalary || ''}</TableCell>
-				<TableCell>{employee.nationality || ''}</TableCell>
-				<TableCell>{employee.civilStatus || ''}</TableCell>
-				<TableCell>{formatDate(employee.bornDate)}</TableCell>
-				<TableCell>{employee.studies || ''}</TableCell>
 			</TableRow>
 		{/each}
 	</TableBody>

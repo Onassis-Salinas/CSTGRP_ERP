@@ -37,6 +37,11 @@ export class EmployeesController {
     return this.employeesService.getActiveEmployees();
   }
 
+  @Get(':id')
+  getEmployee(@Param(new ZodPiPe(idSchema)) params) {
+    return this.employeesService.getEmployee(params);
+  }
+
   @Get('assistance/:id')
   getAssistance(@Param(new ZodPiPe(idSchema)) params) {
     return this.employeesService.getAssistance(params);

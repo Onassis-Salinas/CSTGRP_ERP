@@ -248,10 +248,10 @@
 							<div class="border-primary-500 my-2 w-full border-b">Contacto de Emergencia</div>
 							<div class="grid w-full grid-cols-2 gap-2">
 								<Label name="Contacto de Emergencia">
-									<Input bind:value={formData.emmergencyContact} />
+									<Input bind:value={formData.emergencyContact} />
 								</Label>
 								<Label name="Número de Emergencia">
-									<Input bind:value={formData.emmergencyNumber} />
+									<Input bind:value={formData.emergencyNumber} />
 								</Label>
 							</div>
 							<div class="border-primary-500 my-2 w-full border-b">Contacto de Emergencia</div>

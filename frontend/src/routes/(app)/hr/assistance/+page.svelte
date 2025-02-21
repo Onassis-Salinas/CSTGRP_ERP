@@ -117,7 +117,7 @@
 
 <CusTable>
 	<TableHeader>
-		<TableHead class="w-[1%]">No. Empleado</TableHead>
+		<TableHead class="w-[1%]">No</TableHead>
 		<TableHead class="w-[20%]">Nombre</TableHead>
 		<TableHead class="w-[1%]">Posicion</TableHead>
 		<TableHead class="w-[10%]">Lunes</TableHead>
