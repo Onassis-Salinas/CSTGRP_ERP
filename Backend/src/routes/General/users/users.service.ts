@@ -21,12 +21,12 @@ dotenv.config();
 export class UsersService {
   constructor(private readonly req: ContextProvider) {}
 
-  async loginUser(body: z.infer<typeof loginSchema>, res) {
+  async loginUser(body: z.infer<typeof loginSchema>, res, ip) {
     const [user] =
       await sql`select * from users where username = ${body.username}`;
     if (!user) {
       await this.req.record(
-        `Login fallido, no existe el usuario: ${body.username}`,
+        `Login fallido, no existe el usuario: ${body.username}, IP: ${ip}`,
         null,
         'delete',
       );
@@ -52,7 +52,7 @@ export class UsersService {
     Object.keys(user).forEach((key) => {
       res.setCookie(key, user[key], cookieConfig);
     });
-    await this.req.record(`${body.username} inicio sesion`);
+    await this.req.record(`${body.username} inicio sesion, IP: ${ip}`);
 
     res.send();
   }

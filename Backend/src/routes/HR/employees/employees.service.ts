@@ -152,6 +152,8 @@ export class EmployeesService {
     worksheet.columns = [
       { header: 'No. Empleado', key: 'noEmpleado', width: 25 },
       { header: 'Nombre', key: 'name', width: 25 },
+      { header: 'Apellido paterno', key: 'paternalLastName', width: 25 },
+      { header: 'Apellido materno', key: 'maternalLastName', width: 25 },
       { header: 'Área', key: 'area', width: 25 },
       { header: 'Puesto', key: 'position', width: 25 },
       { header: 'CIM', key: 'cim', width: 25 },
@@ -192,8 +194,32 @@ export class EmployeesService {
       cell.style = { font: { bold: true } };
     });
 
-    const buffer = await workbook.xlsx.writeBuffer();
-    console.log(buffer);
-    return buffer;
+    return await workbook.xlsx.writeBuffer();
+  }
+
+  async exportBasic() {
+    const workbook = new exceljs.Workbook();
+    const worksheet = workbook.addWorksheet('Inventario');
+
+    const rows =
+      await sql`select CONCAT(employees.name, ' ', "paternalLastName", ' ', "maternalLastName") as "name", "noEmpleado", positions.name as position, areas.name as area from employees
+    join areas on areas.id = employees."areaId"
+    join positions on positions.id = employees."positionId"
+    where active`;
+
+    worksheet.columns = [
+      { header: 'No. Empleado', key: 'noEmpleado', width: 25 },
+      { header: 'Nombre', key: 'name', width: 25 },
+      { header: 'Área', key: 'area', width: 25 },
+      { header: 'Puesto', key: 'position', width: 25 },
+    ];
+
+    worksheet.addRows(rows);
+
+    worksheet.getRow(1).eachCell((cell) => {
+      cell.style = { font: { bold: true } };
+    });
+
+    return workbook.xlsx.writeBuffer();
   }
 }

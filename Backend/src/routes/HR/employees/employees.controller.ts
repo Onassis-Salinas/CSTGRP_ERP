@@ -91,12 +91,12 @@ export class EmployeesController {
   }
 
   @Get('export')
-  @Header('Content-Disposition', 'attachment; filename=Inventario.xlsx')
-  @Header(
-    'Content-Type',
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-  )
   export() {
     return this.employeesService.export();
+  }
+
+  @Get('export-basic')
+  exportBasic() {
+    return this.employeesService.exportBasic();
   }
 }

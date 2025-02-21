@@ -7,6 +7,7 @@ import {
   UseGuards,
   Put,
   Delete,
+  Ip,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { ApiTags } from '@nestjs/swagger';
@@ -21,18 +22,18 @@ import { AuthGuard } from 'src/interceptors/auth/authorization.guard';
 
 @ApiTags('Users')
 @Controller('users')
-@UseGuards(new AuthGuard('users'))
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @UseGuards(new AuthGuard('users'))
   @Get()
   get() {
     return this.usersService.findAllUsers();
   }
 
   @Post('login')
-  login(@Body(new ZodPiPe(loginSchema)) body, @Res() res) {
-    return this.usersService.loginUser(body, res);
+  login(@Body(new ZodPiPe(loginSchema)) body, @Res() res, @Ip() ip) {
+    return this.usersService.loginUser(body, res, ip);
   }
 
   @Get('logout')
@@ -40,16 +41,19 @@ export class UsersController {
     return this.usersService.logoutUser(res);
   }
 
+  @UseGuards(new AuthGuard('users'))
   @Post('')
   register(@Body(new ZodPiPe(registerSchema)) body) {
     return this.usersService.registerUser(body);
   }
 
+  @UseGuards(new AuthGuard('users'))
   @Put('')
   edit(@Body(new ZodPiPe(editSchema)) body) {
     return this.usersService.editUser(body);
   }
 
+  @UseGuards(new AuthGuard('users'))
   @Delete('')
   delete(@Body(new ZodPiPe(deleteSchema)) body) {
     return this.usersService.deleteUser(body);

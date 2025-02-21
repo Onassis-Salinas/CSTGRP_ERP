@@ -30,9 +30,6 @@ export class AuthGuard implements CanActivate {
     const req: FastifyRequest & { userId: string } = httpContext.getRequest();
     const res = httpContext.getResponse();
 
-    if (req.raw.url.includes('login') || req.raw.url.includes('logout'))
-      return true;
-
     const token = req.cookies.token;
     if (!token) throw new HttpException('Inicie sesion', 401);
 
