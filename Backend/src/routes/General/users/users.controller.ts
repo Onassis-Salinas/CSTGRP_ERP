@@ -1,3 +1,4 @@
+import { FastifyRequest } from 'fastify';
 import {
   Controller,
   Get,
@@ -8,6 +9,7 @@ import {
   Put,
   Delete,
   Ip,
+  Req,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { ApiTags } from '@nestjs/swagger';
@@ -32,8 +34,18 @@ export class UsersController {
   }
 
   @Post('login')
-  login(@Body(new ZodPiPe(loginSchema)) body, @Res() res, @Ip() ip) {
-    return this.usersService.loginUser(body, res, ip);
+  login(
+    @Body(new ZodPiPe(loginSchema)) body,
+    @Res() res,
+    @Req() req: FastifyRequest,
+  ) {
+    console.log(req.ip);
+    console.log(req.headers['x-forwarded-for']);
+    return this.usersService.loginUser(
+      body,
+      res,
+      req.headers['x-forwarded-for'] || req.ip,
+    );
   }
 
   @Get('logout')
