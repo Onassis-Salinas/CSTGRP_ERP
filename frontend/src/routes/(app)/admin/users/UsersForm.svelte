@@ -132,7 +132,7 @@
 					<Label name="Perm. Movimientos">
 						<Select items={permissions} bind:value={formData.perm_materialmovements} />
 					</Label>
-					<Label name="Perm. Movimientos">
+					<Label name="Perm. Dashboard">
 						<Select items={permissions} bind:value={formData.perm_inventorystats} />
 					</Label>
 					<Label name="Perm. Requisiciones">
