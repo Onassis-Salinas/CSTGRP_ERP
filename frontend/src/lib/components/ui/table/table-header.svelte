@@ -10,10 +10,7 @@
 
 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 <thead
-	class={cn(
-		'sticky top-0 z-20 w-full bg-[#fbfbfb] text-sm border-b',
-		className
-	)}
+	class={cn('sticky top-0 z-20 w-full bg-white border-b text-sm', className)}
 	{...$$restProps}
 	on:click
 	on:keydown

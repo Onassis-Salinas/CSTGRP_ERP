@@ -4,14 +4,14 @@
 	import { cn } from '$lib/utils.js';
 	import Input from './input.svelte';
 
-	type $$Props = HTMLInputAttributes & { edit?: boolean; divClass?: string };
+	type $$Props = HTMLInputAttributes & { edit: boolean; divClass?: string };
 	type $$Events = InputEvents;
 
 	let className: $$Props['class'] = undefined;
 	let divClass: $$Props['divClass'] = undefined;
 
 	export let value: $$Props['value'] = undefined;
-	export let edit: $$Props['edit'] = false;
+	export let edit: $$Props['edit'];
 	export { className as class };
 
 	// Workaround for https://github.com/sveltejs/svelte/issues/9305

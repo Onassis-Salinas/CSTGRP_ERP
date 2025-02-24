@@ -9,11 +9,12 @@ const bloodRegex = /^(A|B|AB|O)[+-]$/;
 const nssRegex = /^[0-9]{11}$/;
 const infonavitRegex = /^[0-9]{10}$/;
 const accountRegex = /^[0-9]{10}$/; //Actualizar cantidad de digitos
+const noEmpleadoRegex = /^[0-9]{5}$/; //Actualizar cantidad de digitos
 const phoneRegex = /^((\+\d{1,2}\d{10})|(\d{10}))$/;
 //Telefono
 
 export const createSchema = z.object({
-  noEmpleado: z.number().min(10000).max(99999),
+  noEmpleado: z.string().refine((value) => noEmpleadoRegex.test(value)),
   name: z.string().min(3),
   areaId: z.number(),
   paternalLastName: z.string().min(3).optional().nullable(),
@@ -94,7 +95,11 @@ export const createSchema = z.object({
 
 export const editSchema = z.object({
   id: z.number(),
-  noEmpleado: z.number().min(10000).max(99999).optional().nullable(),
+  noEmpleado: z
+    .string()
+    .refine((value) => noEmpleadoRegex.test(value))
+    .optional()
+    .nullable(),
   name: z.string().min(3).optional(),
   paternalLastName: z.string().min(3).optional().nullable(),
   maternalLastName: z.string().min(3).optional().nullable(),

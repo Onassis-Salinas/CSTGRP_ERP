@@ -10,7 +10,7 @@
 
 <th
 	class={cn(
-		'h-8 whitespace-nowrap border-r px-3 text-left align-middle font-semibold text-sm [&:has([role=checkbox])]:pr-0',
+		'h-10 whitespace-nowrap border-r px-3 text-left align-middle font-medium text-sm [&:has([role=checkbox])]:pr-0',
 		className
 	)}
 	{...$$restProps}

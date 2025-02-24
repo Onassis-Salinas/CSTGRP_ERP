@@ -43,7 +43,7 @@
 
 <Card
 	class={cn(
-		'md: fixed -left-64 bottom-0 top-0 z-40 flex w-64 flex-col rounded-[9px] bg-[#fbfbfb] shadow-none transition-all duration-300 xl:left-0',
+		'md: fixed -left-64 bottom-0 top-0 z-40 flex w-64 flex-col bg-[#fbfbfb] shadow-none transition-all rounded-none duration-300 xl:left-0',
 		$sidebarOpen ? 'left-0' : ''
 	)}
 >

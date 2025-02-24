@@ -46,7 +46,7 @@ export class EmployeesService {
 
   async getActiveEmployees() {
     const employees =
-      await sql`select id, name, "paternalLastName" "maternalLastName", "noEmpleado", "areaId", "positionId" from employees where active order by "noEmpleado" DESC`;
+      await sql`select id, name, "paternalLastName", "maternalLastName", "noEmpleado", "areaId", "positionId", active from employees where active order by "noEmpleado" DESC`;
     return employees;
   }
 
@@ -72,7 +72,7 @@ export class EmployeesService {
     const [{ count }] =
       await sql`select count(*) from assistance where "mondayDate" = ${firstDate}`;
 
-    if (count === '0') return;
+    if (count === '0') return employee.id;
     const [assistanceRow] =
       await sql`insert into assistance ("mondayDate", "positionId", "areaId", "employeeId") values
     (${firstDate}, ${employee.positionId}, ${employee.areaId}, ${employee.id}) returning id`;
@@ -80,11 +80,12 @@ export class EmployeesService {
     //Generate productivity for the week
     const [{ captured }] =
       await sql`select captured from areas where "id" = ${employee.areaId}`;
-    if (!captured) return;
+    if (!captured) return employee.id;
 
     await sql`insert into employeeproductivity ("assistanceId") values
     (${assistanceRow.id})`;
-    return;
+
+    return employee.id;
   }
 
   async editEmployee(body: z.infer<typeof editSchema>, file: File) {

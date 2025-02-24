@@ -39,3 +39,19 @@ export function getImage(image: string) {
 export function hasAccess(name: string) {
 	return parseInt(Cookies.get('perm_' + name) || '0') > 0;
 }
+
+export function getPreview(file: any): Promise<string | null> {
+	return new Promise((resolve, reject) => {
+		if (!file) return resolve(null);
+
+		const reader = new FileReader();
+		reader.onload = (e) => {
+			resolve(e?.target?.result as string);
+		};
+		reader.onerror = (err) => {
+			reject(err);
+		};
+
+		reader.readAsDataURL(file);
+	});
+}

@@ -9,7 +9,6 @@
 	import api from '$lib/utils/server';
 	import { onMount } from 'svelte';
 	import EmployeeCard from './EmployeeCard.svelte';
-	import EmployeeForm from './EmployeeForm.svelte';
 	import QuitEmployeeForm from './QuitEmployeeForm.svelte';
 	import ReactivateForm from './ReactivateForm.svelte';
 	import { Button } from '$lib/components/ui/button';
@@ -21,7 +20,6 @@
 	import MenuBar from '$lib/components/basic/MenuBar.svelte';
 	import OptionsCell from '$lib/components/basic/OptionsCell.svelte';
 
-	let show: boolean;
 	let show1: boolean;
 	let show2: boolean;
 	let show3: boolean;
@@ -73,13 +71,9 @@
 		}
 	}
 
-	function editEmployee(i: number) {
-		selectedEmployee = filteredEmployees[i];
-		show = true;
-	}
 	function createEmployee() {
 		selectedEmployee = {};
-		show = true;
+		show1 = true;
 	}
 	function previewEmployee(i: number) {
 		selectedEmployee = filteredEmployees[i];
@@ -93,23 +87,6 @@
 		selectedEmployee = filteredEmployees[i];
 		show3 = true;
 	}
-
-	const statusColors: { [key: string]: 'red' | 'green' | 'yellow' } = {
-		'NO RECONTRATABLE': 'red',
-		RECONTRATABLE: 'green',
-		'A CONSIDERAR': 'yellow'
-	};
-	const banksColors: { [key: string]: 'blue' | 'red' } = {
-		HSBC: 'red',
-		BBVA: 'blue',
-		SCOTIABANK: 'red',
-		SANTANDER: 'red'
-	};
-	const genreColors: { [key: string]: 'pink' | 'blue' | 'gray' } = {
-		F: 'pink',
-		M: 'blue',
-		O: 'gray'
-	};
 
 	async function exportList(mode?: 'full') {
 		const url = mode === 'full' ? '/employees/export' : '/employees/export-basic';
@@ -177,7 +154,6 @@
 			<TableRow>
 				<OptionsCell
 					viewFunc={() => previewEmployee(i)}
-					editFunc={() => editEmployee(i)}
 					deleteFunc={employee.active ? () => deleteEmployee(i) : undefined}
 				>
 					{#if !employee.active}
@@ -187,7 +163,9 @@
 					{/if}
 				</OptionsCell>
 				<TableCell>{employee.noEmpleado || ''}</TableCell>
-				<TableCell class="whitespace-nowrap">{employee.name || ''}</TableCell>
+				<TableCell class="whitespace-nowrap cursor-pointer" on:click={() => previewEmployee(i)}
+					>{employee.name || ''}</TableCell
+				>
 				<TableCell>{employee.paternalLastName || ''}</TableCell>
 				<TableCell>{employee.maternalLastName || ''}</TableCell>
 				<TableCell
@@ -205,7 +183,6 @@
 	</TableBody>
 </CusTable>
 
-<EmployeeForm bind:show bind:selectedEmployee reload={getEmployees} />
 <EmployeeCard bind:show={show1} bind:employee={selectedEmployee} reload={getEmployees} />
 <QuitEmployeeForm bind:show={show2} bind:selectedEmployee reload={getEmployees} />
 <ReactivateForm bind:show={show3} bind:selectedEmployee reload={getEmployees} />

@@ -10,6 +10,8 @@
 	export let onSelectedChange = () => {};
 	export let cell = false;
 	export let menu = false;
+	export let chevron: boolean = true;
+	export let disabled: boolean = false;
 
 	$: newItems = items?.map((item) => ({
 		value: item.value,
@@ -32,9 +34,13 @@
 	}}
 >
 	<Select.Trigger
-		class={cn(cell ? 'h-full w-full border-none' : '', menu ? 'h-[28px]' : '', className)}
+		{chevron}
+		{disabled}
+		class={cn(className, cell ? 'h-full w-full border-none' : '', menu ? 'h-[28px]' : '')}
 	>
-		<Select.Value {placeholder}></Select.Value>
+		<slot>
+			<Select.Value {placeholder}></Select.Value>
+		</slot>
 	</Select.Trigger>
 	<Select.Content>
 		<Select.Group>
