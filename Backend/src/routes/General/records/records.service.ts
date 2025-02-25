@@ -16,7 +16,6 @@ export class RecordsService {
       LIMIT 500
     `;
 
-    console.log(query);
     return records;
   }
 }

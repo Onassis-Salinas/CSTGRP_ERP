@@ -19,7 +19,7 @@
 
 	async function getRecords() {
 		records = (
-			await api.get('/inventory-records', {
+			await api.get('/records', {
 				params: filters
 			})
 		).data;
@@ -37,6 +37,7 @@
 
 	let options = [
 		{ value: 'inventory', name: 'Inventario' },
+		{ value: 'hr', name: 'RRHH' },
 		{ value: 'users', name: 'Usuarios' }
 	];
 </script>
