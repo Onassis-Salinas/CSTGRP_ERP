@@ -1,4 +1,6 @@
+import axios from 'axios';
 import Cookies from 'js-cookie';
+import api from './server';
 
 export function formatDate(strDate?: string) {
 	if (!strDate) return '';
@@ -54,4 +56,73 @@ export function getPreview(file: any): Promise<string | null> {
 
 		reader.readAsDataURL(file);
 	});
+}
+
+export async function openFilePreview(url: string, name: string) {
+	if (!name) name = new Date().toISOString();
+	try {
+		const response = await api.get('/static/' + url, { responseType: 'blob' });
+		let blob = response.data;
+		const extension: string = url.split('.').pop()?.toLowerCase() || '';
+
+		const mimeTypes: Record<string, string> = {
+			pdf: 'application/pdf',
+			jpg: 'image/jpeg',
+			jpeg: 'image/jpeg',
+			png: 'image/png',
+			gif: 'image/gif',
+			webp: 'image/webp',
+			svg: 'image/svg+xml',
+			mp4: 'video/mp4',
+			webm: 'video/webm',
+			ogg: 'video/ogg',
+			mp3: 'audio/mpeg',
+			wav: 'audio/wav',
+			txt: 'text/plain',
+			json: 'application/json',
+			csv: 'text/csv'
+		};
+
+		const fileType = mimeTypes[extension] || blob.type;
+
+		blob = new Blob([blob], { type: fileType });
+
+		const fileURL = URL.createObjectURL(blob);
+
+		if (fileType && Object.values(mimeTypes).includes(fileType)) {
+			window.open(fileURL, '_blank');
+			setTimeout(() => URL.revokeObjectURL(fileURL), 10000);
+		} else {
+			const a = document.createElement('a');
+			a.href = fileURL;
+			a.download = `${name}.${extension}`;
+			document.body.appendChild(a);
+			a.click();
+			document.body.removeChild(a);
+			URL.revokeObjectURL(fileURL);
+		}
+	} catch (error) {
+		console.error('Error descargando el archivo:', error);
+	}
+}
+
+export async function downloadFile(url: string, name: string) {
+	if (!name) name = new Date().toISOString();
+	try {
+		const response = await api.get('/static/' + url, { responseType: 'blob' });
+		let blob = response.data;
+		const extension: string = url.split('.').pop()?.toLowerCase() || '';
+
+		const fileURL = URL.createObjectURL(blob);
+
+		const a = document.createElement('a');
+		a.href = fileURL;
+		a.download = `${name}.${extension}`;
+		document.body.appendChild(a);
+		a.click();
+		document.body.removeChild(a);
+		URL.revokeObjectURL(fileURL);
+	} catch (error) {
+		console.error('Error descargando el archivo:', error);
+	}
 }

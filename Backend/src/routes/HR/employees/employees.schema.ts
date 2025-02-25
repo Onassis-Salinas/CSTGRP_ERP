@@ -205,6 +205,20 @@ export const quitSchema = z.object({
   quitReason: z.string().min(1),
 });
 
+export const getDocumentsSchema = z.object({
+  employeeId: z.string(),
+});
+
+export const editDocSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+});
+
+export const createDocSchema = z.object({
+  employeeId: z.string(),
+  name: z.string(),
+});
+
 export const templateSchema = z.object({
   template: z.number().min(1),
 });

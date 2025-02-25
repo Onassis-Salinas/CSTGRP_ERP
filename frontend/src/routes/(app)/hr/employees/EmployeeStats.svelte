@@ -66,7 +66,7 @@
 		});
 	};
 
-	fetchData();
+	$: if (employee.id) fetchData();
 </script>
 
 <div class="border-primary-500 my-2 w-full border-b">Asistencia</div>

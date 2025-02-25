@@ -5,8 +5,8 @@ export const showSuccess = (message: string) => {
 };
 
 export const showError = (err: any, text?: string) => {
-	let message = err.response.data.message || text;
-	if (err.response.status === 403) message = 'No cuentas con los permisos necesarios';
+	let message = err?.response?.data?.message || text;
+	if (err?.response?.status === 403) message = 'No cuentas con los permisos necesarios';
 
 	toast.error(message);
 };

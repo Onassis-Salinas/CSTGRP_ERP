@@ -9,7 +9,7 @@
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import DisplayInput from '$lib/components/ui/input/display-input.svelte';
 	import { Button } from '$lib/components/ui/button';
-	import { Check, Edit2Icon, } from 'lucide-svelte';
+	import { Check, Edit2Icon } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 	import { showSuccess } from '$lib/utils/showToast';
 	import Select from '$lib/components/basic/Select.svelte';
@@ -24,9 +24,10 @@
 	let formData: any = {};
 	let files: FileList | undefined;
 	let preview: string = '';
+	let tab = '';
 	$: if (files?.[0] || formData.photo) getFilePreview();
 	$: if (!show) clean();
-	$: if (!employee.id) edit = true;
+	$: edit = !employee.id;
 
 	async function getFilePreview() {
 		preview = (await getPreview(files?.[0])) || getImage(formData.photo) || '';
@@ -89,7 +90,6 @@
 
 	$: if (employee.id) setFormData();
 
-	
 	async function setFormData() {
 		const [employeeData] = (await api.get(`/employees/${employee.id}`)).data;
 		formData = {
@@ -104,6 +104,7 @@
 	}
 
 	function clean() {
+		tab = 'info';
 		files = undefined;
 		formData = {};
 		edit = false;
@@ -128,10 +129,12 @@
 
 		if (employee.id) {
 			await api.put('employees', form);
+			employee = { ...employee, ...formData };
 			showSuccess('Informacion actualizada');
 		} else {
 			const newId = (await api.post('employees', form)).data;
 			employee.id = newId.toString();
+			employee = { ...employee, ...formData };
 			showSuccess('Empleado registrado');
 		}
 
@@ -147,7 +150,7 @@
 
 <Dialog bind:open={show}>
 	<DialogContent class="max-w-4xl">
-		<Tabs>
+		<Tabs bind:value={tab}>
 			<DialogHeader class="py-2">
 				<TabsList class="bg-background w-min">
 					<TabsTrigger class="data-[state=active]:bg-muted" value="info">Informacion</TabsTrigger>
@@ -180,7 +183,10 @@
 									size="icon"
 									variant="ghost"
 									class="bg-background size-7 border"
-									on:click={() => (edit = true)}><Edit2Icon class="size-3.5" /></Button
+									on:click={() => {
+										edit = true;
+										tab = 'info';
+									}}><Edit2Icon class="size-3.5" /></Button
 								>
 							{/if}
 						</div>
@@ -191,7 +197,7 @@
 								src={preview}
 								alt=""
 							/>
-							<input type="file" bind:files class="hidden" disabled={!edit} />
+							<input type="file" bind:files class="hidden" disabled={!edit} accept="image/*"/>
 						</label>
 					</div>
 

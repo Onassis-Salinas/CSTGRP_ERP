@@ -16,8 +16,11 @@ import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/interceptors/auth/authorization.guard';
 import { ZodPiPe } from 'src/interceptors/validation/validation.pipe';
 import {
+  createDocSchema,
   createSchema,
+  editDocSchema,
   editSchema,
+  getDocumentsSchema,
   idSchema,
   quitSchema,
   reactivateSchema,
@@ -88,6 +91,34 @@ export class EmployeesController {
   @Put('template')
   updateTemplate(@Body(new ZodPiPe(templateSchema)) body) {
     return this.employeesService.updateTemplate(body);
+  }
+
+  @Get('documents/:employeeId')
+  getDocuments(@Param(new ZodPiPe(getDocumentsSchema)) body) {
+    return this.employeesService.getDocuments(body);
+  }
+
+  @Post('documents')
+  @UseInterceptors(FileInterceptor('file'))
+  uploadDocument(@Body() body, @UploadedFile() file: File) {
+    const validatedBody = new ZodPiPe(createDocSchema).transform(
+      JSON.parse(body.json),
+    );
+    return this.employeesService.uploadDocument(validatedBody, file);
+  }
+
+  @Put('documents')
+  @UseInterceptors(FileInterceptor('file'))
+  editDocument(@Body() body, @UploadedFile() file: File) {
+    const validatedBody = new ZodPiPe(editDocSchema).transform(
+      JSON.parse(body.json),
+    );
+    return this.employeesService.editDocument(validatedBody, file);
+  }
+
+  @Delete('documents/:id')
+  deleteDocument(@Param(new ZodPiPe(idSchema)) body) {
+    return this.employeesService.deleteDocument(body);
   }
 
   @Get('export')

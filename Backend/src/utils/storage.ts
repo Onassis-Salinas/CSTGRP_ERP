@@ -13,6 +13,7 @@ export const getFile = async (
   const file = await fs.readFile(filePath);
   return file;
 };
+
 export const saveFile = async (
   file: any,
   folder: folderType,
