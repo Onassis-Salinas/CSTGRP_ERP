@@ -130,6 +130,7 @@ export function processJob(text: string) {
           code: linesArray[i + 1],
           amount: '',
           realAmount: '',
+          active: false,
         };
 
         for (let j = 2; j < 9; j++) {

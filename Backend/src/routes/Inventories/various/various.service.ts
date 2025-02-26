@@ -46,18 +46,38 @@ export class VariousService {
       const wb = new exceljs.Workbook();
       await wb.xlsx.load(file.buffer);
 
-      const rows: any[] = wb
-        .getWorksheet(1)
-        .getRows(2, 100)
+      const ws = wb.getWorksheet(1);
+
+      const product = ws.getCell(4, 5);
+      const jobpo = ws.getCell(6, 5).value;
+      const amount = ws.getCell(7, 5).value;
+      let dueDate = ws.getCell(5, 7).value;
+
+      if (dueDate instanceof Date) {
+        dueDate = dueDate.toISOString().split('T')[0];
+      } else {
+        throw new HttpException('Fecha incorrecta', 400);
+      }
+
+      const materials = ws
+        .getRows(10, 100)
         .map((row) => {
+          let amount = row.getCell(8).value;
+          if (typeof amount === 'object') amount = (amount as any)?.result;
+          if (typeof amount === 'number') amount = amount.toFixed(2);
+          if (typeof amount === 'undefined' || isNaN(Number(amount)))
+            amount = '0.00';
+
           return {
-            code: row.getCell(1).value,
-            amount: row.getCell(2).value?.toString(),
+            code: row.getCell(4).value,
+            amount,
+            realAmount: amount,
           };
         })
         .filter((item) => item.code);
+      console.log(dueDate);
 
-      return { materials: rows };
+      return { jobpo, dueDate, materials };
     } catch (err) {
       console.log(err);
       throw new HttpException('Excel invalido', 400);

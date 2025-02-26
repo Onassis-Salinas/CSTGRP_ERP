@@ -16,7 +16,7 @@
 	} from '$lib/components/ui/table';
 	import { FileInput, Input } from '$lib/components/ui/input';
 	import api from '$lib/utils/server';
-	import { showSuccess } from '$lib/utils/showToast';
+	import { showError, showSuccess } from '$lib/utils/showToast';
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import MaterialInput from '$lib/components/basic/MaterialInput.svelte';
 	import { Button } from '$lib/components/ui/button';
@@ -68,19 +68,20 @@
 		const fileName = form.get('file')?.name;
 		if (fileName?.includes('.pdf')) {
 			result = (await api.post('/inventoryvarious/jobpdf', form)).data;
+			console.log(result);
 			formData.jobpo = result.jobpo;
 			formData.due = result.dueDate;
 
-			result.materials = result.materials.map((obj: any) => ({ ...obj, active: false }));
-
-			materials = structuredClone(result.materials);
-			console.log(materials);
+			materials = result.materials;
 		}
 		if (fileName?.includes('.xlsx')) {
 			result = (await api.post('/inventoryvarious/exportxlsx', form)).data;
+			formData.jobpo = result.jobpo;
+			formData.due = result.dueDate;
 			materials = result.materials;
+			console.log(result);
 		}
-		if (!result) throw new Error('Archivo invalido');
+		if (!result) showError(null, 'Archivo invalido');
 	}
 
 	function addMaterial() {
