@@ -55,7 +55,8 @@ pids
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
-public/employees/*
-!public/employees/.gitkeep
-public/inventory/*
-!public/inventory/.gitkeep
+storage/employees/*
+!storage/employees/.gitkeep
+storage/inventory/*
+!storage/inventory/.gitkeep
+!storage/templates/*

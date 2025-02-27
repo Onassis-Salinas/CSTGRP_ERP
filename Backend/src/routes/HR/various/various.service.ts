@@ -26,7 +26,16 @@ export class VariousService {
       await sql`select "bornDate", "noEmpleado", name from employees where "noEmpleado" = ${query.noEmpleado}`;
 
     const baseImage = await Jimp.read(
-      path.resolve(__dirname, '..', '..', '..', '..', 'public', 'birthday.png'),
+      path.resolve(
+        __dirname,
+        '..',
+        '..',
+        '..',
+        '..',
+        'static',
+        'templates',
+        'birthday.png',
+      ),
     );
 
     const overlayImage = await Jimp.read(
@@ -44,7 +53,7 @@ export class VariousService {
         '..',
         '..',
         '..',
-        'public',
+        'static',
         'templates',
         'coustard80',
         'font.fnt',
@@ -58,7 +67,7 @@ export class VariousService {
         '..',
         '..',
         '..',
-        'public',
+        'static',
         'templates',
         'coustard40',
         'font.fnt',

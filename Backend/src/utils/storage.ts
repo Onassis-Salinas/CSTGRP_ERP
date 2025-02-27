@@ -9,7 +9,7 @@ export const getFile = async (
   folder: folderType,
   fileName?: string,
 ): null | Promise<any> => {
-  const filePath = join(__dirname, '..', '..', 'public', folder, fileName);
+  const filePath = join(__dirname, '..', '..', 'storage', folder, fileName);
   const file = await fs.readFile(filePath);
   return file;
 };
@@ -24,7 +24,7 @@ export const saveFile = async (
   if (fileName) await deleteFile(fileName);
 
   fileName = `${Date.now()}${path.extname(file.originalname)}`;
-  const filePath = join(__dirname, '..', '..', 'public', folder, fileName);
+  const filePath = join(__dirname, '..', '..', 'storage', folder, fileName);
 
   await new Promise<void>((resolve, reject) => {
     const stream = createWriteStream(filePath);
@@ -40,7 +40,7 @@ export const saveFile = async (
 };
 
 export const deleteFile = async (fileName: string): Promise<string | null> => {
-  const filePath = join(__dirname, '..', '..', 'public', fileName);
+  const filePath = join(__dirname, '..', '..', 'storage', fileName);
 
   try {
     await fs.access(filePath);
