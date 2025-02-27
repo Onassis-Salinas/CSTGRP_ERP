@@ -1,5 +1,5 @@
 import { promises as fs } from 'fs';
-import { format } from 'date-fns';
+import { format, toZonedTime } from 'date-fns-tz';
 import { Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import sql from 'src/utils/db';
@@ -148,6 +148,9 @@ export class PetitionsService {
       height: 28,
       align: 'center',
     });
+
+    console.log(requisition.created_at.toISOString());
+    console.log(requisition.created_at);
 
     fillBox({
       page,
