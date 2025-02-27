@@ -38,8 +38,6 @@ export class PetitionsService {
       'req.pdf',
     );
 
-    console.log(templatePath);
-
     const template = await fs.readFile(templatePath);
     const pdfDoc = await PDFDocument.load(template);
     const [page] = pdfDoc.getPages();

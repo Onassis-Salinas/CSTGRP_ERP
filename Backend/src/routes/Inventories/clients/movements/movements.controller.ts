@@ -15,6 +15,7 @@ export class MovementsController {
     @Req() req,
     @Query(new ZodPiPe(clientSchema)) query,
   ) {
+    return;
     return this.movementsService.getMaterialComparison(
       params,
       req.cookies.token,
@@ -28,6 +29,7 @@ export class MovementsController {
     @Req() req,
     @Query(new ZodPiPe(clientSchema)) query,
   ) {
+    return;
     return this.movementsService.getJobComparison(
       params,
       req.cookies.token,
@@ -37,16 +39,19 @@ export class MovementsController {
 
   @Get()
   get(@Req() req, @Query(new ZodPiPe(clientSchema)) query) {
+    return;
     return this.movementsService.getInventory(req.cookies.token, query);
   }
 
   @Get('jobs')
   getJobs(@Query(new ZodPiPe(IEFilterSchema)) params) {
+    return;
     return this.movementsService.getJobs(params);
   }
 
   @Get('clients')
   getClients() {
+    return;
     return this.movementsService.getClients();
   }
 }

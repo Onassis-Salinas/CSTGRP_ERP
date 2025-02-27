@@ -4,7 +4,6 @@ import { MaterialsModule } from './materials/materials.module';
 import { VariousModule } from './various/various.module';
 import { MovementsModule } from './movements/movements.module';
 import { StatsModule } from './stats/stats.module';
-import { ClientMovementsModule } from './clients/movements/movements.module';
 import { RequisitionsModule } from './requisitions/requsitions.module';
 import { PetitionsModule } from './petitions/petitions.module';
 
@@ -15,7 +14,6 @@ import { PetitionsModule } from './petitions/petitions.module';
     VariousModule,
     MovementsModule,
     StatsModule,
-    ClientMovementsModule,
     RequisitionsModule,
     PetitionsModule,
   ],
