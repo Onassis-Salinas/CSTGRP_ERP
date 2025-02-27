@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Label from '$lib/components/basic/Label.svelte';
 	import MaterialInput from '$lib/components/basic/MaterialInput.svelte';
 	import Select from '$lib/components/basic/Select.svelte';
 	import { Button } from '$lib/components/ui/button';
@@ -9,7 +10,7 @@
 		DialogHeader,
 		DialogTitle
 	} from '$lib/components/ui/dialog';
-	import { FileInput, Input } from '$lib/components/ui/input';
+	import { Input } from '$lib/components/ui/input';
 	import {
 		Table,
 		TableBody,
@@ -21,10 +22,11 @@
 	import api from '$lib/utils/server';
 	import { showSuccess } from '$lib/utils/showToast';
 	import { Trash } from 'lucide-svelte';
+	import { onMount } from 'svelte';
 
 	export let show: boolean;
-	export let reload: any;
-	export let selectedMovement: any = {};
+	let formData: any = {};
+	let areas: any[];
 	interface material {
 		code: string;
 		amount: string;
@@ -32,41 +34,28 @@
 	}
 
 	let materials: material[] = [];
-	let formData: any = {};
-	let files: any;
-	$: inputDisabled = !!files;
-	$: if (files) processPDF();
 	$: if (!show || show) cleanData();
-	$: if (selectedMovement.id) getData();
 
 	async function handleSubmit() {
-		if (selectedMovement.id) {
-			await api.put('/materialmovements/import', {
-				...formData,
-				materials
-			});
-		} else {
-			await api.post('/materialmovements/import', {
-				...formData,
-				materials
-			});
-		}
-
-		reload();
+		await api.post('/requisitions/supplies', {
+			...formData,
+			materials
+		});
 
 		show = false;
-		showSuccess(selectedMovement.id ? 'Importacion actualizada' : `Importacion Registrada`);
+		showSuccess(`Requisicion Registrada`);
 	}
 
-	async function processPDF() {
-		const form = new FormData();
-		form.append('file', files[0]);
-
-		const result = (await api.post('/inventoryvarious/importpdf', form)).data;
-		formData.import = result.importNum;
-		formData.due = result.dueDate;
-		materials = result.materials;
+	async function fetchOptions() {
+		areas = (await api.get('/hrvarious/areas')).data;
 	}
+
+	const motives = [
+		{ name: 'Producción', value: 'Producción' },
+		{ name: 'Empaque', value: 'Empaque' },
+		{ name: 'Corte de tela', value: 'Corte de tela' },
+		{ name: 'Cortes varios', value: 'Cortes varios' }
+	];
 
 	function addMaterial() {
 		materials.push({ code: '', measurement: '', amount: '' });
@@ -79,55 +68,32 @@
 
 	function cleanData() {
 		materials = [{ code: '', measurement: '', amount: '' }];
-		formData = {};
-		files = null;
-		inputDisabled = false;
 	}
 
-	async function getData() {
-		cleanData();
-		const { data } = await api.get('/materialmovements/ie/' + selectedMovement.id);
-		materials = data.materials;
-		formData = { id: data.id, import: data.import, location: data.location, due: data.due };
-		files = null;
-		inputDisabled = false;
-	}
-
-	let options = [
-		{ value: 'At M&M, In transit', name: 'En transito' },
-		{ value: 'At CST, In revision', name: 'En revisión' },
-		{ value: 'At CST, Qtys verified', name: 'Listo' }
-	];
+	onMount(() => {
+		fetchOptions();
+	});
 </script>
 
 <Dialog bind:open={show}>
 	<DialogContent class="max-w-3xl">
 		<DialogHeader>
-			<DialogTitle
-				>{selectedMovement.id ? 'Actualizar importacion' : 'Registrar importacion'}</DialogTitle
-			>
+			<DialogTitle>Pedir insumos</DialogTitle>
 		</DialogHeader>
 		<DialogBody>
-			<div class="grid w-full grid-cols-3 gap-4">
-				<div class="space-y-2">
-					<span>Importacion</span>
-					<Input disabled={inputDisabled} name="text" bind:value={formData.import} />
-				</div>
-				<div class="space-y-2">
-					<span>Ubicacion</span>
-					<Select items={options} bind:value={formData.location} />
-				</div>
-				<div class="space-y-2">
-					<span>Fecha</span>
-					<Input type="date" bind:value={formData.due} />
-				</div>
-				<div class=" col-span-3 space-y-2">
-					<span>Archivo</span>
-					<FileInput type="file" bind:files />
-				</div>
+			<div class="mb-4 grid w-full grid-cols-3 gap-4">
+				<Label name="Solicitante:">
+					<Input bind:value={formData.petitioner} />
+				</Label>
+				<Label name="Motivo:">
+					<Select items={motives} bind:value={formData.motive} />
+				</Label>
+				<Label name="Area:">
+					<Select items={areas} bind:value={formData.areaId} />
+				</Label>
 			</div>
 
-			<Table class="mt-4">
+			<Table>
 				<TableHeader class="border-t">
 					<TableHead class="border-l">Codigo</TableHead>
 					<TableHead>Cantidad</TableHead>

@@ -133,11 +133,9 @@
 				</div>
 			</div>
 
-			<hr class="my-4" />
-
-			<Table>
-				<TableHeader>
-					<TableHead>Codigo</TableHead>
+			<Table class="mt-4">
+				<TableHeader class="border-t">
+					<TableHead class="border-l">Codigo</TableHead>
 					<TableHead>Cantidad</TableHead>
 					<TableHead>Real</TableHead>
 					<TableHead>Medida</TableHead>
@@ -148,20 +146,20 @@
 				<TableBody>
 					{#each materials as material, i}
 						<TableRow>
-							<TableCell class="p-0"
+							<TableCell class="border-l p-0 px-[1px]"
 								><MaterialInput
 									bind:value={materials[i].code}
 									bind:measurement={materials[i].measurement}
 								/></TableCell
 							>
-							<TableCell class="p-0"
+							<TableCell class="p-0 px-[1px]"
 								><Input
 									class="rounded-none border-none !opacity-100"
 									type="number"
 									bind:value={materials[i].amount}
 								/></TableCell
 							>
-							<TableCell class="p-0"
+							<TableCell class="p-0 px-[1px]"
 								><Input
 									class="rounded-none border-none !opacity-100"
 									type="number"
@@ -172,7 +170,7 @@
 							<TableCell class="w-1 p-0 text-center"
 								><Checkbox class="mx-auto size-5" bind:checked={materials[i].active} /></TableCell
 							>
-							<TableCell class="flex h-9 justify-center p-0"
+							<TableCell class="flex h-8 justify-center p-0 px-[1px]"
 								><Button
 									on:click={() => deleteMaterial(i)}
 									variant="ghost"
@@ -183,8 +181,9 @@
 						</TableRow>
 					{/each}
 					<TableRow>
-						<TableCell class="col-span-4"
-							><Button on:click={addMaterial} class="w-full">Anadir material</Button></TableCell
+						<TableCell class="border-l" colspan={6}
+							><Button on:click={addMaterial} class="w-full max-w-40">Anadir material</Button
+							></TableCell
 						>
 					</TableRow>
 				</TableBody>

@@ -21,7 +21,7 @@
 
 <div class="app">
 	<main>
-		<slot>  </slot>
+		<slot></slot>
 	</main>
 </div>
 

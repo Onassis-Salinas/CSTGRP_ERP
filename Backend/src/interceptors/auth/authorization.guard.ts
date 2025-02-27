@@ -20,6 +20,7 @@ type permissionType =
   | 'requisitions'
   | 'materialmovements'
   | 'inventorystats'
+  | 'petitions'
   | 'inventory';
 
 @Injectable()

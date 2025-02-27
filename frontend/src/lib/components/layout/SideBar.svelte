@@ -75,6 +75,9 @@
 					{#if hasAccess('requisitions')}
 						<AccordionOption href="/warehouse/requisitions">Requisiciones</AccordionOption>
 					{/if}
+					{#if hasAccess('petitions')}
+						<AccordionOption href="/warehouse/petitions">Peticiones</AccordionOption>
+					{/if}
 				</AccordionContent>
 			</AccordionItem>
 		{/if}

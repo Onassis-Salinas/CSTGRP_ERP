@@ -3,10 +3,10 @@ import exceljs from 'exceljs';
 import { z } from 'zod';
 import sql from 'src/utils/db';
 import {
-  idSchema,
   jobsSchema,
   movementsFilterSchema,
   requisitionSchema,
+  suppliesSchema,
 } from './requsitions.schema';
 import { ContextProvider } from 'src/interceptors/context.provider';
 
@@ -23,6 +23,7 @@ export class RequisitionsService {
       WHERE
       NOT materialmovements.active AND
       NOT materialmovements.extra AND
+      (select folio from requisitions where jobs LIKE CONCAT('%', materialie.jobpo, '%') and materialie.jobpo is not null and requisitions."materialId" = materials.id) is null AND
       ${body.jobpo ? sql`materialie.jobpo = ${body.jobpo}` : sql`TRUE`} AND
       ${body.programation ? sql`materialie.programation = ${body.programation}` : sql`TRUE`} AND
       ${body.code ? sql`materials.code LIKE ${'%' + body.code + '%'}` : sql`TRUE`}
@@ -39,6 +40,7 @@ export class RequisitionsService {
       JOIN materialie on materialie.id = materialmovements."movementId"
       WHERE
       materials.code = ${body.code} AND  
+      (select folio from requisitions where jobs LIKE CONCAT('%', materialie.jobpo, '%') and materialie.jobpo is not null and requisitions."materialId" = materials.id) is null AND
       NOT materialmovements.active AND
       NOT materialmovements.extra
       ORDER BY materialie.due DESC, materialie.jobpo DESC LIMIT 20`;
@@ -47,11 +49,16 @@ export class RequisitionsService {
 
   async createRequisition(body: z.infer<typeof requisitionSchema>) {
     const [data] =
-      await sql`SELECT STRING_AGG((select jobpo from materialie where id = "movementId"), ', ') as jobs, BOOL_OR(active) as active, SUM(amount) as necessary FROM materialmovements WHERE id IN ${sql(body.jobIds)} `;
+      await sql`SELECT STRING_AGG((select jobpo from materialie where id = "movementId"), ', ') as jobs,
+        BOOL_OR((select folio from requisitions where jobs LIKE CONCAT('%', (select jobpo from materialie where id = materialmovements."movementId"), '%') and (select jobpo from materialie where id = materialmovements."movementId") is not null and requisitions."materialId" = (select "materialId" from materialmovements where id IN ${sql(body.jobIds)} limit 1)) is not null) as req,
+        BOOL_OR(active) as active, SUM(amount) as necessary
+        FROM materialmovements WHERE id IN ${sql(body.jobIds)}`;
 
     if (!data?.jobs) throw new HttpException('Selecciona al menos un job', 400);
     if (data?.active)
       throw new HttpException('Uno de los jobs ya fue expedido', 400);
+    if (data?.req)
+      throw new HttpException('Uno de los jobs ya tiene una requisicion', 400);
 
     await sql.begin(async (sql) => {
       const [inserted] =
@@ -64,8 +71,8 @@ export class RequisitionsService {
           (select name from areas where id = ${body.areaId}),
           (select id from materials where code = ${body.code}),
           ${data.jobs},
-          ${body.requested},
-          ${data.necessary}
+          ${Math.abs(Number(body.requested))},
+          ${Math.abs(Number(data.necessary))}
         ) returning folio`;
 
       await this.req.record(
@@ -75,15 +82,33 @@ export class RequisitionsService {
     });
   }
 
-  async deleteRequisition(body: z.infer<typeof idSchema>) {
-    let deletedObj;
+  async createSupplyRequisition(body: z.infer<typeof suppliesSchema>) {
     await sql.begin(async (sql) => {
-      [deletedObj] =
-        await sql`delete from materials where id = ${body.id} returning image, code`;
+      for (const movement of body.materials) {
+        const [material] =
+          await sql`select id from materials where code = ${movement.code}`;
+        if (!material) throw new HttpException('Material no existente', 400);
 
-      await this.req.record(`Elimino el material ${deletedObj.code}`, sql);
+        const [inserted] =
+          await sql`insert into requisitions (folio, petitioner, "user", motive, area, "materialId", jobs, requested, necesary) values
+        (
+          (SELECT COALESCE(MAX(folio), 0) + 1 FROM requisitions),
+          ${body.petitioner},
+          (select username from users where id = ${this.req.userId}),
+          ${body.motive},
+          (select name from areas where id = ${body.areaId}),
+          ${material.id},
+          '',
+          ${movement.amount},
+          ${movement.amount}
+        ) returning folio`;
+
+        await this.req.record(
+          `Hizo una requisicion de insumos de folio: ${inserted.folio}`,
+          sql,
+        );
+      }
     });
-    return;
   }
 
   async exportPending() {

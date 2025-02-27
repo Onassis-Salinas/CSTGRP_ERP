@@ -18,6 +18,7 @@ export const editSchema = z.object({
   perm_it: z.number().min(0).max(2).optional(),
   perm_materialmovements: z.number().min(0).max(2).optional(),
   perm_inventorystats: z.number().min(0).max(2).optional(),
+  perm_petitions: z.number().min(0).max(2).optional(),
   perm_requisitions: z.number().min(0).max(2).optional(),
   perm_assistance_areas: z.string().max(300).optional().nullable(),
 });
@@ -35,6 +36,7 @@ export const registerSchema = z.object({
   perm_materialmovements: z.number().min(0).max(2),
   perm_inventorystats: z.number().min(0).max(2).optional(),
   perm_requisitions: z.number().min(0).max(2),
+  perm_petitions: z.number().min(0).max(2),
   perm_assistance_areas: z.string().max(300).nullable(),
 });
 

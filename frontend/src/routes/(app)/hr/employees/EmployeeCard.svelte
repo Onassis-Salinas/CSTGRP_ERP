@@ -11,7 +11,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Check, Edit2Icon } from 'lucide-svelte';
 	import { onMount } from 'svelte';
-	import { showSuccess } from '$lib/utils/showToast';
+	import { showSuccess, showError } from '$lib/utils/showToast';
 	import Select from '$lib/components/basic/Select.svelte';
 	import EmployeeDocs from './EmployeeDocs.svelte';
 	import EmployeeHistory from './EmployeeHistory.svelte';
@@ -160,6 +160,9 @@
 						>
 						<TabsTrigger class="data-[state=active]:bg-muted" value="history">Historial</TabsTrigger
 						>
+						<TabsTrigger class="data-[state=active]:bg-muted" value="evaluations"
+							>Evaluaciones</TabsTrigger
+						>
 						<TabsTrigger class="data-[state=active]:bg-muted" value="docs">Documentos</TabsTrigger>
 					{/if}
 				</TabsList>
@@ -197,7 +200,7 @@
 								src={preview}
 								alt=""
 							/>
-							<input type="file" bind:files class="hidden" disabled={!edit} accept="image/*"/>
+							<input type="file" bind:files class="hidden" disabled={!edit} accept="image/*" />
 						</label>
 					</div>
 
@@ -387,13 +390,13 @@
 					<div class="relative mb-6 grid w-full grid-cols-2 gap-x-4 gap-y-2 rounded-md border p-4">
 						<div class="bg-background absolute -top-5 left-8 my-2 px-2 font-semibold">Empresa</div>
 						<div>
-							<p class="text-muted-foreground text-xs">Fecha de Admisión:</p>
+							<p class="text-muted-foreground text-xs">Antiguedad:</p>
 							<DisplayInput value={formatDate(formData.admissionDate)} {edit}>
 								<Input type="date" bind:value={formData.admissionDate} />
 							</DisplayInput>
 						</div>
 						<div>
-							<p class="text-muted-foreground text-xs">Fecha de CIM:</p>
+							<p class="text-muted-foreground text-xs">Fecha de Bcpet:</p>
 							<DisplayInput value={formatDate(formData.cim)} {edit}>
 								<Input type="date" bind:value={formData.cim} />
 							</DisplayInput>

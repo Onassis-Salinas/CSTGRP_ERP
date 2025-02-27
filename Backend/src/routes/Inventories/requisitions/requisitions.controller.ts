@@ -12,10 +12,10 @@ import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/interceptors/auth/authorization.guard';
 import { ZodPiPe } from 'src/interceptors/validation/validation.pipe';
 import {
-  idSchema,
   jobsSchema,
   movementsFilterSchema,
   requisitionSchema,
+  suppliesSchema,
 } from './requsitions.schema';
 
 @ApiTags('Material Requisitions')
@@ -39,9 +39,9 @@ export class RequisitionsController {
     return this.requisitionsService.createRequisition(body);
   }
 
-  @Delete()
-  delete(@Body(new ZodPiPe(idSchema)) body) {
-    return this.requisitionsService.deleteRequisition(body);
+  @Post('supplies')
+  createSuppliesRequisition(@Body(new ZodPiPe(suppliesSchema)) body) {
+    return this.requisitionsService.createSupplyRequisition(body);
   }
 
   @Get('export-pending')

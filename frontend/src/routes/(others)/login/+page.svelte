@@ -18,8 +18,8 @@
 
 	async function login() {
 		await api.post('/users/login', credentials);
-		showSuccess('sesion iniciada');
 		goto('/');
+		showSuccess('Sesión iniciada');
 	}
 	onMount(() => {
 		logout();

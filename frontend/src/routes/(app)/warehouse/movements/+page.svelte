@@ -145,7 +145,7 @@
 				<TableCell>{(movement.jobpo || '') + (movement.extra ? ' -R' : '')}</TableCell>
 				<TableCell>{movement.req || ''}</TableCell>
 				<TableCell>{movement.code}</TableCell>
-				<TableCell class="w-full min-w-24 max-w-1 overflow-hidden">{movement.description}</TableCell
+				<TableCell class="w-full min-w-24 max-w-1 overflow-hidden text-ellipsis">{movement.description}</TableCell
 				>
 				<TableCell><Badge color="gray">{movement.inventory}</Badge></TableCell>
 				<TableCell><Badge color="gray">{movement.leftoverAmount}</Badge></TableCell>

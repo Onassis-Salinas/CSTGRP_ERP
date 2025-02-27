@@ -165,7 +165,7 @@
 				/>
 
 				<TableCell>{material.code}</TableCell>
-				<TableCell class="w-full min-w-24 max-w-1 overflow-hidden">{material.description}</TableCell
+				<TableCell class="w-full min-w-24 max-w-1 overflow-hidden text-ellipsis">{material.description}</TableCell
 				>
 				<TableCell>{material.location || ''}</TableCell>
 				<TableCell><Badge color="gray">{material.leftoverAmount}</Badge></TableCell>

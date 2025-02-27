@@ -22,6 +22,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import ImportMovementsForm from './ImportMovementsForm.svelte';
 
+	let show = false;
 	let show2 = false;
 	let show3 = false;
 	let show4 = false;

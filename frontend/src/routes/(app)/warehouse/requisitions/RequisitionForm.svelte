@@ -26,7 +26,6 @@
 
 	export let show = false;
 	export let selectedMovement: any;
-	let clients: any[];
 	let areas: any[] = [];
 	let formData: any;
 	let jobs: any[] = [];
@@ -54,7 +53,6 @@
 	);
 
 	async function fetchOptions() {
-		clients = (await api.get('/inventoryvarious/clients')).data;
 		areas = (await api.get('/hrvarious/areas')).data;
 	}
 
@@ -86,7 +84,7 @@
 			<DialogTitle>Requerir {selectedMovement?.code}</DialogTitle>
 		</DialogHeader>
 		<DialogBody>
-			<div class="mb-6 grid w-full grid-cols-3 gap-4">
+			<div class="mb-4 grid w-full grid-cols-3 gap-4">
 				<Label name="Solicitante:">
 					<Input bind:value={formData.petitioner} />
 				</Label>

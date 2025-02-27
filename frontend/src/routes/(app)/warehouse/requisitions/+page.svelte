@@ -12,9 +12,10 @@
 	import OptionsCell from '$lib/components/basic/OptionsCell.svelte';
 	import RequisitionForm from './RequisitionForm.svelte';
 	import { es } from 'date-fns/locale';
-
+	import SuppliesForm from './SuppliesForm.svelte';
 	let clients: any = {};
 	let show = false;
+	let show2 = false;
 
 	let filters = {
 		programation: '',
@@ -82,6 +83,7 @@
 
 	<svelte:fragment slot="right">
 		<Button on:click={exportUncheckedMovements}><FileDown class="size-3.5" /></Button>
+		<Button on:click={() => (show2 = true)}><FilePlus2 class="size-3.5 mr-1.5" />Insumos</Button>
 	</svelte:fragment>
 </MenuBar>
 
@@ -113,8 +115,7 @@
 				<TableCell>{movement.programation || ''}</TableCell>
 				<TableCell>{(movement.jobpo || '') + (movement.extra ? ' -R' : '')}</TableCell>
 				<TableCell>{movement.code}</TableCell>
-				<TableCell class="w-full min-w-24 max-w-1 overflow-hidden">{movement.description}</TableCell
-				>
+				<TableCell class="w-full min-w-24 max-w-1 overflow-hidden text-ellipsis">{movement.description}</TableCell>
 				<TableCell><Badge color="gray">{movement.inventory}</Badge></TableCell>
 				<TableCell><Badge color="gray">{movement.leftoverAmount}</Badge></TableCell>
 				<TableCell><Badge color={'red'}>{movement.amount}</Badge></TableCell>
@@ -132,3 +133,4 @@
 </CusTable>
 
 <RequisitionForm bind:show bind:selectedMovement />
+<SuppliesForm bind:show={show2} />

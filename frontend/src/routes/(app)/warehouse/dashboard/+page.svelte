@@ -76,7 +76,7 @@
 					{#each outOfStock as row}
 						<TableRow>
 							<TableCell class="border-l">{row.code || ''}</TableCell>
-							<TableCell class="whitespace-hidden max-w-64 overflow-hidden"
+							<TableCell class="whitespace-hidden max-w-64 overflow-hidden text-ellipsis"
 								>{row.description || ''}</TableCell
 							>
 							<TableCell class="w-full whitespace-normal">{row.jobpo || ''}</TableCell>
