@@ -149,13 +149,13 @@ export class PetitionsService {
       align: 'center',
     });
 
-    console.log(requisition.created_at.toISOString());
-    console.log(requisition.created_at);
-
     fillBox({
       page,
       font,
-      text: format(requisition.created_at, 'dd/MM/yyyy'),
+      text: format(
+        toZonedTime(requisition.created_at, 'America/Tijuana'),
+        'dd/MM/yyyy',
+      ),
       size: 12,
       x: 150,
       y: 695,
@@ -166,7 +166,10 @@ export class PetitionsService {
     fillBox({
       page,
       font,
-      text: format(requisition.created_at, 'HH:mm'),
+      text: format(
+        toZonedTime(requisition.created_at, 'America/Tijuana'),
+        'HH:mm',
+      ),
       size: 12,
       x: 380,
       y: 695,
