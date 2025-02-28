@@ -1,0 +1,16 @@
+{
+  "tasks": {
+    "dev": {
+      "dependsOn": ["^dev"],
+      "outputs": ["dist/**", ".next/**"]
+    },
+    "lint": {
+      "dependsOn": ["^lint"],
+      "outputs": ["dist/**", ".next/**"]
+    },
+    "format": {
+      "dependsOn": ["^format"],
+      "outputs": ["dist/**", ".next/**"]
+    }
+  }
+}

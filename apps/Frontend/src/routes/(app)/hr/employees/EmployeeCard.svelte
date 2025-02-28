@@ -1,0 +1,448 @@
+<script lang="ts">
+	import { Tabs, TabsContent, TabsList, TabsTrigger } from '$lib/components/ui/tabs';
+	import { Dialog, DialogBody } from '$lib/components/ui/dialog';
+	import DialogContent from '$lib/components/ui/dialog/dialog-content.svelte';
+	import DialogHeader from '$lib/components/ui/dialog/dialog-header.svelte';
+	import { Input } from '$lib/components/ui/input';
+	import { formatDate, getImage, getPreview } from '$lib/utils/functions';
+	import api from '$lib/utils/server';
+	import Badge from '$lib/components/ui/badge/badge.svelte';
+	import DisplayInput from '$lib/components/ui/input/display-input.svelte';
+	import { Button } from '$lib/components/ui/button';
+	import { Check, Edit2Icon } from 'lucide-svelte';
+	import { onMount } from 'svelte';
+	import { showSuccess } from '$lib/utils/showToast';
+	import Select from '$lib/components/basic/Select.svelte';
+	import EmployeeDocs from './EmployeeDocs.svelte';
+	import EmployeeHistory from './EmployeeHistory.svelte';
+	import EmployeeStats from './EmployeeStats.svelte';
+
+	export let show = false;
+	export let employee: any;
+	export let reload: any;
+	let edit = false;
+	let formData: any = {};
+	let files: FileList | undefined;
+	let preview: string = '';
+	let tab = '';
+	$: if (files?.[0] || formData.photo) getFilePreview();
+	$: if (!show) clean();
+	$: edit = !employee.id;
+
+	async function getFilePreview() {
+		preview = (await getPreview(files?.[0])) || getImage(formData.photo) || '';
+	}
+
+	let banks = [
+		{ value: 'SCOTIABANK', name: 'SCOTIABANK' },
+		{ value: 'HSBC', name: 'HSBC' },
+		{ value: 'BBVA', name: 'BBVA' }
+	];
+	let status = [
+		{ value: 'Recontratable', name: 'Recontratable' },
+		{ value: 'No recontratable', name: 'No recontratable' },
+		{ value: 'A considerar', name: 'A considerar' }
+	];
+
+	let positionTypes = [
+		{ value: 'Tiempo completo', name: 'Tiempo completo' },
+		{ value: 'Medio tiempo', name: 'Medio tiempo' },
+		{ value: 'Practicante', name: 'Practicante' }
+	];
+
+	let shifts = [
+		{ value: 'Diurno', name: 'Diurno' },
+		{ value: 'Nocturno', name: 'Nocturno' }
+	];
+
+	let genres = [
+		{ value: 'F', name: 'Femenino' },
+		{ value: 'M', name: 'Masculino' },
+		{ value: 'O', name: 'Otro' }
+	];
+
+	let civilStatus = [
+		{ value: 'Casado(a)', name: 'Casado(a)' },
+		{ value: 'Soltero(a)', name: 'Soltero(a)' },
+		{ value: 'Divorciado(a)', name: 'Divorciado(a)' },
+		{ value: 'Viudo(a)', name: 'Viudo(a)' },
+		{ value: 'Separado(a)', name: 'Separado(a)' },
+		{ value: 'Concubinato', name: 'Concubinato' },
+		{ value: 'Unión Libre', name: 'Unión Libre' },
+		{ value: 'Sociedad de Convivencia', name: 'Sociedad de Convivencia' }
+	];
+
+	let areas: any;
+	let positions: any;
+	let areasDisplay: any = {};
+	let positionsDisplay: any = {};
+
+	async function fetchOptions() {
+		areas = (await api.get('/hrvarious/areas')).data;
+		positions = (await api.get('/hrvarious/positions')).data;
+		areas.forEach((area: any) => {
+			areasDisplay[area.value] = { name: area.name, color: area.color };
+		});
+		positions.forEach((position: any) => {
+			positionsDisplay[position.value] = { name: position.name, color: position.color };
+		});
+	}
+
+	$: if (employee.id) setFormData();
+
+	async function setFormData() {
+		const [employeeData] = (await api.get(`/employees/${employee.id}`)).data;
+		formData = {
+			...employeeData,
+			admissionDate: employeeData.admissionDate?.split('T')[0],
+			bornDate: employeeData.bornDate?.split('T')[0],
+			quitDate: employeeData.quitDate?.split('T')[0],
+			cim: employeeData.cim?.split('T')[0],
+			infonavitFee: employeeData.infonavitFee?.toString(),
+			infonavitDiscount: employeeData.infonavitDiscount?.toString()
+		};
+	}
+
+	function clean() {
+		tab = 'info';
+		files = undefined;
+		formData = {};
+		edit = false;
+		preview = '';
+	}
+
+	async function handleSubmit() {
+		const form = new FormData();
+		form.append(
+			'json',
+			JSON.stringify({
+				...formData,
+				id: parseInt(formData.id || ''),
+				areaId: parseInt(formData.areaId || ''),
+				positionId: parseInt(formData.positionId || ''),
+				sons: parseInt(formData.sons || ''),
+				vacations: parseInt(formData.vacations || '')
+			})
+		);
+
+		if (files) form.append('file', files[0]);
+
+		if (employee.id) {
+			await api.put('employees', form);
+			employee = { ...employee, ...formData };
+			showSuccess('Informacion actualizada');
+		} else {
+			const newId = (await api.post('employees', form)).data;
+			employee.id = newId.toString();
+			employee = { ...employee, ...formData };
+			showSuccess('Empleado registrado');
+		}
+
+		reload();
+		setFormData();
+		edit = false;
+	}
+
+	onMount(() => {
+		fetchOptions();
+	});
+</script>
+
+<Dialog bind:open={show}>
+	<DialogContent class="max-w-4xl">
+		<Tabs bind:value={tab}>
+			<DialogHeader class="py-2">
+				<TabsList class="w-min bg-background">
+					<TabsTrigger class="data-[state=active]:bg-muted" value="info">Informacion</TabsTrigger>
+					{#if employee.id}
+						<TabsTrigger class="data-[state=active]:bg-muted" value="statics"
+							>Estadisticas</TabsTrigger
+						>
+						<TabsTrigger class="data-[state=active]:bg-muted" value="history">Historial</TabsTrigger
+						>
+						<TabsTrigger class="data-[state=active]:bg-muted" value="evaluations"
+							>Evaluaciones</TabsTrigger
+						>
+						<TabsTrigger class="data-[state=active]:bg-muted" value="docs">Documentos</TabsTrigger>
+					{/if}
+				</TabsList>
+			</DialogHeader>
+
+			<DialogBody class="h-[85lvh]">
+				<div
+					class="mb-8 grid grid-cols-[auto_1fr] grid-rows-[auto_auto] items-center gap-x-6 gap-y-1"
+				>
+					<div class="relative row-span-2 aspect-square w-24 cursor-pointer rounded-lg border">
+						<div class="absolute -right-2.5 -top-2.5">
+							{#if edit}
+								<Button
+									size="icon"
+									variant="ghost"
+									class="size-7 border bg-background"
+									on:click={handleSubmit}><Check class="size-3.5" /></Button
+								>
+							{:else}
+								<Button
+									size="icon"
+									variant="ghost"
+									class="size-7 border bg-background"
+									on:click={() => {
+										edit = true;
+										tab = 'info';
+									}}><Edit2Icon class="size-3.5" /></Button
+								>
+							{/if}
+						</div>
+
+						<label class="aspect-square w-full">
+							<img
+								class="h-full w-full cursor-pointer rounded-lg object-cover object-top"
+								src={preview}
+								alt=""
+							/>
+							<input type="file" bind:files class="hidden" disabled={!edit} accept="image/*" />
+						</label>
+					</div>
+
+					<div class="flex gap-2">
+						{#if edit}
+							<div>
+								<p class="text-xs text-muted-foreground">Nombre:</p>
+								<DisplayInput bind:value={formData.name} {edit} />
+							</div>
+							<div>
+								<p class="text-xs text-muted-foreground">Apellido paterno:</p>
+								<DisplayInput bind:value={formData.paternalLastName} {edit} />
+							</div>
+							<div>
+								<p class="text-xs text-muted-foreground">Apellido materno:</p>
+								<DisplayInput bind:value={formData.maternalLastName} {edit} />
+							</div>
+							<div>
+								<p class="text-xs text-muted-foreground">No:</p>
+								<DisplayInput bind:value={formData.noEmpleado} {edit} class="max-w-20" />
+							</div>
+						{:else}
+							<p class="text-lg font-semibold">
+								{`${formData.name} ${formData.paternalLastName || ''} ${formData.maternalLastName || ''}`}
+							</p>
+							<p class="text-lg font-semibold">{formData.noEmpleado}</p>
+						{/if}
+					</div>
+					<div class="mb-auto flex flex-col gap-1.5">
+						<Select
+							items={areas}
+							bind:value={formData.areaId}
+							class="h-auto w-min min-w-48 border-none p-0 focus-visible:ring-0 disabled:opacity-100"
+							chevron={false}
+							disabled={!edit}
+						>
+							<Badge color={areasDisplay[formData.areaId || '']?.color}
+								>{areasDisplay[formData.areaId || '']?.name || 'Area'}</Badge
+							>
+						</Select>
+						<Select
+							items={positions}
+							bind:value={formData.positionId}
+							class="h-auto w-min min-w-48 border-none p-0 focus-visible:ring-0 disabled:opacity-100"
+							chevron={false}
+							disabled={!edit}
+						>
+							<Badge color={positionsDisplay[formData.positionId || '']?.color}
+								>{positionsDisplay[formData.positionId || '']?.name || 'Posicion'}</Badge
+							>
+						</Select>
+					</div>
+				</div>
+				<TabsContent value="info">
+					{#if !formData.active && employee.id}
+						<div
+							class="relative mb-6 grid w-full grid-cols-2 gap-x-4 gap-y-2 rounded-md border p-4"
+						>
+							<div class="absolute -top-5 left-8 my-2 bg-background px-2 font-semibold">Baja</div>
+							<div>
+								<p class="text-xs text-muted-foreground">Razón de Salida:</p>
+								<DisplayInput bind:value={formData.quitReason} {edit} />
+							</div>
+							<div>
+								<p class="text-xs text-muted-foreground">Estatus de Salida:</p>
+								<DisplayInput value={formData.quitStatus} {edit}>
+									<Select items={status} bind:value={formData.quitStatus} />
+								</DisplayInput>
+							</div>
+							<div>
+								<p class="text-xs text-muted-foreground">Notas de Salida:</p>
+								<DisplayInput bind:value={formData.quitNotes} {edit} />
+							</div>
+							<div>
+								<p class="text-xs text-muted-foreground">Fecha de Salida:</p>
+								<DisplayInput value={formData.quitDate} {edit}>
+									<Input type="date" bind:value={formData.quitDate} />
+								</DisplayInput>
+							</div>
+						</div>
+					{/if}
+
+					<div class="relative mb-6 grid w-full grid-cols-2 gap-x-4 gap-y-2 rounded-md border p-4">
+						<div class="absolute -top-5 left-8 my-2 bg-background px-2 font-semibold">Contacto</div>
+						<div>
+							<p class="text-xs text-muted-foreground">Correo Electrónico:</p>
+							<DisplayInput bind:value={formData.email} {edit} />
+						</div>
+						<div>
+							<p class="text-xs text-muted-foreground">Número de Teléfono:</p>
+							<DisplayInput bind:value={formData.number} {edit} />
+						</div>
+						<div>
+							<p class="text-xs text-muted-foreground">Dirección:</p>
+							<DisplayInput bind:value={formData.direction} {edit} />
+						</div>
+					</div>
+
+					<div class="relative mb-6 grid w-full grid-cols-2 gap-x-4 gap-y-2 rounded-md border p-4">
+						<div class="absolute -top-5 left-8 my-2 bg-background px-2 font-semibold">Personal</div>
+						<div>
+							<p class="text-xs text-muted-foreground">Nacionalidad:</p>
+							<DisplayInput bind:value={formData.nationality} {edit} />
+						</div>
+						<div>
+							<p class="text-xs text-muted-foreground">Estado Civil:</p>
+							<DisplayInput value={formData.civilStatus} {edit}>
+								<Select items={civilStatus} bind:value={formData.civilStatus} />
+							</DisplayInput>
+						</div>
+						<div>
+							<p class="text-xs text-muted-foreground">Fecha de Nacimiento:</p>
+							<DisplayInput value={formData.bornDate} {edit}>
+								<Input type="date" bind:value={formData.bornDate} />
+							</DisplayInput>
+						</div>
+						<div>
+							<p class="text-xs text-muted-foreground">Estudios:</p>
+							<DisplayInput bind:value={formData.studies} {edit} />
+						</div>
+						<div>
+							<p class="text-xs text-muted-foreground">Género:</p>
+							<DisplayInput bind:value={formData.genre} {edit}>
+								<Select items={genres} bind:value={formData.genre} />
+							</DisplayInput>
+						</div>
+						<div>
+							<p class="text-xs text-muted-foreground">Número de Hijos:</p>
+							<DisplayInput bind:value={formData.sons} {edit} />
+						</div>
+						<div>
+							<p class="text-xs text-muted-foreground">Lugar de Nacimiento:</p>
+							<DisplayInput bind:value={formData.bornLocation} {edit} />
+						</div>
+						<div>
+							<p class="text-xs text-muted-foreground">Tipo de Sangre:</p>
+							<DisplayInput bind:value={formData.blood} {edit} />
+						</div>
+					</div>
+
+					<div class="relative mb-6 grid w-full grid-cols-2 gap-x-4 gap-y-2 rounded-md border p-4">
+						<div class="absolute -top-5 left-8 my-2 bg-background px-2 font-semibold">Legal</div>
+						<div>
+							<p class="text-xs text-muted-foreground">NSS:</p>
+							<DisplayInput bind:value={formData.nss} {edit} />
+						</div>
+						<div>
+							<p class="text-xs text-muted-foreground">CURP:</p>
+							<DisplayInput bind:value={formData.curp} {edit} />
+						</div>
+						<div>
+							<p class="text-xs text-muted-foreground">RFC:</p>
+							<DisplayInput bind:value={formData.rfc} {edit} />
+						</div>
+						<div>
+							<p class="text-xs text-muted-foreground">Cuenta Bancaria:</p>
+							<DisplayInput bind:value={formData.account} {edit} />
+						</div>
+						<div>
+							<p class="text-xs text-muted-foreground">Banco:</p>
+							<DisplayInput bind:value={formData.bank} {edit}>
+								<Select items={banks} bind:value={formData.bank} />
+							</DisplayInput>
+						</div>
+						<div>
+							<p class="text-xs text-muted-foreground">Número de Infonavit:</p>
+							<DisplayInput bind:value={formData.infonavitNo} {edit} />
+						</div>
+						<div>
+							<p class="text-xs text-muted-foreground">Descuento de Infonavit:</p>
+							<DisplayInput bind:value={formData.infonavitDiscount} {edit} />
+						</div>
+						<div>
+							<p class="text-xs text-muted-foreground">Salario de Nómina:</p>
+							<DisplayInput bind:value={formData.nominaSalary} {edit} />
+						</div>
+						<div>
+							<p class="text-xs text-muted-foreground">Número de Clínica:</p>
+							<DisplayInput bind:value={formData.clinicNo} {edit} />
+						</div>
+						<div>
+							<p class="text-xs text-muted-foreground">Salario de IMSS:</p>
+							<DisplayInput bind:value={formData.immsSalary} {edit} />
+						</div>
+					</div>
+
+					<div class="relative mb-6 grid w-full grid-cols-2 gap-x-4 gap-y-2 rounded-md border p-4">
+						<div class="absolute -top-5 left-8 my-2 bg-background px-2 font-semibold">Empresa</div>
+						<div>
+							<p class="text-xs text-muted-foreground">Antiguedad:</p>
+							<DisplayInput value={formatDate(formData.admissionDate)} {edit}>
+								<Input type="date" bind:value={formData.admissionDate} />
+							</DisplayInput>
+						</div>
+						<div>
+							<p class="text-xs text-muted-foreground">Fecha de Bcpet:</p>
+							<DisplayInput value={formatDate(formData.cim)} {edit}>
+								<Input type="date" bind:value={formData.cim} />
+							</DisplayInput>
+						</div>
+						<div>
+							<p class="text-xs text-muted-foreground">Tipo de Posición:</p>
+							<DisplayInput value={formData.positionType} {edit}>
+								<Select items={positionTypes} bind:value={formData.positionType} />
+							</DisplayInput>
+						</div>
+						<div>
+							<p class="text-xs text-muted-foreground">Turno:</p>
+							<DisplayInput value={formData.shift} {edit}>
+								<Select items={shifts} bind:value={formData.shift} />
+							</DisplayInput>
+						</div>
+						<!-- <div>
+							<p class="text-muted-foreground text-xs">Dias de vacaciones:</p>
+							<DisplayInput bind:value={formData.vacations} {edit} />
+						</div> -->
+					</div>
+
+					<div class="relative grid w-full grid-cols-2 gap-x-4 gap-y-2 rounded-md border p-4">
+						<div class="absolute -top-5 left-8 my-2 bg-background px-2 font-semibold">
+							Contacto de Emergencia
+						</div>
+						<div>
+							<p class="text-xs text-muted-foreground">Contacto de Emergencia:</p>
+							<DisplayInput bind:value={formData.emergencyContact} {edit} />
+						</div>
+						<div>
+							<p class="text-xs text-muted-foreground">Número de Emergencia:</p>
+							<DisplayInput bind:value={formData.emergencyNumber} {edit} />
+						</div>
+					</div>
+				</TabsContent>
+				<TabsContent value="statics">
+					<EmployeeStats bind:employee />
+				</TabsContent>
+				<TabsContent value="docs">
+					<EmployeeDocs bind:employee />
+				</TabsContent>
+				<TabsContent value="history">
+					<EmployeeHistory bind:employee />
+				</TabsContent>
+			</DialogBody>
+		</Tabs>
+	</DialogContent>
+</Dialog>

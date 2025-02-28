@@ -1,0 +1,8 @@
+packages:
+  - apps/*
+onlyBuiltDependencies:
+  - '@nestjs/core'
+  - bcrypt
+  - canvas
+  - core-js
+  - esbuild

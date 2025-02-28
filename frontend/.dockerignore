@@ -1,7 +1,0 @@
-node_modules
-dist
-.vscode
-.svelte-kit
-Dockerfile
-README.md
-.dockerignore
