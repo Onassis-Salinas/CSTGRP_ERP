@@ -1,30 +1,25 @@
-FROM node:20-slim AS base
+FROM node:20-slim AS build
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 
-# Install pnpm globally
 RUN npm install -g pnpm
+
+ARG VITE_BASEURL
+ENV VITE_BASEURL=${VITE_BASEURL}
 
 WORKDIR /app
 COPY . .
 
-FROM base AS prod-deps
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod
+RUN pnpm install
 
-FROM base AS build
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install
 RUN pnpm run build
 
-FROM node:20-slim
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
+FROM nginx
 
-# Install pnpm in final stage
-RUN npm install -g pnpm
+COPY --from=build /app/build /usr/share/nginx/html
 
-WORKDIR /app
-COPY --from=prod-deps /app/node_modules /app/node_modules
-COPY --from=build /app/build /app/build
+EXPOSE 80
 
-EXPOSE 3000
-CMD ["node", "build"]
+COPY nginx.conf /etc/nginx/nginx.conf
+
+CMD ["nginx", "-g", "daemon off;"]
