@@ -10,6 +10,7 @@ import fastifyCookie from '@fastify/cookie';
 import multipart from 'fastify-multipart';
 import { DBFilter } from './interceptors/db/db.filter';
 import dotenv from 'dotenv';
+import { swaggerCss } from './utils/swagger';
 
 dotenv.config();
 //hello
@@ -43,7 +44,10 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('docs', app, document);
+  SwaggerModule.setup('docs', app, document, {
+    customCss: swaggerCss,
+    customSiteTitle: 'CSTGRP API',
+  });
 
   await app.listen(process.env.PORT || 3000, '0.0.0.0');
 }
