@@ -1,24 +1,16 @@
-import { FastifyRequest } from 'fastify';
 import {
   Controller,
   Get,
   Post,
   Body,
-  Res,
   UseGuards,
   Put,
   Delete,
-  Req,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { ApiTags } from '@nestjs/swagger';
 import { ZodPiPe } from 'src/interceptors/validation/validation.pipe';
-import {
-  deleteSchema,
-  editSchema,
-  loginSchema,
-  registerSchema,
-} from './users.schema';
+import { deleteSchema, editSchema, registerSchema } from './users.schema';
 import { AuthGuard } from 'src/interceptors/auth/authorization.guard';
 
 @ApiTags('Users')
@@ -30,24 +22,6 @@ export class UsersController {
   @Get()
   get() {
     return this.usersService.findAllUsers();
-  }
-
-  @Post('login')
-  login(
-    @Body(new ZodPiPe(loginSchema)) body,
-    @Res() res,
-    @Req() req: FastifyRequest,
-  ) {
-    return this.usersService.loginUser(
-      body,
-      res,
-      req.headers['x-forwarded-for'],
-    );
-  }
-
-  @Get('logout')
-  logout(@Res() res) {
-    return this.usersService.logoutUser(res);
   }
 
   @UseGuards(new AuthGuard('users'))

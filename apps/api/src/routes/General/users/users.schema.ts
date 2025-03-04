@@ -1,10 +1,5 @@
 import { z } from 'zod';
 
-export const loginSchema = z.object({
-  username: z.string(),
-  password: z.string(),
-});
-
 export const editSchema = z.object({
   id: z.number().optional(),
   username: z.string().optional(),

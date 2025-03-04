@@ -55,7 +55,7 @@
 	<Accordion class="space-y-1 px-2 pt-2">
 		{#if hasAccess('inventory') || hasAccess('materialmovements') || hasAccess('requisitions')}
 			<AccordionItem value="1" class="border-none">
-				<AccordionTrigger class="rounded-md p-2 text-sm hover:bg-muted hover:no-underline">
+				<AccordionTrigger class="hover:bg-muted rounded-md p-2 text-sm hover:no-underline">
 					<span class="flex items-center gap-2">
 						<Package class="size-4 text-[#5c5e63]" />
 						Almacen
@@ -83,7 +83,7 @@
 		{/if}
 		{#if hasAccess('employees') || hasAccess('assistance') || hasAccess('productivity')}
 			<AccordionItem value="2" class="border-none">
-				<AccordionTrigger class="rounded-md p-2 text-sm hover:bg-muted hover:no-underline">
+				<AccordionTrigger class="hover:bg-muted rounded-md p-2 text-sm hover:no-underline">
 					<span class="flex items-center gap-2">
 						<Users class="size-4 text-[#5c5e63]" />
 						RRHH
@@ -107,7 +107,7 @@
 		{/if}
 		{#if hasAccess('it')}
 			<AccordionItem value="3" class="border-none">
-				<AccordionTrigger class="rounded-md p-2 text-sm hover:bg-muted hover:no-underline">
+				<AccordionTrigger class="hover:bg-muted rounded-md p-2 text-sm hover:no-underline">
 					<span class="flex items-center gap-2">
 						<Monitor class="size-4 text-[#5c5e63]" />
 						Sistemas
@@ -124,7 +124,7 @@
 		{/if}
 		{#if hasAccess('structure')}
 			<AccordionItem value="7" class="border-none">
-				<AccordionTrigger class="rounded-md p-2 text-sm hover:bg-muted hover:no-underline">
+				<AccordionTrigger class="hover:bg-muted rounded-md p-2 text-sm hover:no-underline">
 					<span class="flex items-center gap-2">
 						<GitMerge class="size-4 text-[#5c5e63]" />
 						Estructura
@@ -139,7 +139,7 @@
 		{/if}
 		{#if !hasAccess('inventory') && !hasAccess('users') && !hasAccess('structure') && !hasAccess('it') && !hasAccess('assistance') && !hasAccess('productivity') && !hasAccess('employees') && !hasAccess('materialmovements')}
 			<AccordionItem value="9" class="border-none">
-				<AccordionTrigger class="rounded-md p-2 text-sm hover:bg-muted hover:no-underline">
+				<AccordionTrigger class="hover:bg-muted rounded-md p-2 text-sm hover:no-underline">
 					<span class="flex items-center gap-2">
 						<ShoppingBag class="size-4 text-[#5c5e63]" />
 						Clients
@@ -154,7 +154,7 @@
 		{/if}
 		{#if hasAccess('users')}
 			<AccordionItem value="6" class="border-none">
-				<AccordionTrigger class="rounded-md p-2 text-sm hover:bg-muted hover:no-underline">
+				<AccordionTrigger class="hover:bg-muted rounded-md p-2 text-sm hover:no-underline">
 					<span class="flex items-center gap-2">
 						<Shield class="size-4 text-[#5c5e63]" />
 						Admin
@@ -163,7 +163,7 @@
 
 				<AccordionContent>
 					<AccordionOption href="/admin/users">Usuarios</AccordionOption>
-					<AccordionOption href="/warehouse/records">Historial</AccordionOption>
+					<AccordionOption href="/admin/records">Historial</AccordionOption>
 				</AccordionContent>
 			</AccordionItem>
 		{/if}
@@ -188,13 +188,13 @@
 	</Accordion>
 
 	<div class="mt-auto space-y-1 px-2 pb-2">
-		<p class="block rounded-md p-2 hover:bg-muted">
+		<p class="hover:bg-muted block rounded-md p-2">
 			<span class="flex items-center gap-2 text-sm">
 				<UserCircle class="size-4 text-[#5c5e63]" />
 				{username}
 			</span>
 		</p>
-		<button class="block w-full rounded-md p-2 hover:bg-muted" on:click={() => (showModal = true)}>
+		<button class="hover:bg-muted block w-full rounded-md p-2" on:click={() => (showModal = true)}>
 			<span class="flex items-center gap-2 text-sm">
 				<LogOut class="size-4 text-[#5c5e63]" />
 				Salir

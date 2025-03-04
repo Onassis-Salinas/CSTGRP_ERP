@@ -38,7 +38,8 @@
 	let options = [
 		{ value: 'inventory', name: 'Inventario' },
 		{ value: 'hr', name: 'RRHH' },
-		{ value: 'users', name: 'Usuarios' }
+		{ value: 'users', name: 'Usuarios' },
+		{ value: 'auth', name: 'Sesión' }
 	];
 </script>
 
@@ -78,7 +79,7 @@
 		{#each records as record}
 			<TableRow>
 				<TableCell class={actionColors[record.action]}
-					>{format(record.created_at, 'dd/MM/yyyy HH:mm', { locale: es })}</TableCell
+					>{format(new Date(record.created_at), 'dd/MM/yyyy HH:mm', { locale: es })}</TableCell
 				>
 				<TableCell>{record.user}</TableCell>
 				<TableCell>{record.text}</TableCell>

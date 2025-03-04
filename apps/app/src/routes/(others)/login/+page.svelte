@@ -13,11 +13,11 @@
 	};
 
 	async function logout() {
-		await api.get('/users/logout');
+		await api.get('/auth/logout');
 	}
 
 	async function login() {
-		await api.post('/users/login', credentials);
+		await api.post('/auth/login', credentials);
 		goto('/');
 		showSuccess('Sesión iniciada');
 	}

@@ -4,7 +4,6 @@ import { HRModule } from './routes/HR/hr.module';
 import { StructureModule } from './routes/Structure/structure.module';
 import { InventoriesModule } from './routes/Inventories/inventories.module';
 import { FastifyMulterModule } from '@nest-lab/fastify-multer';
-import { ResourceModule } from './routes/Resources/general.module';
 import { ITModule } from './routes/IT/it.module';
 
 @Module({
@@ -12,7 +11,6 @@ import { ITModule } from './routes/IT/it.module';
     GeneralModule,
     HRModule,
     StructureModule,
-    ResourceModule,
     InventoriesModule,
     ITModule,
     FastifyMulterModule,
