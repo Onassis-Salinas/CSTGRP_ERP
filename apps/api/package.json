@@ -101,7 +101,8 @@
       "bcrypt",
       "@nestjs/core",
       "canvas",
-      "core-js"
+      "core-js",
+      "@swc/core"
     ]
   }
 }
