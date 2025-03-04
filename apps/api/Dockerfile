@@ -1,30 +1,24 @@
 FROM node:20-slim AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
+WORKDIR /app
 
-# Install pnpm globally
 RUN npm install -g pnpm
 
-WORKDIR /app
-COPY . .
-
-FROM base AS prod-deps
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod
-
-FROM base AS build
+COPY package.json ./
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install
+
+COPY . .
 RUN pnpm run build
 
-FROM node:20-slim
+FROM node:20-slim AS production
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-
-# Install pnpm in final stage
-RUN npm install -g pnpm
-
 WORKDIR /app
-COPY --from=prod-deps /app/node_modules /app/node_modules
-COPY --from=build /app/dist /app/dist
+
+COPY --from=base /app/node_modules ./node_modules
+COPY --from=base /app/dist ./dist
+COPY --from=base /app/static ./static
 
 EXPOSE 3000
 CMD ["node", "dist/main.js"]
