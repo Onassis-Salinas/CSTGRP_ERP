@@ -1,39 +1,44 @@
+import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
+
+const permType = z.number().min(0).max(2);
 
 export const editSchema = z.object({
   id: z.number().optional(),
   username: z.string().optional(),
   password: z.string().min(3).optional(),
-  perm_users: z.number().min(0).max(2).optional(),
-  perm_assistance: z.number().min(0).max(2).optional(),
-  perm_employees: z.number().min(0).max(2).optional(),
-  perm_productivity: z.number().min(0).max(2).optional(),
-  perm_inventory: z.number().min(0).max(2).optional(),
-  perm_structure: z.number().min(0).max(2).optional(),
-  perm_it: z.number().min(0).max(2).optional(),
-  perm_materialmovements: z.number().min(0).max(2).optional(),
-  perm_inventorystats: z.number().min(0).max(2).optional(),
-  perm_petitions: z.number().min(0).max(2).optional(),
-  perm_requisitions: z.number().min(0).max(2).optional(),
+  perm_users: permType.optional(),
+  perm_assistance: permType.optional(),
+  perm_employees: permType.optional(),
+  perm_productivity: permType.optional(),
+  perm_inventory: permType.optional(),
+  perm_structure: permType.optional(),
+  perm_it: permType.optional(),
+  perm_materialmovements: permType.optional(),
+  perm_inventorystats: permType.optional(),
+  perm_petitions: permType.optional(),
+  perm_requisitions: permType.optional(),
   perm_assistance_areas: z.string().max(300).optional().nullable(),
 });
 
 export const registerSchema = z.object({
   username: z.string(),
   password: z.string().min(3),
-  perm_users: z.number().min(0).max(2),
-  perm_assistance: z.number().min(0).max(2),
-  perm_employees: z.number().min(0).max(2),
-  perm_productivity: z.number().min(0).max(2),
-  perm_inventory: z.number().min(0).max(2),
-  perm_it: z.number().min(0).max(2),
-  perm_structure: z.number().min(0).max(2),
-  perm_materialmovements: z.number().min(0).max(2),
-  perm_inventorystats: z.number().min(0).max(2).optional(),
-  perm_requisitions: z.number().min(0).max(2),
-  perm_petitions: z.number().min(0).max(2),
+  perm_users: permType,
+  perm_assistance: permType,
+  perm_employees: permType,
+  perm_productivity: permType,
+  perm_inventory: permType,
+  perm_it: permType,
+  perm_structure: permType,
+  perm_materialmovements: permType,
+  perm_inventorystats: permType,
+  perm_requisitions: permType,
+  perm_petitions: permType,
   perm_assistance_areas: z.string().max(300).nullable(),
 });
+
+export class RegisterDTO extends createZodDto(registerSchema) {}
 
 export const deleteSchema = z.object({
   id: z.number(),
