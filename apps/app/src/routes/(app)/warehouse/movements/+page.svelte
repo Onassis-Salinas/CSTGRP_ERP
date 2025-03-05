@@ -29,6 +29,7 @@
 		import: '',
 		jobpo: '',
 		code: '',
+		req: '',
 		checked: ''
 	};
 
@@ -107,12 +108,13 @@
 
 <MenuBar>
 	<form class="flex flex-col gap-1 lg:flex-row" on:submit|preventDefault={getMovements} action={''}>
-		<Input menu bind:value={filters.import} placeholder="Importacion" />
-		<Input menu bind:value={filters.programation} placeholder="Programacion" />
-		<Input menu bind:value={filters.jobpo} placeholder="Job" />
-		<Input menu bind:value={filters.code} placeholder="Material" />
-		<Select menu items={checkStatus} bind:value={filters.checked} />
-		<Button type="submit"><Search class="mr-1.5 size-3.5" />Buscar</Button>
+		<Input menu bind:value={filters.import} placeholder="Importacion" class="max-w-32" />
+		<Input menu bind:value={filters.programation} placeholder="Programacion" class="max-w-32" />
+		<Input menu bind:value={filters.jobpo} placeholder="Job" class="max-w-32" />
+		<Input menu bind:value={filters.code} placeholder="Material" class="max-w-32" />
+		<Input menu bind:value={filters.req} placeholder="Req" class="max-w-32" />
+		<Select menu items={checkStatus} bind:value={filters.checked} class="min-w-32 max-w-32" />
+		<Button type="submit"><Search class="size-3.5" /></Button>
 	</form>
 	<svelte:fragment slot="right">
 		<Button on:click={exportUncheckedMovements}><FileDown class="size-3.5" /></Button>
