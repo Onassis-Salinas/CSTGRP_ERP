@@ -1,11 +1,10 @@
 <script lang="ts">
 	import * as Select from '../ui/select/index';
 	import { cn } from '$lib/utils.js';
-
 	let className = '';
 	export { className as class };
 	export let items: { value: string | number | boolean; name: string; label?: string }[];
-	export let placeholder = 'Seleccione una opcion';
+	export let placeholder = 'Selecciona una opción';
 	export let value: string | number;
 	export let onSelectedChange = () => {};
 	export let cell = false;

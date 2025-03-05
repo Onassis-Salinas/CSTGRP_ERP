@@ -47,6 +47,12 @@
 	}
 
 	async function handleSubmit() {
+		Object.keys(formData).forEach((key) => {
+			if (key.startsWith('perm_')) {
+				formData[key] = parseInt(formData[key]);
+			}
+		});
+
 		if (selectedUser.id) {
 			if (formData.password === '') delete formData.password;
 			await api.put('users', {
@@ -94,91 +100,89 @@
 		<DialogHeader>
 			<DialogTitle
 				>{selectedUser.id
-					? `Editar Informacion de ${selectedUser.username}`
-					: 'Registrar Usuario'}</DialogTitle
+					? `Editar información de ${selectedUser.username}`
+					: 'Registrar usuario'}</DialogTitle
 			>
 		</DialogHeader>
 
 		<DialogBody>
-			<form on:submit|preventDefault={handleSubmit}>
-				<div class="grid w-full grid-cols-2 gap-4">
-					<Label name="Nombre">
-						<Input name="text" bind:value={formData.username} />
-					</Label>
-					<Label name="Contraseña">
-						<Input name="text" bind:value={formData.password} />
-					</Label>
-					<Label name="Perm. Usuarios">
-						<Select items={permissions} bind:value={formData.perm_users} />
-					</Label>
-					<Label name="Perm. Asistencia">
-						<Select items={permissions} bind:value={formData.perm_assistance} />
-					</Label>
-					<Label name="Perm. Empleados">
-						<Select items={permissions} bind:value={formData.perm_employees} />
-					</Label>
-					<Label name="Perm. Productividad">
-						<Select items={permissions} bind:value={formData.perm_productivity} />
-					</Label>
-					<Label name="Perm. Inventario">
-						<Select items={permissions} bind:value={formData.perm_inventory} />
-					</Label>
-					<Label name="Perm. Estructura">
-						<Select items={permissions} bind:value={formData.perm_structure} />
-					</Label>
-					<Label name="Perm. Sistemas">
-						<Select items={permissions} bind:value={formData.perm_it} />
-					</Label>
-					<Label name="Perm. Movimientos">
-						<Select items={permissions} bind:value={formData.perm_materialmovements} />
-					</Label>
-					<Label name="Perm. Dashboard">
-						<Select items={permissions} bind:value={formData.perm_inventorystats} />
-					</Label>
-					<Label name="Perm. Requisiciones">
-						<Select items={permissions} bind:value={formData.perm_requisitions} />
-					</Label>
-					<Label name="Perm. Peticiones">
-						<Select items={permissions} bind:value={formData.perm_petitions} />
-					</Label>
-					<Label name="Areas">
-						<DropdownMenu>
-							<DropdownMenuTrigger>
-								<Button variant="outline" class="w-full"
-									>Seleccionar<ChevronDown class="ms-2 size-4 text-primary" /></Button
-								>
-							</DropdownMenuTrigger>
-							<DropdownMenuContent>
-								{#each areas as area, i}
-									<li class="list-none">
-										<Checkbox
-											id={'c-' + area.name}
-											checked={selectedAreas.includes(area.value) || selectedAreas[0] === 'Todas'}
-											onCheckedChange={(v) => {
-												handleCheck(v, i);
-											}}
-										/>
-										<LabelBase for={'c-' + area.name}>{area.name}</LabelBase>
-									</li>
-								{/each}
+			<div class="grid w-full grid-cols-2 gap-4">
+				<Label name="Nombre">
+					<Input name="text" bind:value={formData.username} />
+				</Label>
+				<Label name="Contraseña">
+					<Input name="text" bind:value={formData.password} />
+				</Label>
+				<Label name="Perm. Usuarios">
+					<Select items={permissions} bind:value={formData.perm_users} />
+				</Label>
+				<Label name="Perm. Asistencia">
+					<Select items={permissions} bind:value={formData.perm_assistance} />
+				</Label>
+				<Label name="Perm. Empleados">
+					<Select items={permissions} bind:value={formData.perm_employees} />
+				</Label>
+				<Label name="Perm. Productividad">
+					<Select items={permissions} bind:value={formData.perm_productivity} />
+				</Label>
+				<Label name="Perm. Inventario">
+					<Select items={permissions} bind:value={formData.perm_inventory} />
+				</Label>
+				<Label name="Perm. Estructura">
+					<Select items={permissions} bind:value={formData.perm_structure} />
+				</Label>
+				<Label name="Perm. Sistemas">
+					<Select items={permissions} bind:value={formData.perm_it} />
+				</Label>
+				<Label name="Perm. Movimientos">
+					<Select items={permissions} bind:value={formData.perm_materialmovements} />
+				</Label>
+				<Label name="Perm. Dashboard">
+					<Select items={permissions} bind:value={formData.perm_inventorystats} />
+				</Label>
+				<Label name="Perm. Requisiciones">
+					<Select items={permissions} bind:value={formData.perm_requisitions} />
+				</Label>
+				<Label name="Perm. Peticiones">
+					<Select items={permissions} bind:value={formData.perm_petitions} />
+				</Label>
+				<Label name="Areas">
+					<DropdownMenu>
+						<DropdownMenuTrigger>
+							<Button variant="outline" class="w-full"
+								>Seleccionar<ChevronDown class="text-primary ms-2 size-4" /></Button
+							>
+						</DropdownMenuTrigger>
+						<DropdownMenuContent>
+							{#each areas as area, i}
 								<li class="list-none">
 									<Checkbox
-										id="c-todas"
-										checked={selectedAreas[0] === 'Todas'}
+										id={'c-' + area.name}
+										checked={selectedAreas.includes(area.value) || selectedAreas[0] === 'Todas'}
 										onCheckedChange={(v) => {
-											console.log(v);
-											checkAll(v);
+											handleCheck(v, i);
 										}}
 									/>
-									<LabelBase for="c-todas" class="font-semibold">Todas</LabelBase>
+									<LabelBase for={'c-' + area.name}>{area.name}</LabelBase>
 								</li>
-							</DropdownMenuContent>
-						</DropdownMenu>
-					</Label>
-				</div>
+							{/each}
+							<li class="list-none">
+								<Checkbox
+									id="c-todas"
+									checked={selectedAreas[0] === 'Todas'}
+									onCheckedChange={(v) => {
+										console.log(v);
+										checkAll(v);
+									}}
+								/>
+								<LabelBase for="c-todas" class="font-semibold">Todas</LabelBase>
+							</li>
+						</DropdownMenuContent>
+					</DropdownMenu>
+				</Label>
+			</div>
 
-				<Button type="submit" class="mt-4 w-full">Guardar cambios</Button>
-			</form>
+			<Button type="submit" class="mt-4 w-full" on:click={handleSubmit}>Guardar cambios</Button>
 		</DialogBody>
 	</DialogContent>
 </Dialog>
