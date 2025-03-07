@@ -180,6 +180,9 @@
 						</DropdownMenuContent>
 					</DropdownMenu>
 				</Label>
+				<Label name="Mantenimiento">
+					<Checkbox bind:checked={formData.maintance} />
+				</Label>
 			</div>
 
 			<Button type="submit" class="mt-4 w-full" on:click={handleSubmit}>Guardar cambios</Button>

@@ -14,6 +14,9 @@ api.interceptors.response.use(
 		if (error.response && error.response.status === 401) {
 			goto('/login');
 		}
+		if (error.response && error.response.status === 503) {
+			goto('/clients/maintenance');
+		}
 		return Promise.reject(error);
 	}
 );

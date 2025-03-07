@@ -109,7 +109,13 @@ export class MovementsService {
     return movements;
   }
 
-  async getJobs(body: z.infer<typeof IEFilterSchema>) {
+  async getJobs(
+    body: z.infer<typeof IEFilterSchema>,
+    token: string,
+    query: z.infer<typeof clientSchema>,
+  ) {
+    await getUserName(token, query);
+
     const movements = await sql`
       SELECT jobpo, created_at, due, id
       FROM materialie
@@ -135,6 +141,11 @@ async function getUserName(token: string, query: z.infer<typeof clientSchema>) {
     [area] =
       await sql`select id from clients where name = ${query.clientId || ''}`;
   if (!area) throw new HttpException('Cliente no encontrado', 403);
+
+  const [{ maintance }] =
+    await sql`select maintance from users where username = ${user.username}`;
+  if (maintance)
+    throw new HttpException('Sorry, we are under maintenance', 503);
 
   return area.id;
 }

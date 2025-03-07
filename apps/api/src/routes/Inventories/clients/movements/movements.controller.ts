@@ -22,6 +22,7 @@ export class MovementsController {
     );
   }
 
+  //TODO: Add maintance
   @Get('job/comparison/:id')
   getJobComparison(
     @Param(new ZodPiPe(idSchema)) params,
@@ -41,8 +42,12 @@ export class MovementsController {
   }
 
   @Get('jobs')
-  getJobs(@Query(new ZodPiPe(IEFilterSchema)) params) {
-    return this.movementsService.getJobs(params);
+  getJobs(
+    @Query(new ZodPiPe(IEFilterSchema)) params,
+    @Req() req,
+    @Query(new ZodPiPe(clientSchema)) query,
+  ) {
+    return this.movementsService.getJobs(params, req.cookies.token, query);
   }
 
   @Get('clients')

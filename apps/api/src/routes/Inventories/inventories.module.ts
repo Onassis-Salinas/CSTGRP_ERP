@@ -6,7 +6,7 @@ import { MovementsModule } from './movements/movements.module';
 import { StatsModule } from './stats/stats.module';
 import { RequisitionsModule } from './requisitions/requsitions.module';
 import { PetitionsModule } from './petitions/petitions.module';
-
+import { ClientMovementsModule } from './clients/movements/movements.module';
 @Module({
   imports: [
     InventoryModule,
@@ -15,6 +15,7 @@ import { PetitionsModule } from './petitions/petitions.module';
     MovementsModule,
     StatsModule,
     RequisitionsModule,
+    ClientMovementsModule,
     PetitionsModule,
   ],
 })

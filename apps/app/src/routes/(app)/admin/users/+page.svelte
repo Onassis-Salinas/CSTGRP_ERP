@@ -13,7 +13,7 @@
 	import api from '$lib/utils/server';
 	import { showSuccess } from '$lib/utils/showToast';
 	import UsersForm from './UsersForm.svelte';
-	import { ChevronDown, Eye, Pen, PlusCircle } from 'lucide-svelte';
+	import { ChevronDown, Eye, Minus, Pen, PlusCircle } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 	import MenuBar from '$lib/components/basic/MenuBar.svelte';
 	import OptionsCell from '$lib/components/basic/OptionsCell.svelte';
@@ -35,7 +35,8 @@
 		perm_it: 0,
 		perm_inventorystats: 0,
 		perm_petitions: 0,
-		perm_requisitions: 0
+		perm_requisitions: 0,
+		maintance: false
 	};
 	let users: (typeof selectedUser)[] = [];
 	let areas: any = {};
@@ -69,6 +70,7 @@
 			perm_inventorystats: 0,
 			perm_petitions: 0,
 			perm_requisitions: 0,
+			maintance: false,
 			perm_it: 0
 		};
 		show = true;
@@ -94,6 +96,7 @@
 			perm_inventory: 0,
 			perm_structure: 0,
 			perm_requisitions: 0,
+			maintance: false,
 			perm_it: 0,
 			perm_inventorystats: 0,
 			perm_petitions: 0
@@ -103,14 +106,15 @@
 		show1 = false;
 	}
 
-	function getBadgeColor(num: number): 'gray' | 'green' | 'blue' {
+	function getBadgeColor(num: number): 'gray' | 'green' | 'blue' | 'red' {
 		if (num === 0) return 'gray';
 		if (num === 1) return 'green';
 		if (num === 2) return 'blue';
+		if (num === 3) return 'red';
 		return 'gray';
 	}
 
-	const badgeTexts = [null, Eye, Pen];
+	const badgeTexts = [null, Eye, Pen, Minus];
 
 	onMount(() => {
 		getUsers();
@@ -148,6 +152,7 @@
 		<TableHead class="w-[12.5%]">Peticiones</TableHead>
 		<TableHead class="w-[12.5%]">Sistemas</TableHead>
 		<TableHead class="w-[12.5%]">Areas</TableHead>
+		<TableHead class="w-[12.5%]">Block</TableHead>
 	</TableHeader>
 	<TableBody>
 		{#each users as user, i}
@@ -264,6 +269,14 @@
 						</DropdownMenuContent>
 					</DropdownMenu>
 				</TableCell>
+				<TableCell class="p-1.5 text-center"
+					><Badge
+						class="flex h-full w-full items-center justify-center p-1"
+						color={getBadgeColor(user.maintance ? 3 : 0)}
+					>
+						<svelte:component this={badgeTexts[user.maintance ? 3 : 0]} class="size-4" />
+					</Badge></TableCell
+				>
 			</TableRow>
 		{/each}
 	</TableBody>

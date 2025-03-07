@@ -19,6 +19,7 @@ export const editSchema = z.object({
   perm_petitions: permType.optional(),
   perm_requisitions: permType.optional(),
   perm_assistance_areas: z.string().max(300).optional().nullable(),
+  maintance: z.boolean().optional(),
 });
 
 export const registerSchema = z.object({
@@ -36,6 +37,7 @@ export const registerSchema = z.object({
   perm_requisitions: permType,
   perm_petitions: permType,
   perm_assistance_areas: z.string().max(300).nullable(),
+  maintance: z.boolean(),
 });
 
 export class RegisterDTO extends createZodDto(registerSchema) {}
