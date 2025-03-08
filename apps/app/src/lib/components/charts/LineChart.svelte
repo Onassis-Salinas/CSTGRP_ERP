@@ -5,9 +5,12 @@
 	export let color: ColorKeys;
 	export let data: { value: number; name: string }[];
 	export let label;
+	export let maxValue: number | undefined = undefined;
+	export let stepSize: number | undefined = undefined;
+	export let minValue: number | undefined = undefined;
 	let canvas: HTMLCanvasElement;
 
-	$: maxValue = Math.max(...data.map((e) => e.value));
+	$: if (!maxValue) maxValue = Math.max(...data.map((e) => e.value));
 
 	const drawChart = () => {
 		if (Chart.getChart(canvas)) {
@@ -74,12 +77,14 @@
 						}
 					},
 					y: {
-						suggestedMax: maxValue + 1,
+						suggestedMax: maxValue ? maxValue + 1 : null,
+						suggestedMin: minValue,
 						grid: {
 							color: '#eee'
 						},
 						ticks: {
-							color: '#333'
+							stepSize: stepSize,
+							color: '#6b7280'
 						}
 					}
 				}

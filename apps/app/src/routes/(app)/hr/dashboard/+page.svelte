@@ -16,8 +16,6 @@
 	import { formatDate, getDayNumber } from '$lib/utils/functions';
 	import api from '$lib/utils/server';
 	import { showSuccess } from '$lib/utils/showToast';
-	import { Button } from '$lib/components/ui/button';
-	import { Image } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 	import Select from '$lib/components/basic/Select.svelte';
 	import MenuBar from '$lib/components/basic/MenuBar.svelte';
@@ -32,6 +30,7 @@
 	let areas: any[] = [];
 	let dailyIncidencesList: any[] = [];
 	let birthDays: any[] = [];
+	let rotation: number = 0;
 
 	$: textDate =
 		['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes'][getDayNumber(selectedDate)] +
@@ -62,6 +61,7 @@
 
 	async function getDailyData() {
 		assistance = (await api.get('/hrstats/assistance/' + selectedDate)).data;
+		rotation = (await api.get('/hrstats/employeerotation/' + selectedDate)).data;
 		dailyIncidences = (await api.get('/hrstats/assistanceinfo/' + selectedDate)).data;
 		areaIncidences = (
 			await api.get(`/hrstats/areaassistanceinfo?areaId=${areaSelected}&date=${selectedDate}`)
@@ -116,7 +116,8 @@
 		</CardHeader>
 		<CardContent>
 			{#if assistance}
-				<LineChart label="Asistencia" data={assistance} color="purple"></LineChart>
+				<LineChart label="Asistencia" data={assistance} color="green" minValue={0} maxValue={99}
+				></LineChart>
 			{/if}
 		</CardContent>
 	</Card>
@@ -136,7 +137,7 @@
 					{#each dailyIncidencesList as row}
 						<TableRow>
 							<TableCell>{row.name}</TableCell>
-							<TableCell><Badge color="outline">{row.incidence}</Badge></TableCell>
+							<TableCell><Badge color="green">{row.incidence}</Badge></TableCell>
 							<!-- <TableCell class="px-4 py-4">{row.areaId}</TableCell> -->
 						</TableRow>
 					{/each}
@@ -197,7 +198,16 @@
 		</CardContent>
 	</Card>
 
-	<Card class="min-h-96 w-full max-w-full"></Card>
+	<Card class="min-h-96 w-full max-w-full">
+		<CardHeader>
+			<CardTitle>Rotacion</CardTitle>
+		</CardHeader>
+		<CardContent>
+			<p>
+				{rotation.toFixed(2)}%
+			</p>
+		</CardContent>
+	</Card>
 
 	<Card class="col-span-2 min-h-96 w-full max-w-full">
 		<CardHeader>
@@ -205,19 +215,19 @@
 		</CardHeader>
 		<CardContent>
 			<Table>
-				<TableHead class="sticky top-0">
-					<TableCell></TableCell>
-					<TableCell>No. Empleado</TableCell>
-					<TableCell>Nombre</TableCell>
-					<TableCell>Cumpleaños</TableCell>
-				</TableHead>
+				<TableHeader class="sticky top-0">
+					<TableHead></TableHead>
+					<TableHead>No. Empleado</TableHead>
+					<TableHead>Nombre</TableHead>
+					<TableHead>Cumpleaños</TableHead>
+				</TableHeader>
 				<TableBody>
 					{#each birthDays as row}
 						<TableRow>
 							<TableCell>
-								<Button class="sm px-3 py-1.5" on:click={() => getBirthdayPhoto(row.noEmpleado)}>
+								<!-- <Button class="sm px-3 py-1.5" on:click={() => getBirthdayPhoto(row.noEmpleado)}>
 									<Image />
-								</Button>
+								</Button> -->
 							</TableCell>
 
 							<TableCell>{row.noEmpleado}</TableCell>

@@ -16,10 +16,12 @@ import { AuthGuard } from 'src/interceptors/auth/authorization.guard';
 import { ZodPiPe } from 'src/interceptors/validation/validation.pipe';
 import {
   createDocSchema,
+  createRecordSchema,
   createSchema,
   editDocSchema,
   editSchema,
   getDocumentsSchema,
+  getEmployeeHistorySchema,
   idSchema,
   quitSchema,
   reactivateSchema,
@@ -95,6 +97,16 @@ export class EmployeesController {
   @Get('documents/:employeeId')
   getDocuments(@Param(new ZodPiPe(getDocumentsSchema)) body) {
     return this.employeesService.getDocuments(body);
+  }
+
+  @Get('history/:employeeId')
+  getEmployeeHistory(@Param(new ZodPiPe(getEmployeeHistorySchema)) body) {
+    return this.employeesService.getEmployeeHistory(body);
+  }
+
+  @Post('history')
+  uploadRecord(@Body(new ZodPiPe(createRecordSchema)) body) {
+    return this.employeesService.uploadRecord(body);
   }
 
   @Post('documents')

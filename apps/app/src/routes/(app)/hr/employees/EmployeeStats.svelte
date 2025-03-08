@@ -1,7 +1,9 @@
 <script lang="ts">
-	import { Table, TableCell, TableHead, TableRow } from '$lib/components/ui/table';
+	import LineChart from '$lib/components/charts/LineChart.svelte';
+	import * as Tooltip from '$lib/components/ui/tooltip';
 	import { formatDate } from '$lib/utils/functions';
 	import api from '$lib/utils/server';
+	import AssistanceCube from './AssistanceCube.svelte';
 
 	export let employee: any;
 
@@ -9,9 +11,15 @@
 	let productivity: any[] = [];
 
 	const fetchData = async () => {
-		assistance = (await api.get(`/employees/assistance/${employee.id}`)).data;
-		const productivityInfo = (await api.get(`/employees/productivity/${employee.id}`)).data;
+		const assistanceInfo = (await api.get(`/employees/assistance/${employee.id}`)).data;
 
+		assistanceInfo.map((e: any) => {
+			e.mondayDate = e.mondayDate;
+		});
+
+		assistance = assistanceInfo;
+
+		const productivityInfo = (await api.get(`/employees/productivity/${employee.id}`)).data;
 		productivity = [];
 		productivityInfo.forEach((e: any) => {
 			const codes = [
@@ -66,32 +74,52 @@
 		});
 	};
 
+	function getWeekNumber(date: any) {
+		date = new Date(date);
+		const startOfYear = new Date(date.getFullYear(), 0, 1);
+		const diff = (date as any) - (startOfYear as any);
+		return Math.ceil((diff / (1000 * 60 * 60 * 24) + startOfYear.getDay() + 1) / 7);
+	}
+
 	$: if (employee.id) fetchData();
 </script>
 
 <div class="border-primary-500 my-2 w-full border-b">Asistencia</div>
-<Table>
-	<TableHead>
-		<TableCell></TableCell>
-		<TableCell>Lunes</TableCell>
-		<TableCell>Martes</TableCell>
-		<TableCell>Miercoles</TableCell>
-		<TableCell>Jueves</TableCell>
-		<TableCell>Viernes</TableCell>
-	</TableHead>
-	{#each assistance as day}
-		<TableRow>
-			<TableCell>{formatDate(day.mondayDate)}</TableCell>
-			<TableCell>{day.incidence0}</TableCell>
-			<TableCell>{day.incidence1}</TableCell>
-			<TableCell>{day.incidence2}</TableCell>
-			<TableCell>{day.incidence3}</TableCell>
-			<TableCell>{day.incidence4}</TableCell>
-		</TableRow>
-	{/each}
-</Table>
 
-<div class="border-primary-500 my-2 w-full border-b">Productividad</div>
-<div class="h-36">
-	<!-- <ILineChart name="" data={productivity || []} /> -->
+<div
+	class="grid w-full grid-flow-col grid-cols-[auto_repeat(32,_1fr)] grid-rows-[auto_repeat(5,_1fr)] gap-1.5"
+>
+	<p></p>
+	<p class="mr-3 text-xs font-medium text-gray-500">Lunes</p>
+	<p class="mr-3 text-xs font-medium text-gray-500">Martes</p>
+	<p class="mr-3 text-xs font-medium text-gray-500">Miercoles</p>
+	<p class="mr-3 text-xs font-medium text-gray-500">Jueves</p>
+	<p class="mr-3 text-xs font-medium text-gray-500">Viernes</p>
+	{#each assistance as day}
+		<Tooltip.Root>
+			<Tooltip.Trigger>
+				<p class="text-xs font-medium text-gray-500">{getWeekNumber(day.mondayDate)}</p>
+			</Tooltip.Trigger>
+			<Tooltip.Content>
+				<p>{formatDate(day.mondayDate)}</p>
+			</Tooltip.Content>
+		</Tooltip.Root>
+		<AssistanceCube incidence={day.incidence0} />
+		<AssistanceCube incidence={day.incidence1} />
+		<AssistanceCube incidence={day.incidence2} />
+		<AssistanceCube incidence={day.incidence3} />
+		<AssistanceCube incidence={day.incidence4} />
+	{/each}
+</div>
+
+<div class="border-primary-500 my-2 mt-12 w-full border-b">Productividad</div>
+<div class="h-48">
+	<LineChart
+		data={productivity || []}
+		color="blue"
+		label="Productividad"
+		maxValue={99}
+		minValue={0}
+		stepSize={20}
+	/>
 </div>

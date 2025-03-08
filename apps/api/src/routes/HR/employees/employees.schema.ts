@@ -209,6 +209,10 @@ export const getDocumentsSchema = z.object({
   employeeId: z.string(),
 });
 
+export const getEmployeeHistorySchema = z.object({
+  employeeId: z.string(),
+});
+
 export const editDocSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -217,6 +221,13 @@ export const editDocSchema = z.object({
 export const createDocSchema = z.object({
   employeeId: z.string(),
   name: z.string(),
+});
+
+export const createRecordSchema = z.object({
+  employeeId: z.string(),
+  date: z.string().refine((value) => dateRegex.test(value)),
+  type: z.string(),
+  text: z.string(),
 });
 
 export const templateSchema = z.object({

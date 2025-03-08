@@ -32,7 +32,7 @@ export class StatsService {
   async assistance(body: z.infer<typeof dateSchema>) {
     const [firstDate] = getWeekDays(body.date);
     const rows = [];
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 30; i++) {
       const evaluatedWeek = new Date(
         new Date(firstDate).setDate(new Date(firstDate).getDate() - i * 7),
       )
@@ -123,19 +123,21 @@ export class StatsService {
       .toISOString()
       .split('T')[0];
 
-    const [{ fires }] = await sql`
-      'Select COUNT(*) as fires from employees where quitDate >= ${initialDate} and quitDate <= ${finalDate}`;
-
-    const [{ hires }] = await sql`
-      'Select COUNT(*) as hires from employees where admissionDate >= ${initialDate} and quitDate <= ${finalDate}`;
-
-    const [{ finalEmployees }] = await sql`
-      SELECT COUNT(*) as finalEmployees FROM employees where Active = 1`;
+    let [{ fires }] = await sql`
+      Select COUNT(*) as fires from employees where "quitDate" >= ${initialDate} and "quitDate" <= ${finalDate}`;
+    fires = Number(fires);
+    let [{ hires }] = await sql`
+      Select COUNT(*) as hires from employees where "admissionDate" >= ${initialDate} and "admissionDate" <= ${finalDate}`;
+    hires = Number(hires);
+    let [{ finalEmployees }] = await sql`
+    SELECT COUNT(*) as "finalEmployees" FROM employees where active`;
+    finalEmployees = Number(finalEmployees);
 
     const initalEmployees = finalEmployees + fires - hires;
 
     const result =
       ((fires + hires) / 2 / ((initalEmployees + finalEmployees) / 2)) * 100;
+
     return result;
   }
 }

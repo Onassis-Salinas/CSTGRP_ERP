@@ -133,6 +133,7 @@
 			showSuccess('Informacion actualizada');
 		} else {
 			const newId = (await api.post('employees', form)).data;
+			console.log(newId);
 			employee.id = newId.toString();
 			employee = { ...employee, ...formData };
 			showSuccess('Empleado registrado');
@@ -152,7 +153,7 @@
 	<DialogContent class="max-w-4xl">
 		<Tabs bind:value={tab}>
 			<DialogHeader class="py-2">
-				<TabsList class="w-min bg-background">
+				<TabsList class="bg-background w-min">
 					<TabsTrigger class="data-[state=active]:bg-muted" value="info">Informacion</TabsTrigger>
 					{#if employee.id}
 						<TabsTrigger class="data-[state=active]:bg-muted" value="statics"
@@ -178,14 +179,14 @@
 								<Button
 									size="icon"
 									variant="ghost"
-									class="size-7 border bg-background"
+									class="bg-background size-7 border"
 									on:click={handleSubmit}><Check class="size-3.5" /></Button
 								>
 							{:else}
 								<Button
 									size="icon"
 									variant="ghost"
-									class="size-7 border bg-background"
+									class="bg-background size-7 border"
 									on:click={() => {
 										edit = true;
 										tab = 'info';
@@ -197,7 +198,7 @@
 						<label class="aspect-square w-full">
 							<img
 								class="h-full w-full cursor-pointer rounded-lg object-cover object-top"
-								src={preview}
+								src={preview || '/person.svg'}
 								alt=""
 							/>
 							<input type="file" bind:files class="hidden" disabled={!edit} accept="image/*" />
@@ -207,19 +208,19 @@
 					<div class="flex gap-2">
 						{#if edit}
 							<div>
-								<p class="text-xs text-muted-foreground">Nombre:</p>
+								<p class="text-muted-foreground text-xs">Nombre:</p>
 								<DisplayInput bind:value={formData.name} {edit} />
 							</div>
 							<div>
-								<p class="text-xs text-muted-foreground">Apellido paterno:</p>
+								<p class="text-muted-foreground text-xs">Apellido paterno:</p>
 								<DisplayInput bind:value={formData.paternalLastName} {edit} />
 							</div>
 							<div>
-								<p class="text-xs text-muted-foreground">Apellido materno:</p>
+								<p class="text-muted-foreground text-xs">Apellido materno:</p>
 								<DisplayInput bind:value={formData.maternalLastName} {edit} />
 							</div>
 							<div>
-								<p class="text-xs text-muted-foreground">No:</p>
+								<p class="text-muted-foreground text-xs">No:</p>
 								<DisplayInput bind:value={formData.noEmpleado} {edit} class="max-w-20" />
 							</div>
 						{:else}
@@ -259,23 +260,23 @@
 						<div
 							class="relative mb-6 grid w-full grid-cols-2 gap-x-4 gap-y-2 rounded-md border p-4"
 						>
-							<div class="absolute -top-5 left-8 my-2 bg-background px-2 font-semibold">Baja</div>
+							<div class="bg-background absolute -top-5 left-8 my-2 px-2 font-semibold">Baja</div>
 							<div>
-								<p class="text-xs text-muted-foreground">Razón de Salida:</p>
+								<p class="text-muted-foreground text-xs">Razón de Salida:</p>
 								<DisplayInput bind:value={formData.quitReason} {edit} />
 							</div>
 							<div>
-								<p class="text-xs text-muted-foreground">Estatus de Salida:</p>
+								<p class="text-muted-foreground text-xs">Estatus de Salida:</p>
 								<DisplayInput value={formData.quitStatus} {edit}>
 									<Select items={status} bind:value={formData.quitStatus} />
 								</DisplayInput>
 							</div>
 							<div>
-								<p class="text-xs text-muted-foreground">Notas de Salida:</p>
+								<p class="text-muted-foreground text-xs">Notas de Salida:</p>
 								<DisplayInput bind:value={formData.quitNotes} {edit} />
 							</div>
 							<div>
-								<p class="text-xs text-muted-foreground">Fecha de Salida:</p>
+								<p class="text-muted-foreground text-xs">Fecha de Salida:</p>
 								<DisplayInput value={formData.quitDate} {edit}>
 									<Input type="date" bind:value={formData.quitDate} />
 								</DisplayInput>
@@ -284,131 +285,131 @@
 					{/if}
 
 					<div class="relative mb-6 grid w-full grid-cols-2 gap-x-4 gap-y-2 rounded-md border p-4">
-						<div class="absolute -top-5 left-8 my-2 bg-background px-2 font-semibold">Contacto</div>
+						<div class="bg-background absolute -top-5 left-8 my-2 px-2 font-semibold">Contacto</div>
 						<div>
-							<p class="text-xs text-muted-foreground">Correo Electrónico:</p>
+							<p class="text-muted-foreground text-xs">Correo Electrónico:</p>
 							<DisplayInput bind:value={formData.email} {edit} />
 						</div>
 						<div>
-							<p class="text-xs text-muted-foreground">Número de Teléfono:</p>
+							<p class="text-muted-foreground text-xs">Número de Teléfono:</p>
 							<DisplayInput bind:value={formData.number} {edit} />
 						</div>
 						<div>
-							<p class="text-xs text-muted-foreground">Dirección:</p>
+							<p class="text-muted-foreground text-xs">Dirección:</p>
 							<DisplayInput bind:value={formData.direction} {edit} />
 						</div>
 					</div>
 
 					<div class="relative mb-6 grid w-full grid-cols-2 gap-x-4 gap-y-2 rounded-md border p-4">
-						<div class="absolute -top-5 left-8 my-2 bg-background px-2 font-semibold">Personal</div>
+						<div class="bg-background absolute -top-5 left-8 my-2 px-2 font-semibold">Personal</div>
 						<div>
-							<p class="text-xs text-muted-foreground">Nacionalidad:</p>
+							<p class="text-muted-foreground text-xs">Nacionalidad:</p>
 							<DisplayInput bind:value={formData.nationality} {edit} />
 						</div>
 						<div>
-							<p class="text-xs text-muted-foreground">Estado Civil:</p>
+							<p class="text-muted-foreground text-xs">Estado Civil:</p>
 							<DisplayInput value={formData.civilStatus} {edit}>
 								<Select items={civilStatus} bind:value={formData.civilStatus} />
 							</DisplayInput>
 						</div>
 						<div>
-							<p class="text-xs text-muted-foreground">Fecha de Nacimiento:</p>
+							<p class="text-muted-foreground text-xs">Fecha de Nacimiento:</p>
 							<DisplayInput value={formData.bornDate} {edit}>
 								<Input type="date" bind:value={formData.bornDate} />
 							</DisplayInput>
 						</div>
 						<div>
-							<p class="text-xs text-muted-foreground">Estudios:</p>
+							<p class="text-muted-foreground text-xs">Estudios:</p>
 							<DisplayInput bind:value={formData.studies} {edit} />
 						</div>
 						<div>
-							<p class="text-xs text-muted-foreground">Género:</p>
+							<p class="text-muted-foreground text-xs">Género:</p>
 							<DisplayInput bind:value={formData.genre} {edit}>
 								<Select items={genres} bind:value={formData.genre} />
 							</DisplayInput>
 						</div>
 						<div>
-							<p class="text-xs text-muted-foreground">Número de Hijos:</p>
+							<p class="text-muted-foreground text-xs">Número de Hijos:</p>
 							<DisplayInput bind:value={formData.sons} {edit} />
 						</div>
 						<div>
-							<p class="text-xs text-muted-foreground">Lugar de Nacimiento:</p>
+							<p class="text-muted-foreground text-xs">Lugar de Nacimiento:</p>
 							<DisplayInput bind:value={formData.bornLocation} {edit} />
 						</div>
 						<div>
-							<p class="text-xs text-muted-foreground">Tipo de Sangre:</p>
+							<p class="text-muted-foreground text-xs">Tipo de Sangre:</p>
 							<DisplayInput bind:value={formData.blood} {edit} />
 						</div>
 					</div>
 
 					<div class="relative mb-6 grid w-full grid-cols-2 gap-x-4 gap-y-2 rounded-md border p-4">
-						<div class="absolute -top-5 left-8 my-2 bg-background px-2 font-semibold">Legal</div>
+						<div class="bg-background absolute -top-5 left-8 my-2 px-2 font-semibold">Legal</div>
 						<div>
-							<p class="text-xs text-muted-foreground">NSS:</p>
+							<p class="text-muted-foreground text-xs">NSS:</p>
 							<DisplayInput bind:value={formData.nss} {edit} />
 						</div>
 						<div>
-							<p class="text-xs text-muted-foreground">CURP:</p>
+							<p class="text-muted-foreground text-xs">CURP:</p>
 							<DisplayInput bind:value={formData.curp} {edit} />
 						</div>
 						<div>
-							<p class="text-xs text-muted-foreground">RFC:</p>
+							<p class="text-muted-foreground text-xs">RFC:</p>
 							<DisplayInput bind:value={formData.rfc} {edit} />
 						</div>
 						<div>
-							<p class="text-xs text-muted-foreground">Cuenta Bancaria:</p>
+							<p class="text-muted-foreground text-xs">Cuenta Bancaria:</p>
 							<DisplayInput bind:value={formData.account} {edit} />
 						</div>
 						<div>
-							<p class="text-xs text-muted-foreground">Banco:</p>
+							<p class="text-muted-foreground text-xs">Banco:</p>
 							<DisplayInput bind:value={formData.bank} {edit}>
 								<Select items={banks} bind:value={formData.bank} />
 							</DisplayInput>
 						</div>
 						<div>
-							<p class="text-xs text-muted-foreground">Número de Infonavit:</p>
+							<p class="text-muted-foreground text-xs">Número de Infonavit:</p>
 							<DisplayInput bind:value={formData.infonavitNo} {edit} />
 						</div>
 						<div>
-							<p class="text-xs text-muted-foreground">Descuento de Infonavit:</p>
+							<p class="text-muted-foreground text-xs">Descuento de Infonavit:</p>
 							<DisplayInput bind:value={formData.infonavitDiscount} {edit} />
 						</div>
 						<div>
-							<p class="text-xs text-muted-foreground">Salario de Nómina:</p>
+							<p class="text-muted-foreground text-xs">Salario de Nómina:</p>
 							<DisplayInput bind:value={formData.nominaSalary} {edit} />
 						</div>
 						<div>
-							<p class="text-xs text-muted-foreground">Número de Clínica:</p>
+							<p class="text-muted-foreground text-xs">Número de Clínica:</p>
 							<DisplayInput bind:value={formData.clinicNo} {edit} />
 						</div>
 						<div>
-							<p class="text-xs text-muted-foreground">Salario de IMSS:</p>
+							<p class="text-muted-foreground text-xs">Salario de IMSS:</p>
 							<DisplayInput bind:value={formData.immsSalary} {edit} />
 						</div>
 					</div>
 
 					<div class="relative mb-6 grid w-full grid-cols-2 gap-x-4 gap-y-2 rounded-md border p-4">
-						<div class="absolute -top-5 left-8 my-2 bg-background px-2 font-semibold">Empresa</div>
+						<div class="bg-background absolute -top-5 left-8 my-2 px-2 font-semibold">Empresa</div>
 						<div>
-							<p class="text-xs text-muted-foreground">Antiguedad:</p>
+							<p class="text-muted-foreground text-xs">Antiguedad:</p>
 							<DisplayInput value={formatDate(formData.admissionDate)} {edit}>
 								<Input type="date" bind:value={formData.admissionDate} />
 							</DisplayInput>
 						</div>
 						<div>
-							<p class="text-xs text-muted-foreground">Fecha de Bcpet:</p>
+							<p class="text-muted-foreground text-xs">Fecha de Bcpet:</p>
 							<DisplayInput value={formatDate(formData.cim)} {edit}>
 								<Input type="date" bind:value={formData.cim} />
 							</DisplayInput>
 						</div>
 						<div>
-							<p class="text-xs text-muted-foreground">Tipo de Posición:</p>
+							<p class="text-muted-foreground text-xs">Tipo de Posición:</p>
 							<DisplayInput value={formData.positionType} {edit}>
 								<Select items={positionTypes} bind:value={formData.positionType} />
 							</DisplayInput>
 						</div>
 						<div>
-							<p class="text-xs text-muted-foreground">Turno:</p>
+							<p class="text-muted-foreground text-xs">Turno:</p>
 							<DisplayInput value={formData.shift} {edit}>
 								<Select items={shifts} bind:value={formData.shift} />
 							</DisplayInput>
@@ -420,15 +421,15 @@
 					</div>
 
 					<div class="relative grid w-full grid-cols-2 gap-x-4 gap-y-2 rounded-md border p-4">
-						<div class="absolute -top-5 left-8 my-2 bg-background px-2 font-semibold">
+						<div class="bg-background absolute -top-5 left-8 my-2 px-2 font-semibold">
 							Contacto de Emergencia
 						</div>
 						<div>
-							<p class="text-xs text-muted-foreground">Contacto de Emergencia:</p>
+							<p class="text-muted-foreground text-xs">Contacto de Emergencia:</p>
 							<DisplayInput bind:value={formData.emergencyContact} {edit} />
 						</div>
 						<div>
-							<p class="text-xs text-muted-foreground">Número de Emergencia:</p>
+							<p class="text-muted-foreground text-xs">Número de Emergencia:</p>
 							<DisplayInput bind:value={formData.emergencyNumber} {edit} />
 						</div>
 					</div>

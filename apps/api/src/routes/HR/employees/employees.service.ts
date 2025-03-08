@@ -2,10 +2,12 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { File } from '@nest-lab/fastify-multer';
 import {
   createDocSchema,
+  createRecordSchema,
   createSchema,
   editDocSchema,
   editSchema,
   getDocumentsSchema,
+  getEmployeeHistorySchema,
   idSchema,
   quitSchema,
   reactivateSchema,
@@ -16,11 +18,22 @@ import sql from 'src/utils/db';
 import { getWeekDays } from 'src/utils/functions';
 import exceljs from 'exceljs';
 import { deleteFile, saveFile } from 'src/utils/storage';
+import { createRecord } from './employees.utils';
 
 @Injectable()
 export class EmployeesService {
   async getAssistance(body) {
     const [firstDate] = getWeekDays(new Date());
+
+    const dates = [];
+    for (let i = 0; i < 32; i++) {
+      dates.push(
+        new Date(
+          new Date(firstDate).setDate(new Date(firstDate).getDate() - 7 * i),
+        ).toISOString(),
+      );
+    }
+
     const rows = await sql`SELECT "mondayDate",
     (SELECT name FROM incidences WHERE id = assistance."incidenceId0") AS "incidence0",
     (SELECT name FROM incidences WHERE id = assistance."incidenceId1") AS "incidence1",
@@ -28,23 +41,58 @@ export class EmployeesService {
     (SELECT name FROM incidences WHERE id = assistance."incidenceId3") AS "incidence3",
     (SELECT name FROM incidences WHERE id = assistance."incidenceId4") AS "incidence4"
     FROM assistance
-    WHERE "mondayDate" > ${new Date(new Date(firstDate).setDate(new Date(firstDate).getDate() - 28))} AND "employeeId" = ${parseInt(body.id)}
+    WHERE "mondayDate" in ${sql(dates)} AND "employeeId" = ${parseInt(body.id)}
     ORDER BY "mondayDate" desc`;
 
-    return rows;
+    const result = dates.map((date) => {
+      const row = rows.find((e: any) => e.mondayDate.toISOString() === date);
+
+      return (
+        row || {
+          mondayDate: date,
+          incidence0: null,
+          incidence1: null,
+          incidence2: null,
+          incidence3: null,
+          incidence4: null,
+        }
+      );
+    });
+
+    return result;
   }
 
   async getProductivity(body) {
     const [firstDate] = getWeekDays(new Date());
+
+    const dates = [];
+    for (let i = 0; i < 8; i++) {
+      dates.push(
+        new Date(
+          new Date(firstDate).setDate(new Date(firstDate).getDate() - 7 * i),
+        ).toISOString(),
+      );
+    }
+
     const rows = await sql`select *
     from employeeproductivity
     JOIN assistance
     On assistance.id = employeeproductivity."assistanceId"
-    where assistance."mondayDate" > ${new Date(new Date(firstDate).setDate(new Date(firstDate).getDate() - 60))}
+    where assistance."mondayDate" in ${sql(dates)} 
     And assistance."employeeId" = ${parseInt(body.id)}
-    order by "mondayDate" asc`;
+    order by "mondayDate" desc`;
 
-    return rows;
+    const result = dates.map((date) => {
+      const row = rows.find((e: any) => e.mondayDate.toISOString() === date);
+
+      return (
+        row || {
+          mondayDate: date,
+        }
+      );
+    });
+
+    return result;
   }
 
   async getActiveEmployees() {
@@ -66,36 +114,52 @@ export class EmployeesService {
   async registerEmployee(body: z.infer<typeof createSchema>, file: File) {
     const image = await saveFile(file, 'employees');
 
-    const employee: any = (
-      await sql`insert into employees ${sql({ ...body, photo: image })} returning id, "areaId", "positionId", "admissionDate"`
-    )[0];
+    const id: any = await sql.begin(async (sql) => {
+      const employee: any = (
+        await sql`insert into employees ${sql({ ...body, photo: image })} returning *`
+      )[0];
 
-    //Generate assistance for the week
-    const [firstDate] = getWeekDays(employee.admissionDate);
-    const [{ count }] =
-      await sql`select count(*) from assistance where "mondayDate" = ${firstDate}`;
+      //Create record
+      await sql`insert into employeeRecords ("employeeId", date, type, text) values (${employee.id}, now(), 'alta', 'Empleado dado de alta')`;
+      await createRecord({ previous: null, current: employee }, sql);
 
-    if (count === '0') return employee.id;
-    const [assistanceRow] =
-      await sql`insert into assistance ("mondayDate", "positionId", "areaId", "employeeId") values
+      //Generate assistance for the week
+      const [firstDate] = getWeekDays(employee.admissionDate);
+      const [{ count }] =
+        await sql`select count(*) from assistance where "mondayDate" = ${firstDate}`;
+
+      if (count === '0') return employee.id;
+      const [assistanceRow] =
+        await sql`insert into assistance ("mondayDate", "positionId", "areaId", "employeeId") values
     (${firstDate}, ${employee.positionId}, ${employee.areaId}, ${employee.id}) returning id`;
 
-    //Generate productivity for the week
-    const [{ captured }] =
-      await sql`select captured from areas where "id" = ${employee.areaId}`;
-    if (!captured) return employee.id;
+      //Generate productivity for the week
+      const [{ captured }] =
+        await sql`select captured from areas where "id" = ${employee.areaId}`;
+      if (!captured) return employee.id;
 
-    await sql`insert into employeeproductivity ("assistanceId") values
+      await sql`insert into employeeproductivity ("assistanceId") values
     (${assistanceRow.id})`;
+      return employee.id;
+    });
 
-    return employee.id;
+    return id;
   }
 
   async editEmployee(body: z.infer<typeof editSchema>, file: File) {
     const [previousObj] =
-      await sql`select photo from employees where id = ${body.id}`;
+      await sql`select * from employees where id = ${body.id}`;
+
     const image = await saveFile(file, 'employees', previousObj.photo);
-    await sql`update "employees" SET ${sql({ ...body, photo: image })} where id = ${body.id}`;
+
+    await sql.begin(async (sql) => {
+      const [newEmployee] =
+        await sql`update "employees" SET ${sql({ ...body, photo: image })} where id = ${body.id} returning *`;
+
+      //Create record
+      await createRecord({ previous: previousObj, current: newEmployee }, sql);
+    });
+
     return;
   }
 
@@ -109,32 +173,41 @@ export class EmployeesService {
       quitReason: null,
     };
 
-    const employee = (
-      await sql`update "employees" SET ${sql(data)} where id = ${data.id} returning id, "areaId", "positionId", "admissionDate"`
-    )[0];
+    await sql.begin(async (sql) => {
+      const employee = (
+        await sql`update "employees" SET ${sql(data)} where id = ${data.id} returning id, "areaId", "positionId", "admissionDate", (select name from areas where id = "areaId") as "area", (select name from positions where id = "positionId") as "position"`
+      )[0];
 
-    //Generate assistance for the week
-    const [firstDate] = getWeekDays(employee.admissionDate);
-    const [{ count }] =
-      await sql`select count(*) from assistance where "mondayDate" = ${firstDate}`;
+      //Create record
+      await sql`insert into employeeRecords ("employeeId", date, type, text) values (${employee.id}, now(), 'alta', ${'Empleado reactivado en el area ' + employee.area + ', en el puesto ' + employee.position})`;
 
-    if (count === '0') return;
-    const [assistanceRow] =
-      await sql`insert into assistance ("mondayDate", "positionId", "areaId", "employeeId") values
+      //Generate assistance for the week
+      const [firstDate] = getWeekDays(employee.admissionDate);
+      const [{ count }] =
+        await sql`select count(*) from assistance where "mondayDate" = ${firstDate}`;
+
+      if (count === '0') return;
+      const [assistanceRow] =
+        await sql`insert into assistance ("mondayDate", "positionId", "areaId", "employeeId") values
     (${firstDate}, ${employee.positionId}, ${employee.areaId}, ${employee.id}) returning id`;
 
-    //Generate productivity for the week
-    const [{ captured }] =
-      await sql`select captured from areas where "id" = ${employee.areaId}`;
-    if (!captured) return;
+      //Generate productivity for the week
+      const [{ captured }] =
+        await sql`select captured from areas where "id" = ${employee.areaId}`;
+      if (!captured) return;
 
-    await sql`insert into employeeproductivity ("assistanceId") values
+      await sql`insert into employeeproductivity ("assistanceId") values
     (${assistanceRow.id})`;
+    });
+
     return;
   }
 
   async quitEmployee(body: z.infer<typeof quitSchema>) {
-    await sql`update employees set active = false, "quitDate" = ${body.quitDate}, "quitStatus" = ${body.quitStatus}, "quitReason" = ${body.quitReason}, "quitNotes" = ${body.quitNotes}  where id = ${body.id}`;
+    await sql.begin(async (sql) => {
+      await sql`update employees set active = false, "quitDate" = ${body.quitDate}, "quitStatus" = ${body.quitStatus}, "quitReason" = ${body.quitReason}, "quitNotes" = ${body.quitNotes}  where id = ${body.id}`;
+      await sql`insert into employeeRecords ("employeeId", date, type, text) values (${body.id}, now(), 'baja', 'Empleado dado de baja')`;
+    });
     return;
   }
 
@@ -151,6 +224,11 @@ export class EmployeesService {
 
     const url = await saveFile(file, 'employees');
     await sql`insert into documents (url, name, "employeeId") values (${url}, ${body.name}, ${body.employeeId}) `;
+    return;
+  }
+
+  async uploadRecord(body: z.infer<typeof createRecordSchema>) {
+    await sql`insert into employeeRecords ("employeeId", date, type, text) values (${body.employeeId}, ${body.date}, ${body.type}, ${body.text})`;
     return;
   }
 
@@ -171,6 +249,10 @@ export class EmployeesService {
     const [prevDoc] =
       await sql`delete from documents where id = ${body.id} returning url`;
     await deleteFile(prevDoc.url);
+  }
+
+  async getEmployeeHistory(body: z.infer<typeof getEmployeeHistorySchema>) {
+    return await sql`select * from employeerecords where "employeeId" = ${body.employeeId} order by date desc, id desc`;
   }
 
   async updateTemplate(body: z.infer<typeof templateSchema>) {
