@@ -63,4 +63,10 @@ export class FunctionsController {
   adjustInventory(@UploadedFile() file: File) {
     return this.functionsService.adjustInventory(file);
   }
+
+  @Post('employees')
+  @UseInterceptors(FileInterceptor('file'))
+  importEmployees(@UploadedFile() file: File) {
+    return this.functionsService.importEmployees(file);
+  }
 }

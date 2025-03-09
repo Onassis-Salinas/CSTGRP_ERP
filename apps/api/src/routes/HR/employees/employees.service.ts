@@ -2,12 +2,14 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { File } from '@nest-lab/fastify-multer';
 import {
   createDocSchema,
+  createEvaluationSchema,
   createRecordSchema,
   createSchema,
   editDocSchema,
   editSchema,
   getDocumentsSchema,
   getEmployeeHistorySchema,
+  getEvaluationsSchema,
   idSchema,
   quitSchema,
   reactivateSchema,
@@ -215,6 +217,10 @@ export class EmployeesService {
     return await sql`select * from documents where "employeeId" = ${body.employeeId}`;
   }
 
+  async getEvaluations(body: z.infer<typeof getEvaluationsSchema>) {
+    return await sql`select * from evaluations where "employeeId" = ${body.employeeId} order by date desc`;
+  }
+
   async uploadDocument(body: z.infer<typeof createDocSchema>, file: File) {
     const [exists] =
       await sql`select 1 from documents where name = ${body.name} and "employeeId" = ${body.employeeId}`;
@@ -224,6 +230,17 @@ export class EmployeesService {
 
     const url = await saveFile(file, 'employees');
     await sql`insert into documents (url, name, "employeeId") values (${url}, ${body.name}, ${body.employeeId}) `;
+    return;
+  }
+
+  async uploadEvaluation(
+    body: z.infer<typeof createEvaluationSchema>,
+    file: File,
+  ) {
+    if (!file) throw new HttpException('Falta el archivo', 400);
+
+    const url = await saveFile(file, 'employees');
+    await sql`insert into evaluations (url, score, date, "employeeId") values (${url}, ${body.score}, ${body.date}, ${body.employeeId}) `;
     return;
   }
 
@@ -249,6 +266,12 @@ export class EmployeesService {
     const [prevDoc] =
       await sql`delete from documents where id = ${body.id} returning url`;
     await deleteFile(prevDoc.url);
+  }
+
+  async deleteEvaluation(body: z.infer<typeof idSchema>) {
+    const [prevEval] =
+      await sql`delete from evaluations where id = ${body.id} returning url`;
+    await deleteFile(prevEval.url);
   }
 
   async getEmployeeHistory(body: z.infer<typeof getEmployeeHistorySchema>) {

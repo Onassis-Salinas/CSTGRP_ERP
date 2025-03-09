@@ -16,6 +16,7 @@
 	import EmployeeDocs from './EmployeeDocs.svelte';
 	import EmployeeHistory from './EmployeeHistory.svelte';
 	import EmployeeStats from './EmployeeStats.svelte';
+	import EmployeeEvaluations from './EmployeeEvaluations.svelte';
 
 	export let show = false;
 	export let employee: any;
@@ -439,6 +440,9 @@
 				</TabsContent>
 				<TabsContent value="docs">
 					<EmployeeDocs bind:employee />
+				</TabsContent>
+				<TabsContent value="evaluations">
+					<EmployeeEvaluations bind:employee />
 				</TabsContent>
 				<TabsContent value="history">
 					<EmployeeHistory bind:employee />

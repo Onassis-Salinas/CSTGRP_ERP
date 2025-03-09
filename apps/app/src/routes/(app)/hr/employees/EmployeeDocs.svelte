@@ -18,7 +18,7 @@
 	import api from '$lib/utils/server';
 	import { showError, showSuccess } from '$lib/utils/showToast';
 	import { Check, FileDown, Trash, Upload } from 'lucide-svelte';
-	import { downloadFile, getImage, openFilePreview } from '$lib/utils/functions';
+	import { downloadFile, openFilePreview } from '$lib/utils/functions';
 	import { cn } from '$lib/utils';
 
 	export let employee: any;

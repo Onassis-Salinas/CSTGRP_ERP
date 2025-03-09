@@ -22,6 +22,7 @@ export class DBFilter<T extends PostgresError> {
         ) + ' Ya fue registrado';
     if (exception.code === '22001') message = 'Valor muy largo';
 
+    console.log(exception);
     console.log(exception.message);
     console.log(exception.code);
     console.log(exception.detail);

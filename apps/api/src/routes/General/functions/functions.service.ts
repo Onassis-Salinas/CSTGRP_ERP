@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-
 import sql from 'src/utils/db';
 import dotenv from 'dotenv';
 import ExcelJS from 'exceljs';
@@ -321,5 +320,75 @@ export class FunctionsService {
     await this.update();
 
     return [job, importRows, restRows];
+  }
+
+  async importEmployees(file: File) {
+    const wb = new ExcelJS.Workbook();
+    await wb.xlsx.load(file.buffer);
+
+    const areas = await sql`select id, name from areas`;
+    const positions = await sql`select id, name from positions`;
+
+    const rows: any[] = wb
+      .getWorksheet(4)
+      .getRows(2, 200)
+      .map((row) => {
+        return {
+          noEmpleado: row.getCell(4).text.trim(),
+          name: row.getCell(5).text.trim(),
+          bornLocation: row.getCell(6).text.trim(),
+          genre: row.getCell(7).text.trim()?.toUpperCase(),
+          sons: parseInt(row.getCell(8).text.trim()) || 0,
+          nss: row.getCell(9).text.trim(),
+          clinicNo: row.getCell(10).text.trim(),
+          curp: row.getCell(11).text.trim(),
+          rfc: row.getCell(12).text.trim(),
+          email: row.getCell(13).text.trim(),
+          blood:
+            row.getCell(14).text.trim()?.trim().toUpperCase() === 'N/A'
+              ? null
+              : row.getCell(14).text.trim(),
+          number: row.getCell(15).text.trim(),
+          direction: row.getCell(16).text.trim(),
+          bornDate: row.getCell(17).value,
+          bank: row.getCell(19).text.trim(),
+          account: row.getCell(20).text.trim(),
+          infonavitNo: row.getCell(21).text.trim(),
+          infonavitFee: Number(row.getCell(22).text.trim()) || 0,
+          infonavitDiscount: Number(row.getCell(23).text.trim()) || 0,
+          emergencyContact: row.getCell(24).text.trim(),
+          emergencyNumber: row.getCell(25).text.trim(),
+          positionType: row.getCell(26).text.trim(),
+          areaId: areas.find(
+            (area) => area.name === row.getCell(27).text.trim(),
+          )?.id,
+          positionId: positions.find(
+            (position) =>
+              position.name ===
+              row.getCell(28).text.trim() +
+                (row.getCell(29).text.trim() === 'N/A' ||
+                row.getCell(29).text.trim() === ''
+                  ? ''
+                  : ' ' + row.getCell(29).text.trim()),
+          )?.id,
+          admissionDate: row.getCell(30).value,
+          bcpet: row.getCell(31).value,
+          cim: row.getCell(34).value === 'N/A' ? null : row.getCell(34).value,
+          shift: row.getCell(35).text.trim(),
+          nominaSalary: Number(row.getCell(36).text.trim()) || 0,
+        };
+      })
+      .filter((item) => item.noEmpleado);
+
+    await sql`delete from employees`;
+
+    for (const row of rows) {
+      if (!row.areaId) throw new Error('Area not found ' + row.noEmpleado);
+      if (!row.positionId)
+        throw new Error('Position not found ' + row.noEmpleado);
+      console.log(row.infonavitFee, row.infonavitDiscount, row.nominaSalary);
+    }
+
+    await sql`insert into employees ${sql(rows)}`;
   }
 }

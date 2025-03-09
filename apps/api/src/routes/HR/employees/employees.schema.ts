@@ -213,6 +213,10 @@ export const getEmployeeHistorySchema = z.object({
   employeeId: z.string(),
 });
 
+export const getEvaluationsSchema = z.object({
+  employeeId: z.string(),
+});
+
 export const editDocSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -221,6 +225,12 @@ export const editDocSchema = z.object({
 export const createDocSchema = z.object({
   employeeId: z.string(),
   name: z.string(),
+});
+
+export const createEvaluationSchema = z.object({
+  employeeId: z.string(),
+  score: z.number(),
+  date: z.string().refine((value) => dateRegex.test(value)),
 });
 
 export const createRecordSchema = z.object({
