@@ -23,6 +23,7 @@
 	import api from '$lib/utils/server';
 	import { showSuccess } from '$lib/utils/showToast';
 	import { onMount } from 'svelte';
+	import Cookies from 'js-cookie';
 
 	export let show = false;
 	export let selectedMovement: any;
@@ -33,6 +34,7 @@
 	$: if (show || true) setFormData();
 	function setFormData() {
 		formData = { ...selectedMovement };
+		formData.petitioner = Cookies.get('username');
 	}
 
 	async function getJobs() {
@@ -59,6 +61,7 @@
 	async function handleSubmit() {
 		await api.post('requisitions', {
 			...formData,
+			petitioner: Cookies.get('username'),
 			jobIds: jobs.filter((v) => v.selected).map((v) => v.id)
 		});
 		showSuccess('Requisicion registrado');

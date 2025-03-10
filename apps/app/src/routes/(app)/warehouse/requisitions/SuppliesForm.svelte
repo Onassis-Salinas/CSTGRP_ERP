@@ -23,9 +23,11 @@
 	import { showSuccess } from '$lib/utils/showToast';
 	import { Trash } from 'lucide-svelte';
 	import { onMount } from 'svelte';
-
+	import Cookies from 'js-cookie';
 	export let show: boolean;
-	let formData: any = {};
+	let formData: any = {
+		petitioner: Cookies.get('username')
+	};
 	let areas: any[];
 	interface material {
 		code: string;
@@ -122,7 +124,7 @@
 								><Button
 									on:click={() => deleteMaterial(i)}
 									variant="ghost"
-									class="aspect-square p-1 text-destructive-foreground"
+									class="text-destructive-foreground aspect-square p-1"
 									><Trash class="size-5" /></Button
 								></TableCell
 							>
