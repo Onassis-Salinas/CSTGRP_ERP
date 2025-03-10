@@ -74,11 +74,6 @@ export const createSchema = z.object({
   infonavitFee: z.string().min(1).optional().nullable(),
   infonavitDiscount: z.string().min(1).optional().nullable(),
   positionType: z.string().min(1).optional().nullable(),
-  cim: z
-    .string()
-    .refine((value) => dateRegex.test(value))
-    .optional()
-    .nullable(),
   shift: z.string().min(1).optional().nullable(),
   nominaSalary: z.number().min(0).optional().nullable(),
   immsSalary: z.number().min(0).optional().nullable(),
@@ -162,11 +157,6 @@ export const editSchema = z.object({
   infonavitFee: z.string().min(1).optional().nullable(),
   infonavitDiscount: z.string().min(1).optional().nullable(),
   positionType: z.string().min(1).optional().nullable(),
-  cim: z
-    .string()
-    .refine((value) => dateRegex.test(value))
-    .optional()
-    .nullable(),
   shift: z.string().min(1).optional().nullable(),
   nominaSalary: z.number().min(0).optional().nullable(),
   immsSalary: z.number().min(0).optional().nullable(),

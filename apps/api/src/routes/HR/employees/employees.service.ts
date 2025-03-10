@@ -300,7 +300,6 @@ export class EmployeesService {
       { header: 'Apellido materno', key: 'maternalLastName', width: 25 },
       { header: 'Área', key: 'area', width: 25 },
       { header: 'Puesto', key: 'position', width: 25 },
-      { header: 'CIM', key: 'cim', width: 25 },
       { header: 'Salario de Nómina', key: 'nominaSalary', width: 25 },
       { header: 'Salario IMMS', key: 'immsSalary', width: 25 },
       { header: 'Fecha de Baja', key: 'quitDate', width: 25 },
