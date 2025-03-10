@@ -23,7 +23,7 @@ export class PetitionsService {
 
   async download(body: z.infer<typeof idSchema>) {
     const [requisition] =
-      await sql`select requisitions.*, materials.code, materials.description from requisitions
+      await sql`select requisitions.*, materials.code, materials.description, materials.measurement from requisitions
       join materials on requisitions."materialId" = materials.id
       where requisitions.id = ${body.id}`;
 
@@ -116,8 +116,8 @@ export class PetitionsService {
     fillBox({
       page,
       font,
-      text: requisition.necesary,
-      size: 12,
+      text: requisition.necesary + ' ' + requisition.measurement,
+      size: 11,
       x: 470,
       y: 560,
       width: 90,
@@ -128,20 +128,8 @@ export class PetitionsService {
     fillBox({
       page,
       font,
-      text: requisition.necesary,
-      size: 12,
-      x: 470,
-      y: 510,
-      width: 90,
-      height: 28,
-      align: 'center',
-    });
-
-    fillBox({
-      page,
-      font,
-      text: requisition.necesary,
-      size: 12,
+      text: requisition.requested + ' ' + requisition.measurement,
+      size: 11,
       x: 470,
       y: 510,
       width: 90,
