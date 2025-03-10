@@ -19,6 +19,7 @@ type permissionType =
   | 'it'
   | 'requisitions'
   | 'materialmovements'
+  | 'poimp'
   | 'inventorystats'
   | 'petitions'
   | 'inventory';

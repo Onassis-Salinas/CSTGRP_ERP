@@ -53,11 +53,11 @@
 	</a>
 
 	<Accordion class="space-y-1 px-2 pt-2">
-		{#if hasAccess('inventory') || hasAccess('materialmovements') || hasAccess('requisitions')}
+		{#if hasAccess('inventory') || hasAccess('materialmovements') || hasAccess('requisitions') || hasAccess('poimp')}
 			<AccordionItem value="1" class="border-none">
 				<AccordionTrigger class="hover:bg-muted rounded-md p-2 text-sm hover:no-underline">
 					<span class="flex items-center gap-2">
-						<Package class="size-4 text-[#5c5e63]" />
+						<Package class="size-3.5 text-[#5c5e63]" />
 						Almacen
 					</span>
 				</AccordionTrigger>
@@ -69,8 +69,10 @@
 						<AccordionOption href="/warehouse/inventory">Inventario</AccordionOption>
 					{/if}
 					{#if hasAccess('materialmovements')}
-						<AccordionOption href="/warehouse/po-imp">Po-Imp</AccordionOption>
 						<AccordionOption href="/warehouse/movements">Movimientos</AccordionOption>
+					{/if}
+					{#if hasAccess('poimp')}
+						<AccordionOption href="/warehouse/po-imp">Po-Imp</AccordionOption>
 					{/if}
 					{#if hasAccess('requisitions')}
 						<AccordionOption href="/warehouse/requisitions">Requisiciones</AccordionOption>
@@ -85,7 +87,7 @@
 			<AccordionItem value="2" class="border-none">
 				<AccordionTrigger class="hover:bg-muted rounded-md p-2 text-sm hover:no-underline">
 					<span class="flex items-center gap-2">
-						<Users class="size-4 text-[#5c5e63]" />
+						<Users class="size-3.5 text-[#5c5e63]" />
 						RRHH
 					</span>
 				</AccordionTrigger>
@@ -109,7 +111,7 @@
 			<AccordionItem value="3" class="border-none">
 				<AccordionTrigger class="hover:bg-muted rounded-md p-2 text-sm hover:no-underline">
 					<span class="flex items-center gap-2">
-						<Monitor class="size-4 text-[#5c5e63]" />
+						<Monitor class="size-3.5 text-[#5c5e63]" />
 						Sistemas
 					</span>
 				</AccordionTrigger>
@@ -126,7 +128,7 @@
 			<AccordionItem value="7" class="border-none">
 				<AccordionTrigger class="hover:bg-muted rounded-md p-2 text-sm hover:no-underline">
 					<span class="flex items-center gap-2">
-						<GitMerge class="size-4 text-[#5c5e63]" />
+						<GitMerge class="size-3.5 text-[#5c5e63]" />
 						Estructura
 					</span>
 				</AccordionTrigger>
@@ -137,11 +139,11 @@
 				</AccordionContent>
 			</AccordionItem>
 		{/if}
-		{#if !hasAccess('inventory') && !hasAccess('users') && !hasAccess('structure') && !hasAccess('it') && !hasAccess('assistance') && !hasAccess('productivity') && !hasAccess('employees') && !hasAccess('materialmovements')}
+		{#if !hasAccess('inventory') && !hasAccess('users') && !hasAccess('structure') && !hasAccess('it') && !hasAccess('assistance') && !hasAccess('productivity') && !hasAccess('employees') && !hasAccess('materialmovements') && !hasAccess('poimp')}
 			<AccordionItem value="9" class="border-none">
 				<AccordionTrigger class="hover:bg-muted rounded-md p-2 text-sm hover:no-underline">
 					<span class="flex items-center gap-2">
-						<ShoppingBag class="size-4 text-[#5c5e63]" />
+						<ShoppingBag class="size-3.5 text-[#5c5e63]" />
 						Clients
 					</span>
 				</AccordionTrigger>
@@ -156,7 +158,7 @@
 			<AccordionItem value="6" class="border-none">
 				<AccordionTrigger class="hover:bg-muted rounded-md p-2 text-sm hover:no-underline">
 					<span class="flex items-center gap-2">
-						<Shield class="size-4 text-[#5c5e63]" />
+						<Shield class="size-3.5 text-[#5c5e63]" />
 						Admin
 					</span>
 				</AccordionTrigger>
@@ -171,7 +173,7 @@
 		<AccordionItem value="4" class="border-none">
 			<AccordionTrigger class="hover:bg-muted rounded-md p-2 text-sm hover:no-underline">
 				<span class="flex items-center gap-2">
-					<File class="size-4 text-[#5c5e63]" />
+					<File class="size-3.5 text-[#5c5e63]" />
 					Recursos
 				</span>
 			</AccordionTrigger>
@@ -190,13 +192,13 @@
 	<div class="mt-auto space-y-1 px-2 pb-2">
 		<p class="hover:bg-muted block rounded-md p-2">
 			<span class="flex items-center gap-2 text-sm">
-				<UserCircle class="size-4 text-[#5c5e63]" />
+				<UserCircle class="size-3.5 text-[#5c5e63]" />
 				{username}
 			</span>
 		</p>
 		<button class="hover:bg-muted block w-full rounded-md p-2" on:click={() => (showModal = true)}>
 			<span class="flex items-center gap-2 text-sm">
-				<LogOut class="size-4 text-[#5c5e63]" />
+				<LogOut class="size-3.5 text-[#5c5e63]" />
 				Salir
 			</span>
 		</button>

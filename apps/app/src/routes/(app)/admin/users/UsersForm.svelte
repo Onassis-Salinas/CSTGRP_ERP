@@ -146,6 +146,9 @@
 				<Label name="Perm. Peticiones">
 					<Select items={permissions} bind:value={formData.perm_petitions} />
 				</Label>
+				<Label name="Perm. Po-Imp">
+					<Select items={permissions} bind:value={formData.perm_poimp} />
+				</Label>
 				<Label name="Areas">
 					<DropdownMenu>
 						<DropdownMenuTrigger>

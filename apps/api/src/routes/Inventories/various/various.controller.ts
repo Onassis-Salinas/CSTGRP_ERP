@@ -14,7 +14,6 @@ import { FileInterceptor, File } from '@nest-lab/fastify-multer';
 
 @ApiTags('Inventory various')
 @Controller('inventoryvarious')
-@UseGuards(new AuthGuard('inventory'))
 export class VariousController {
   constructor(private readonly variousService: VariousService) {}
 
