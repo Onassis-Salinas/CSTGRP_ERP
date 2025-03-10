@@ -69,4 +69,10 @@ export class FunctionsController {
   importEmployees(@UploadedFile() file: File) {
     return this.functionsService.importEmployees(file);
   }
+
+  @Post('employees/photos')
+  @UseInterceptors(FileInterceptor('file'))
+  importEmployeePhotos(@UploadedFile() file: File) {
+    return this.functionsService.importEmployeePhotos(file);
+  }
 }

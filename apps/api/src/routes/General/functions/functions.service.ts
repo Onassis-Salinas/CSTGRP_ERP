@@ -1,3 +1,4 @@
+import AdmZip from 'adm-zip';
 import { Injectable } from '@nestjs/common';
 import sql from 'src/utils/db';
 import dotenv from 'dotenv';
@@ -11,6 +12,7 @@ import {
 } from 'src/routes/Inventories/various/various.utils';
 import { File } from '@nest-lab/fastify-multer';
 import { updateMaterialAmount } from 'src/utils/functions';
+import { deleteFile, saveFile } from 'src/utils/storage';
 
 dotenv.config();
 
@@ -390,5 +392,30 @@ export class FunctionsService {
     }
 
     await sql`insert into employees ${sql(rows)}`;
+  }
+
+  async importEmployeePhotos(file: File) {
+    const zip = new AdmZip(file.buffer);
+    const entries = zip.getEntries();
+    let completed = 0;
+    for (const entry of entries) {
+      const image = await saveFile(
+        {
+          buffer: entry.getData(),
+          originalname: entry.name,
+        },
+        'employees',
+      );
+      const [employee] =
+        await sql`update employees set photo = ${image} where "noEmpleado" = ${entry.name.split('.')[0]} returning "noEmpleado"`;
+      if (!employee) {
+        await deleteFile(image);
+        console.log('deleted ' + entry.name);
+      } else {
+        completed++;
+      }
+    }
+
+    return { completed, total: entries.length };
   }
 }
