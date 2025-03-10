@@ -116,7 +116,10 @@ export class PetitionsService {
     fillBox({
       page,
       font,
-      text: requisition.necesary + ' ' + requisition.measurement,
+      text:
+        String(requisition.necesary).replace(/\B(?=(\d{3})+(?!\d))/g, ',') +
+        ' ' +
+        requisition.measurement,
       size: 11,
       x: 470,
       y: 560,
@@ -128,7 +131,10 @@ export class PetitionsService {
     fillBox({
       page,
       font,
-      text: requisition.requested + ' ' + requisition.measurement,
+      text:
+        String(requisition.requested).replace(/\B(?=(\d{3})+(?!\d))/g, ',') +
+        ' ' +
+        requisition.measurement,
       size: 11,
       x: 470,
       y: 510,
