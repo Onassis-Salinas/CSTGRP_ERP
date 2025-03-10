@@ -13,7 +13,7 @@ export class AssistanceService {
 
     const assistance =
       await sql`SELECT id, "incidenceId0", "incidenceId1", "incidenceId2", "incidenceId3", "incidenceId4", "areaId", "positionId", 
-      (select name from employees where id = "employeeId"),
+      (select CONCAT(name, ' ', "paternalLastName", ' ', "maternalLastName") from employees where id = "employeeId") as name,
       (select "noEmpleado" from employees where id = "employeeId")
 
       from assistance WHERE "mondayDate" = ${firstDate}
@@ -83,7 +83,7 @@ export class AssistanceService {
         (SELECT code FROM incidences WHERE id = "incidenceId4") AS viernes,
         (SELECT name FROM areas WHERE id = "areaId") AS area,
         (SELECT name FROM positions WHERE id = "positionId") AS position,
-        (SELECT name FROM employees WHERE id = "employeeId") AS name,
+        (SELECT CONCAT(name, ' ', "paternalLastName", ' ', "maternalLastName") FROM employees WHERE id = "employeeId") AS name,
         (SELECT "noEmpleado" FROM employees WHERE id = "employeeId") AS "noEmpleado"
       FROM assistance 
       WHERE "mondayDate" = ${firstDate}

@@ -8,7 +8,7 @@ import { z } from 'zod';
 export class StatsService {
   async birthDays(body: z.infer<typeof dateSchema>) {
     const rows =
-      await sql`SELECT "noEmpleado", name, "bornDate" from employees where extract(month from "bornDate") = extract(month from ${body.date}::DATE)`;
+      await sql`SELECT "noEmpleado", CONCAT(name, ' ', "paternalLastName", ' ', "maternalLastName") as name, "bornDate" from employees where extract(month from "bornDate") = extract(month from ${body.date}::DATE)`;
 
     return rows;
   }
@@ -79,7 +79,7 @@ export class StatsService {
 
     const rows =
       await sql`SELECT (select name from incidences where id = ${sql('incidenceId' + dayNumber)}) as incidence, 
-        (select name from employees where id = "employeeId"),
+        (select CONCAT(name, ' ', "paternalLastName", ' ', "maternalLastName") as name from employees where id = "employeeId"),
         (select "areaId" from employees where id = "employeeId")
       FROM assistance WHERE "mondayDate" = ${firstDate}
        AND ${sql('incidenceId' + dayNumber)} <> 1

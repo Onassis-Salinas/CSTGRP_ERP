@@ -98,7 +98,7 @@
 			admissionDate: employeeData.admissionDate?.split('T')[0],
 			bornDate: employeeData.bornDate?.split('T')[0],
 			quitDate: employeeData.quitDate?.split('T')[0],
-			cim: employeeData.cim?.split('T')[0],
+			bcpet: employeeData.bcpet?.split('T')[0],
 			infonavitFee: employeeData.infonavitFee?.toString(),
 			infonavitDiscount: employeeData.infonavitDiscount?.toString()
 		};
@@ -334,7 +334,7 @@
 							<DisplayInput bind:value={formData.sons} {edit} />
 						</div>
 						<div>
-							<p class="text-muted-foreground text-xs">Lugar de Nacimiento:</p>
+							<p class="text-muted-foreground text-xs">Lugar de Nacimpetiento:</p>
 							<DisplayInput bind:value={formData.bornLocation} {edit} />
 						</div>
 						<div>
@@ -399,8 +399,8 @@
 						</div>
 						<div>
 							<p class="text-muted-foreground text-xs">Fecha de Bcpet:</p>
-							<DisplayInput value={formatDate(formData.cim)} {edit}>
-								<Input type="date" bind:value={formData.cim} />
+							<DisplayInput value={formatDate(formData.bcpet)} {edit}>
+								<Input type="date" bind:value={formData.bcpet} />
 							</DisplayInput>
 						</div>
 						<div>
