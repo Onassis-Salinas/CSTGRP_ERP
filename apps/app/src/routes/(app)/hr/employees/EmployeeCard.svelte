@@ -198,7 +198,7 @@
 
 						<label class="aspect-square w-full">
 							<img
-								class="h-full w-full cursor-pointer rounded-lg object-cover object-top"
+								class="h-full w-full cursor-pointer rounded-lg object-cover"
 								src={preview || '/person.svg'}
 								alt=""
 							/>
