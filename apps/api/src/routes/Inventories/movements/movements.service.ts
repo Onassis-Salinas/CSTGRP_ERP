@@ -25,9 +25,10 @@ export class MovementsService {
   constructor(private readonly req: ContextProvider) {}
 
   async getMovements(body: z.infer<typeof movementsFilterSchema>) {
+    console.log(body.req === null);
     const movements = await sql`SELECT
       materials.code, materials.description, materials.measurement, materials."clientId", materials."leftoverAmount", materials.amount as inventory, materialmovements.active, materialmovements.amount, materialmovements."realAmount", materialmovements.id, materialie.due, materialie.jobpo, materialie.programation, materialie.import, materialmovements.extra,
-      (select folio from requisitions where jobs LIKE CONCAT('%', materialie.jobpo, '%') and materialie.jobpo is not null and requisitions."materialId" = materials.id) as req
+      (select STRING_AGG(folio::TEXT, ', ')  from requisitions where jobs LIKE CONCAT('%', materialie.jobpo, '%') and materialie.jobpo is not null and requisitions."materialId" = materials.id) as req
       FROM materialmovements
       JOIN materials on materials.id = materialmovements."materialId"
       JOIN materialie on materialie.id = materialmovements."movementId"
