@@ -61,7 +61,6 @@
 	async function handleSubmit() {
 		await api.post('requisitions', {
 			...formData,
-			petitioner: Cookies.get('username'),
 			jobIds: jobs.filter((v) => v.selected).map((v) => v.id)
 		});
 		showSuccess('Requisicion registrado');
