@@ -58,8 +58,8 @@
 	</svelte:fragment>
 </MenuBar>
 
-<div class="grid flex-1 grid-cols-3 place-items-stretch gap-4 overflow-auto p-4">
-	<Card class="col-span-3 flex h-[85lvh] w-full max-w-full flex-col border-none shadow-none">
+<div class="flex flex-1 flex-col place-items-stretch gap-8 overflow-auto p-4">
+	<Card class="flex max-h-[85lvh] w-full max-w-full flex-col border-none shadow-none">
 		<CardTitle class="pb-3 pl-1">Material faltante para completar ordenes</CardTitle>
 		<CardContent class="overflow-y-auto border p-0">
 			<Table class="w-full">
@@ -90,7 +90,7 @@
 			</Table>
 		</CardContent>
 	</Card>
-	<Card class="col-span-3 flex h-[30rem] w-full max-w-full flex-col border-none shadow-none">
+	<Card class="flex max-h-[85lvh] w-full max-w-full flex-col border-none shadow-none">
 		<CardTitle class="pb-3 pl-1">En minimos</CardTitle>
 		<CardContent class="overflow-auto border p-0">
 			<Table>
