@@ -1,3 +1,4 @@
+import { apiReference } from '@scalar/nestjs-api-reference';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import {
@@ -10,7 +11,6 @@ import fastifyCookie from '@fastify/cookie';
 import multipart from 'fastify-multipart';
 import { DBFilter } from './interceptors/db/db.filter';
 import dotenv from 'dotenv';
-import { swaggerCss, swaggerJs } from './utils/swagger';
 import { patchNestJsSwagger } from 'nestjs-zod';
 
 dotenv.config();
@@ -46,10 +46,25 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('docs', app, document, {
-    customCss: swaggerCss,
-    customJsStr: swaggerJs,
-  });
+
+  app.use(
+    '/docs',
+    apiReference({
+      withFastify: true,
+      hideClientButton: false,
+      showSidebar: true,
+      theme: 'none',
+      layout: 'modern',
+      isEditable: false,
+      hideModels: false,
+      hideDownloadButton: true,
+      hideTestRequestButton: true,
+      hideSearch: false,
+      hideDarkModeToggle: false,
+      withDefaultFonts: true,
+      content: document,
+    }),
+  );
 
   await app.listen(process.env.PORT || 3000, '0.0.0.0');
 }
