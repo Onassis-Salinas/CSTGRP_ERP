@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import Label from '$lib/components/basic/Label.svelte';
 	import Select from '$lib/components/basic/Select.svelte';
 	import { Button } from '$lib/components/ui/button';
@@ -22,12 +24,15 @@
 	import { ChevronDown } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 
-	export let show = false;
-	export let reload: any;
-	export let selectedUser: any;
-	let formData: any;
+	interface Props {
+		show?: boolean;
+		reload: any;
+		selectedUser: any;
+	}
 
-	$: if (show || true) setFormData();
+	let { show = $bindable(false), reload, selectedUser }: Props = $props();
+	let formData: any = $state();
+
 	function setFormData() {
 		selectedAreas = selectedUser?.perm_assistance_areas?.split(',') || [];
 		formData = { ...selectedUser };
@@ -38,9 +43,9 @@
 		{ value: 1, name: 'Leer' },
 		{ value: 2, name: 'Modificar' }
 	];
-	let selectedAreas: any[] = [];
+	let selectedAreas: any[] = $state([]);
 
-	let areas: any[];
+	let areas: any[] = $state();
 
 	async function getAreas() {
 		areas = (await api.get('/hrvarious/areas')).data;
@@ -92,6 +97,9 @@
 
 	onMount(() => {
 		getAreas();
+	});
+	run(() => {
+		if (show || true) setFormData();
 	});
 </script>
 
@@ -153,7 +161,7 @@
 					<DropdownMenu>
 						<DropdownMenuTrigger>
 							<Button variant="outline" class="w-full"
-								>Seleccionar<ChevronDown class="text-primary ms-2 size-4" /></Button
+								>Seleccionar<ChevronDown class="ms-2 size-4 text-primary" /></Button
 							>
 						</DropdownMenuTrigger>
 						<DropdownMenuContent>

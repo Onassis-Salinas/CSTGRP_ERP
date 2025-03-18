@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import Label from '$lib/components/basic/Label.svelte';
 	import MaterialInput from '$lib/components/basic/MaterialInput.svelte';
 	import Select from '$lib/components/basic/Select.svelte';
@@ -24,19 +26,22 @@
 	import { Trash } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 	import Cookies from 'js-cookie';
-	export let show: boolean;
-	let formData: any = {
+	interface Props {
+		show: boolean;
+	}
+
+	let { show = $bindable() }: Props = $props();
+	let formData: any = $state({
 		petitioner: Cookies.get('username')
-	};
-	let areas: any[];
+	});
+	let areas: any[] = $state();
 	interface material {
 		code: string;
 		amount: string;
 		measurement: string;
 	}
 
-	let materials: material[] = [];
-	$: if (!show || show) cleanData();
+	let materials: material[] = $state([]);
 
 	async function handleSubmit() {
 		await api.post('/requisitions/supplies', {
@@ -74,6 +79,9 @@
 
 	onMount(() => {
 		fetchOptions();
+	});
+	run(() => {
+		if (!show || show) cleanData();
 	});
 </script>
 
@@ -124,7 +132,7 @@
 								><Button
 									on:click={() => deleteMaterial(i)}
 									variant="ghost"
-									class="text-destructive-foreground aspect-square p-1"
+									class="aspect-square p-1 text-destructive-foreground"
 									><Trash class="size-5" /></Button
 								></TableCell
 							>

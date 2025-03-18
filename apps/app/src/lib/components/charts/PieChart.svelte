@@ -1,13 +1,19 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import Chart from 'chart.js/auto';
 	import { type ColorKeys, colors } from '../../utils/colors';
 	import { browser } from '$app/environment';
-	export let data: { value: number; name: string }[];
-	export let label: string;
+	interface Props {
+		data: { value: number; name: string }[];
+		label: string;
+	}
 
-	let canvas: HTMLCanvasElement;
+	let { data, label }: Props = $props();
 
-	$: maxValue = Math.max(...data.map((e) => e.value));
+	let canvas: HTMLCanvasElement = $state();
+
+	let maxValue = $derived(Math.max(...data.map((e) => e.value)));
 
 	const drawChart = () => {
 		if (Chart.getChart(canvas)) {
@@ -58,7 +64,9 @@
 		});
 	};
 
-	$: if (data[0] && browser && canvas) drawChart();
+	run(() => {
+		if (data[0] && browser && canvas) drawChart();
+	});
 </script>
 
 <canvas bind:this={canvas} class="h-full max-h-96 w-full"></canvas>

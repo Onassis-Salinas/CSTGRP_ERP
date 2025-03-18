@@ -1,14 +1,20 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import LineChart from '$lib/components/charts/LineChart.svelte';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import { formatDate } from '$lib/utils/functions';
 	import api from '$lib/utils/server';
 	import AssistanceCube from './AssistanceCube.svelte';
 
-	export let employee: any;
+	interface Props {
+		employee: any;
+	}
 
-	let assistance: any[] = [];
-	let productivity: any[] = [];
+	let { employee }: Props = $props();
+
+	let assistance: any[] = $state([]);
+	let productivity: any[] = $state([]);
 
 	const fetchData = async () => {
 		const assistanceInfo = (await api.get(`/employees/assistance/${employee.id}`)).data;
@@ -81,7 +87,9 @@
 		return Math.ceil((diff / (1000 * 60 * 60 * 24) + startOfYear.getDay() + 1) / 7);
 	}
 
-	$: if (employee.id) fetchData();
+	run(() => {
+		if (employee.id) fetchData();
+	});
 </script>
 
 <div class="border-primary-500 my-2 w-full border-b">Asistencia</div>

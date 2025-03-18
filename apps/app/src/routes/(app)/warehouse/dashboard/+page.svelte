@@ -15,29 +15,30 @@
 	import { onMount } from 'svelte';
 	import MenuBar from '$lib/components/basic/MenuBar.svelte';
 
-	let warnings: any[] = [];
-	let outOfStock: any[] = [];
-	let selectedDate = new Date().toISOString().split('T')[0];
+	let warnings: any[] = $state([]);
+	let outOfStock: any[] = $state([]);
+	let selectedDate = $state(new Date().toISOString().split('T')[0]);
 
-	$: textDate =
+	let textDate = $derived(
 		['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes'][getDayNumber(selectedDate)] +
-		' ' +
-		selectedDate.split('-')[2] +
-		' de ' +
-		[
-			'Enero',
-			'Febrero',
-			'Marzo',
-			'Abril',
-			'Mayo',
-			'Junio',
-			'Julio',
-			'Agosto',
-			'Septiembre',
-			'Octubre',
-			'Noviembre',
-			'Diciembre'
-		][parseInt(selectedDate.split('-')[1]) - 1];
+			' ' +
+			selectedDate.split('-')[2] +
+			' de ' +
+			[
+				'Enero',
+				'Febrero',
+				'Marzo',
+				'Abril',
+				'Mayo',
+				'Junio',
+				'Julio',
+				'Agosto',
+				'Septiembre',
+				'Octubre',
+				'Noviembre',
+				'Diciembre'
+			][parseInt(selectedDate.split('-')[1]) - 1]
+	);
 
 	async function fetchConstData() {
 		warnings = (await api.get('/inventorystats/stockwarnings')).data;
@@ -50,12 +51,12 @@
 </script>
 
 <MenuBar>
-	<svelte:fragment slot="left">
+	{#snippet left()}
 		<Input menu class="w-fit shadow-sm" type="date" bind:value={selectedDate}></Input>
-	</svelte:fragment>
-	<svelte:fragment slot="right">
+	{/snippet}
+	{#snippet right()}
 		<Input menu class="w-fit font-semibold" value={textDate}></Input>
-	</svelte:fragment>
+	{/snippet}
 </MenuBar>
 
 <div class="flex flex-1 flex-col place-items-stretch gap-8 overflow-auto p-4">

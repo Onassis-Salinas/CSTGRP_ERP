@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import {
@@ -14,14 +16,18 @@
 	import { Check } from 'lucide-svelte';
 	import { format } from 'date-fns';
 	import { es } from 'date-fns/locale';
-	export let employee: any;
-	let docs: any[] = [];
+	interface Props {
+		employee: any;
+	}
 
-	let newDoc = {
+	let { employee }: Props = $props();
+	let docs: any[] = $state([]);
+
+	let newDoc = $state({
 		text: '',
 		date: new Date(),
 		type: ''
-	};
+	});
 
 	async function fetchData() {
 		const serverDocs: any[] = (await api.get('/employees/history/' + employee.id)).data || [];
@@ -54,7 +60,9 @@
 		fetchData();
 	}
 
-	$: if (employee.id) fetchData();
+	run(() => {
+		if (employee.id) fetchData();
+	});
 </script>
 
 <Table>

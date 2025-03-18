@@ -17,12 +17,12 @@
 	import { format } from 'date-fns';
 	import { es } from 'date-fns/locale';
 
-	let show = false;
-	let show1 = false;
-	let show2 = false;
-	let show3 = false;
+	let show = $state(false);
+	let show1 = $state(false);
+	let show2 = $state(false);
+	let show3 = $state(false);
 
-	let selectedMaterial: any = {
+	let selectedMaterial: any = $state({
 		code: '',
 		measurement: '',
 		description: '',
@@ -30,21 +30,23 @@
 		clientId: '',
 		id: '',
 		leftoverAmount: ''
-	};
-	let inventory: any[] = [];
-	let clients: any = {};
+	});
+	let inventory: any[] = $state([]);
+	let clients: any = $state({});
 
-	let filters = {
+	let filters = $state({
 		code: '',
 		clients: ['']
-	};
-
-	$: filteredInventory = inventory.filter((material) => {
-		if (filters.code) {
-			if (filters.code) return material.code?.toUpperCase()?.includes(filters.code.toUpperCase());
-		}
-		return true;
 	});
+
+	let filteredInventory = $derived(
+		inventory.filter((material) => {
+			if (filters.code) {
+				if (filters.code) return material.code?.toUpperCase()?.includes(filters.code.toUpperCase());
+			}
+			return true;
+		})
+	);
 
 	async function getInventory() {
 		const result = await api.get('/inventory');
@@ -127,13 +129,13 @@
 </script>
 
 <MenuBar>
-	<svelte:fragment slot="left">
+	{#snippet left()}
 		<Input menu bind:value={filters.code} placeholder="Codigo" />
-	</svelte:fragment>
-	<svelte:fragment slot="right">
+	{/snippet}
+	{#snippet right()}
 		<Button on:click={exportInventory}><FileDown class="size-3.5" /></Button>
 		<Button on:click={createMaterial}><PlusCircle class="mr-1.5 size-3.5" />Añadir Material</Button>
-	</svelte:fragment>
+	{/snippet}
 </MenuBar>
 
 <CusTable>

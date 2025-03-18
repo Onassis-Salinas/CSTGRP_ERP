@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { preventDefault } from 'svelte/legacy';
+
 	import ExportMovementsForm from './ExportMovementsForm.svelte';
 	import CusTable from '$lib/components/basic/CusTable.svelte';
 	import Select from '$lib/components/basic/Select.svelte';
@@ -22,17 +24,17 @@
 	import { Button } from '$lib/components/ui/button';
 	import ImportMovementsForm from './ImportMovementsForm.svelte';
 
-	let show2 = false;
-	let show3 = false;
-	let show4 = false;
-	let show5 = false;
+	let show2 = $state(false);
+	let show3 = $state(false);
+	let show4 = $state(false);
+	let show5 = $state(false);
 
-	let filters = {
+	let filters = $state({
 		type: 'both',
 		code: ''
-	};
+	});
 
-	let selectedMovement: any = {};
+	let selectedMovement: any = $state({});
 
 	let options = [
 		{ value: 'both', name: 'Ambos' },
@@ -40,7 +42,7 @@
 		{ value: 'exports', name: 'Exportaciones' }
 	];
 
-	let movements: any[] = [];
+	let movements: any[] = $state([]);
 
 	async function getMovements() {
 		const result = (await api.get(`/materialmovements/ie`, { params: filters })).data;
@@ -81,7 +83,7 @@
 </script>
 
 <MenuBar>
-	<form class="flex flex-col gap-2 lg:flex-row" on:submit|preventDefault={getMovements} action={''}>
+	<form class="flex flex-col gap-2 lg:flex-row" onsubmit={preventDefault(getMovements)} action={''}>
 		<Select
 			class="min-w-36"
 			menu
@@ -91,7 +93,7 @@
 		/>
 		<Input menu bind:value={filters.code} placeholder="Identificador" />
 	</form>
-	<svelte:fragment slot="right">
+	{#snippet right()}
 		<DropdownMenu>
 			<DropdownMenuTrigger>
 				<Button><Pen class="mr-1.5 size-3.5" />Registrar</Button>
@@ -111,7 +113,7 @@
 				</DropdownMenuContent>
 			</DropdownMenuTrigger>
 		</DropdownMenu>
-	</svelte:fragment>
+	{/snippet}
 </MenuBar>
 
 <CusTable>

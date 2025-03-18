@@ -9,17 +9,21 @@
 	import { CircleAlert } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 
-	export let show = false;
-	export let selectedEmployee: any;
-	export let reload: any;
+	interface Props {
+		show?: boolean;
+		selectedEmployee: any;
+		reload: any;
+	}
 
-	let formData: any = {
+	let { show = $bindable(false), selectedEmployee = $bindable({}), reload }: Props = $props();
+
+	let formData: any = $state({
 		id: selectedEmployee.id,
 		quitReason: null,
 		quitDate: '',
 		quitNotes: '',
 		quitStatus: ''
-	};
+	});
 
 	let status = [
 		{ value: 'RECONTRATABLE', name: 'Recontratable' },

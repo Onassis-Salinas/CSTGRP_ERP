@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import Cookies from 'js-cookie';
 	import { sidebarOpen } from '../../utils/store';
 	import AccordionItem from '../ui/accordion/accordion-item.svelte';
@@ -24,7 +26,7 @@
 	import { browser } from '$app/environment';
 	import { hasAccess } from '$lib/utils/functions';
 
-	let showModal = false;
+	let showModal = $state(false);
 
 	const username = Cookies.get('username');
 
@@ -32,13 +34,15 @@
 		sidebarOpen.set(false);
 	}
 
-	$: if ($sidebarOpen) {
-		requestAnimationFrame(() => {
-			document.querySelector('main')?.addEventListener('click', closeSidebar);
-		});
-	} else {
-		if (browser) document.querySelector('main')?.removeEventListener('click', closeSidebar);
-	}
+	run(() => {
+		if ($sidebarOpen) {
+			requestAnimationFrame(() => {
+				document.querySelector('main')?.addEventListener('click', closeSidebar);
+			});
+		} else {
+			if (browser) document.querySelector('main')?.removeEventListener('click', closeSidebar);
+		}
+	});
 </script>
 
 <Card
@@ -55,7 +59,7 @@
 	<Accordion class="space-y-1 px-2 pt-2">
 		{#if hasAccess('inventory') || hasAccess('materialmovements') || hasAccess('requisitions') || hasAccess('poimp')}
 			<AccordionItem value="1" class="border-none">
-				<AccordionTrigger class="hover:bg-muted rounded-md p-2 text-sm hover:no-underline">
+				<AccordionTrigger class="rounded-md p-2 text-sm hover:bg-muted hover:no-underline">
 					<span class="flex items-center gap-2">
 						<Package class="size-3.5 text-[#5c5e63]" />
 						Almacen
@@ -85,7 +89,7 @@
 		{/if}
 		{#if hasAccess('employees') || hasAccess('assistance') || hasAccess('productivity')}
 			<AccordionItem value="2" class="border-none">
-				<AccordionTrigger class="hover:bg-muted rounded-md p-2 text-sm hover:no-underline">
+				<AccordionTrigger class="rounded-md p-2 text-sm hover:bg-muted hover:no-underline">
 					<span class="flex items-center gap-2">
 						<Users class="size-3.5 text-[#5c5e63]" />
 						RRHH
@@ -109,7 +113,7 @@
 		{/if}
 		{#if hasAccess('it')}
 			<AccordionItem value="3" class="border-none">
-				<AccordionTrigger class="hover:bg-muted rounded-md p-2 text-sm hover:no-underline">
+				<AccordionTrigger class="rounded-md p-2 text-sm hover:bg-muted hover:no-underline">
 					<span class="flex items-center gap-2">
 						<Monitor class="size-3.5 text-[#5c5e63]" />
 						Sistemas
@@ -126,7 +130,7 @@
 		{/if}
 		{#if hasAccess('structure')}
 			<AccordionItem value="7" class="border-none">
-				<AccordionTrigger class="hover:bg-muted rounded-md p-2 text-sm hover:no-underline">
+				<AccordionTrigger class="rounded-md p-2 text-sm hover:bg-muted hover:no-underline">
 					<span class="flex items-center gap-2">
 						<GitMerge class="size-3.5 text-[#5c5e63]" />
 						Estructura
@@ -141,7 +145,7 @@
 		{/if}
 		{#if !hasAccess('inventory') && !hasAccess('users') && !hasAccess('structure') && !hasAccess('it') && !hasAccess('assistance') && !hasAccess('productivity') && !hasAccess('employees') && !hasAccess('materialmovements') && !hasAccess('poimp')}
 			<AccordionItem value="9" class="border-none">
-				<AccordionTrigger class="hover:bg-muted rounded-md p-2 text-sm hover:no-underline">
+				<AccordionTrigger class="rounded-md p-2 text-sm hover:bg-muted hover:no-underline">
 					<span class="flex items-center gap-2">
 						<ShoppingBag class="size-3.5 text-[#5c5e63]" />
 						Clients
@@ -156,7 +160,7 @@
 		{/if}
 		{#if hasAccess('users')}
 			<AccordionItem value="6" class="border-none">
-				<AccordionTrigger class="hover:bg-muted rounded-md p-2 text-sm hover:no-underline">
+				<AccordionTrigger class="rounded-md p-2 text-sm hover:bg-muted hover:no-underline">
 					<span class="flex items-center gap-2">
 						<Shield class="size-3.5 text-[#5c5e63]" />
 						Admin
@@ -190,13 +194,13 @@
 	</Accordion>
 
 	<div class="mt-auto space-y-1 px-2 pb-2">
-		<p class="hover:bg-muted block rounded-md p-2">
+		<p class="block rounded-md p-2 hover:bg-muted">
 			<span class="flex items-center gap-2 text-sm">
 				<UserCircle class="size-3.5 text-[#5c5e63]" />
 				{username}
 			</span>
 		</p>
-		<button class="hover:bg-muted block w-full rounded-md p-2" on:click={() => (showModal = true)}>
+		<button class="block w-full rounded-md p-2 hover:bg-muted" onclick={() => (showModal = true)}>
 			<span class="flex items-center gap-2 text-sm">
 				<LogOut class="size-3.5 text-[#5c5e63]" />
 				Salir

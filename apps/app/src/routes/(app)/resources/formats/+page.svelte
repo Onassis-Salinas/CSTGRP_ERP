@@ -3,9 +3,9 @@
 	import Table from '$lib/components/ui/table/table.svelte';
 	import api from '$lib/utils/server';
 
-	let folders: any[] = [];
-	let files: any[] = [];
-	let folderSelected = '';
+	let folders: any[] = $state([]);
+	let files: any[] = $state([]);
+	let folderSelected = $state('');
 	const fetchAreas = async () => {
 		folders = (await api.get('/resources/formatsfolders')).data;
 	};

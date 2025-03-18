@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { Input } from '$lib/components/ui/input';
 	import {
 		DropdownMenu,
@@ -20,34 +22,20 @@
 	import MenuBar from '$lib/components/basic/MenuBar.svelte';
 	import OptionsCell from '$lib/components/basic/OptionsCell.svelte';
 
-	let show1: boolean;
-	let show2: boolean;
-	let show3: boolean;
-	let selectedEmployee: any = {};
-	let employees: any[] = [];
-	let filteredEmployees: any[];
-	let searchParams = {
+	let show1: boolean = $state();
+	let show2: boolean = $state();
+	let show3: boolean = $state();
+	let selectedEmployee: any = $state({});
+	let employees: any[] = $state([]);
+	let filteredEmployees: any[] = $state();
+	let searchParams = $state({
 		noEmpleado: '',
 		name: ''
-	};
+	});
 
-	let areas: any = {};
-	let positions: any = {};
-	let searchActive: boolean = true;
-
-	$: if (searchActive || true) if (browser) getEmployees();
-	$: {
-		filteredEmployees = employees.filter((e) => {
-			if (searchParams.noEmpleado) return e.noEmpleado === searchParams.noEmpleado;
-			if (searchParams.name)
-				return (
-					e.name?.toUpperCase()?.includes(searchParams.name.toUpperCase()) ||
-					e.paternalLastName?.toUpperCase()?.includes(searchParams.name.toUpperCase()) ||
-					e.maternalLastName?.toUpperCase()?.includes(searchParams.name.toUpperCase())
-				);
-			return true;
-		});
-	}
+	let areas: any = $state({});
+	let positions: any = $state({});
+	let searchActive: boolean = $state(true);
 
 	async function fetchOptions() {
 		const areasArray = (await api.get('/hrvarious/areas')).data;
@@ -112,17 +100,32 @@
 		await fetchOptions();
 		getEmployees();
 	});
+	run(() => {
+		if (searchActive || true) if (browser) getEmployees();
+	});
+	run(() => {
+		filteredEmployees = employees.filter((e) => {
+			if (searchParams.noEmpleado) return e.noEmpleado === searchParams.noEmpleado;
+			if (searchParams.name)
+				return (
+					e.name?.toUpperCase()?.includes(searchParams.name.toUpperCase()) ||
+					e.paternalLastName?.toUpperCase()?.includes(searchParams.name.toUpperCase()) ||
+					e.maternalLastName?.toUpperCase()?.includes(searchParams.name.toUpperCase())
+				);
+			return true;
+		});
+	});
 </script>
 
 <MenuBar>
-	<svelte:fragment slot="left">
+	{#snippet left()}
 		<Input bind:value={searchParams.noEmpleado} placeholder="No. Empleado" />
 		<Input bind:value={searchParams.name} placeholder="Nombre" />
 
 		<Button on:click={() => (searchActive = true)} value={'active'}>Activos</Button>
 		<Button on:click={() => (searchActive = false)} value={'inactive'}>Inactivos</Button>
-	</svelte:fragment>
-	<svelte:fragment slot="right">
+	{/snippet}
+	{#snippet right()}
 		<DropdownMenu>
 			<DropdownMenuTrigger class="h-7">
 				<Button><FileDown class="size-3.5" /></Button>
@@ -133,7 +136,7 @@
 			</DropdownMenuTrigger>
 		</DropdownMenu>
 		<Button on:click={createEmployee}><PlusCircle class="mr-1.5 size-3.5" />Añadir empleado</Button>
-	</svelte:fragment>
+	{/snippet}
 </MenuBar>
 
 <CusTable>

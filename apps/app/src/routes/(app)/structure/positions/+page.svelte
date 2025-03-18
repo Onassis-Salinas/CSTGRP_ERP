@@ -13,11 +13,11 @@
 	import OptionsCell from '$lib/components/basic/OptionsCell.svelte';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 
-	let show: boolean;
-	let show1: boolean;
-	let selectedPosition: any = {};
+	let show: boolean = $state();
+	let show1: boolean = $state();
+	let selectedPosition: any = $state({});
 
-	let positions: any[] = [];
+	let positions: any[] = $state([]);
 
 	async function getPositions() {
 		const result = await api.get('/positions');
@@ -43,9 +43,9 @@
 </script>
 
 <MenuBar>
-	<svelte:fragment slot="right">
+	{#snippet right()}
 		<Button on:click={createPosition}><PlusCircle class="mr-1.5 size-3.5" />Añadir posicion</Button>
-	</svelte:fragment>
+	{/snippet}
 </MenuBar>
 
 <CusTable>

@@ -1,17 +1,24 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { cn } from '$lib/utils';
 	import api from '../../utils/server';
 	import { Input } from '../ui/input';
 
-	export let value: string | undefined;
-	export let measurement = '';
-	export let normal = false;
+	interface Props {
+		value: string | undefined;
+		measurement?: string;
+		normal?: boolean;
+	}
 
-	$: if (value) getMeasurement();
+	let { value = $bindable(), measurement = $bindable(''), normal = false }: Props = $props();
 
 	async function getMeasurement() {
 		measurement = (await api.get('/inventoryvarious/measurement?code=' + value)).data;
 	}
+	run(() => {
+		if (value) getMeasurement();
+	});
 </script>
 
 <Input

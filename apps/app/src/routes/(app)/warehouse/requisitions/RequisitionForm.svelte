@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import Label from '$lib/components/basic/Label.svelte';
 	import Select from '$lib/components/basic/Select.svelte';
 	import { Button } from '$lib/components/ui/button';
@@ -25,13 +27,16 @@
 	import { onMount } from 'svelte';
 	import Cookies from 'js-cookie';
 
-	export let show = false;
-	export let selectedMovement: any;
-	let areas: any[] = [];
-	let formData: any;
-	let jobs: any[] = [];
+	interface Props {
+		show?: boolean;
+		selectedMovement: any;
+	}
 
-	$: if (show || true) setFormData();
+	let { show = $bindable(false), selectedMovement }: Props = $props();
+	let areas: any[] = $state([]);
+	let formData: any = $state();
+	let jobs: any[] = $state([]);
+
 	function setFormData() {
 		formData = { ...selectedMovement };
 		formData.petitioner = Cookies.get('username');
@@ -47,12 +52,6 @@
 			})
 		).data;
 	}
-
-	$: if (selectedMovement?.code) getJobs();
-	$: formData.necessary = jobs.reduce(
-		(prev, v) => (v.selected ? prev + Number(v.amount) : prev),
-		0
-	);
 
 	async function fetchOptions() {
 		areas = (await api.get('/hrvarious/areas')).data;
@@ -77,6 +76,15 @@
 
 	onMount(() => {
 		fetchOptions();
+	});
+	run(() => {
+		if (show || true) setFormData();
+	});
+	run(() => {
+		if (selectedMovement?.code) getJobs();
+	});
+	run(() => {
+		formData.necessary = jobs.reduce((prev, v) => (v.selected ? prev + Number(v.amount) : prev), 0);
 	});
 </script>
 

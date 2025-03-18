@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import {
 		DropdownMenu,
 		DropdownMenuContent,
@@ -21,12 +23,16 @@
 	import { downloadFile, openFilePreview } from '$lib/utils/functions';
 	import { cn } from '$lib/utils';
 
-	export let employee: any;
-	let docs: any[] = [];
-	let newDoc = {
+	interface Props {
+		employee: any;
+	}
+
+	let { employee }: Props = $props();
+	let docs: any[] = $state([]);
+	let newDoc = $state({
 		name: '',
 		file: null
-	};
+	});
 
 	let predefinedDocs = [
 		'Formato de alta',
@@ -119,7 +125,9 @@
 		fetchData();
 	}
 
-	$: if (employee.id) fetchData();
+	run(() => {
+		if (employee.id) fetchData();
+	});
 </script>
 
 <Table>
@@ -142,7 +150,7 @@
 						<Upload class="size-4" />
 						<input
 							type="file"
-							on:change={(e) => uploadDocument(e?.target?.files?.[0], row.name, row.id)}
+							onchange={(e) => uploadDocument(e?.target?.files?.[0], row.name, row.id)}
 							class="hidden"
 						/>
 					</label>

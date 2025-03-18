@@ -9,22 +9,26 @@
 	import { UserPlus } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 
-	export let show = false;
-	export let selectedEmployee: any;
-	export let reload: any;
+	interface Props {
+		show?: boolean;
+		selectedEmployee: any;
+		reload: any;
+	}
 
-	let areas: any;
-	let positions: any;
+	let { show = $bindable(false), selectedEmployee = $bindable({}), reload }: Props = $props();
+
+	let areas: any = $state();
+	let positions: any = $state();
 
 	async function fetchOptions() {
 		areas = (await api.get('/hrvarious/areas')).data;
 		positions = (await api.get('/hrvarious/positions')).data;
 	}
 
-	let formData: any = {
+	let formData: any = $state({
 		id: selectedEmployee.id,
 		admissionDate: new Date().toISOString().split('T')[0]
-	};
+	});
 
 	async function handleSubmmit() {
 		await api.put('/employees/reactivate', {

@@ -1,7 +1,11 @@
 <script lang="ts">
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import { cn } from '$lib/utils';
-	export let incidence: string;
+	interface Props {
+		incidence: string;
+	}
+
+	let { incidence }: Props = $props();
 </script>
 
 <Tooltip.Root>

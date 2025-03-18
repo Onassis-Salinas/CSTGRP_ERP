@@ -13,11 +13,11 @@
 	import MenuBar from '$lib/components/basic/MenuBar.svelte';
 	import OptionsCell from '$lib/components/basic/OptionsCell.svelte';
 
-	let show: boolean;
-	let show1: boolean;
-	let selectedDevice: any = {};
+	let show: boolean = $state();
+	let show1: boolean = $state();
+	let selectedDevice: any = $state({});
 
-	let devices: any[] = [];
+	let devices: any[] = $state([]);
 
 	async function getEmails() {
 		const result = await api.get('/emails');
@@ -43,9 +43,9 @@
 </script>
 
 <MenuBar>
-	<svelte:fragment slot="right">
+	{#snippet right()}
 		<Button on:click={createDevice}><PlusCircle class="mr-1.5 size-3.5" />Añadir correo</Button>
-	</svelte:fragment>
+	{/snippet}
 </MenuBar>
 
 <CusTable>

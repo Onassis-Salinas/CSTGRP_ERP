@@ -8,10 +8,21 @@
 	import { Ellipsis, Pen, Trash, Eye } from 'lucide-svelte';
 	import { TableCell } from '$lib/components/ui/table';
 
-	export let viewFunc: (() => void) | undefined = undefined;
-	export let deleteFunc: (() => void) | undefined = undefined;
-	export let editFunc: (() => void) | undefined = undefined;
-	export let extraButtons: { fn: () => void; name: string; icon: any }[] = [];
+	interface Props {
+		viewFunc?: (() => void) | undefined;
+		deleteFunc?: (() => void) | undefined;
+		editFunc?: (() => void) | undefined;
+		extraButtons?: { fn: () => void; name: string; icon: any }[];
+		children?: import('svelte').Snippet;
+	}
+
+	let {
+		viewFunc = undefined,
+		deleteFunc = undefined,
+		editFunc = undefined,
+		extraButtons = [],
+		children
+	}: Props = $props();
 </script>
 
 <TableCell class="sticky left-0 border-r-0 bg-background p-0">
@@ -25,7 +36,7 @@
 		<DropdownMenuContent>
 			{#each extraButtons as button}
 				<DropdownMenuItem on:click={button.fn}>
-					<svelte:component this={button.icon} class="size-3.5" />
+					<button.icon class="size-3.5" />
 					{button.name}
 				</DropdownMenuItem>
 			{/each}
@@ -45,7 +56,7 @@
 					<Trash class="size-3.5" /> Eliminar
 				</DropdownMenuItem>
 			{/if}
-			<slot />
+			{@render children?.()}
 		</DropdownMenuContent>
 	</DropdownMenu>
 </TableCell>

@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import {
 		Dialog,
 		DialogBody,
@@ -22,9 +24,13 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Trash } from 'lucide-svelte';
 
-	export let show: boolean;
-	export let reload: any;
-	export let selectedMovement: any = {};
+	interface Props {
+		show: boolean;
+		reload: any;
+		selectedMovement?: any;
+	}
+
+	let { show = $bindable(), reload, selectedMovement = {} }: Props = $props();
 
 	interface material {
 		code: string;
@@ -34,13 +40,9 @@
 		active: boolean;
 	}
 
-	let materials: material[] = [];
-	let formData: any = {};
-	let files: any;
-	$: inputDisabled = !!files;
-	$: if (files) processPDF();
-	$: if (!show || show) cleanData();
-	$: if (selectedMovement.id) getData();
+	let materials: material[] = $state([]);
+	let formData: any = $state({});
+	let files: any = $state();
 
 	async function handleSubmit() {
 		if (selectedMovement.id) {
@@ -106,6 +108,19 @@
 		files = null;
 		inputDisabled = false;
 	}
+	let inputDisabled;
+	run(() => {
+		inputDisabled = !!files;
+	});
+	run(() => {
+		if (files) processPDF();
+	});
+	run(() => {
+		if (!show || show) cleanData();
+	});
+	run(() => {
+		if (selectedMovement.id) getData();
+	});
 </script>
 
 <Dialog bind:open={show}>

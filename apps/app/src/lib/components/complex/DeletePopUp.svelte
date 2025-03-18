@@ -3,9 +3,13 @@
 	import { Button } from '../ui/button';
 	import { Dialog, DialogBody, DialogContent } from '../ui/dialog';
 
-	export let show = false;
-	export let deleteFunc;
-	export let text;
+	interface Props {
+		show?: boolean;
+		deleteFunc: any;
+		text: any;
+	}
+
+	let { show = $bindable(false), deleteFunc, text }: Props = $props();
 </script>
 
 <Dialog bind:open={show}>

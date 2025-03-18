@@ -4,6 +4,11 @@
 	import { onDestroy, onMount } from 'svelte';
 	import '../../../app.css';
 	import { browser } from '$app/environment';
+	interface Props {
+		children?: import('svelte').Snippet;
+	}
+
+	let { children }: Props = $props();
 
 	function handleUnhandledRejection(e: PromiseRejectionEvent) {
 		console.log(e);
@@ -21,7 +26,7 @@
 
 <div class="app">
 	<main>
-		<slot></slot>
+		{@render children?.()}
 	</main>
 </div>
 

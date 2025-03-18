@@ -2,17 +2,28 @@
 	import { type Variant, badgeVariants } from './index.js';
 	import { cn } from '$lib/utils.js';
 
-	let className: string | undefined | null = undefined;
-	export let href: string | undefined = undefined;
-	export let color: Variant = 'default';
-	export { className as class };
+	interface Props {
+		class?: string | undefined | null;
+		href?: string | undefined;
+		color?: Variant;
+		children?: import('svelte').Snippet;
+		[key: string]: any;
+	}
+
+	let {
+		class: className = undefined,
+		href = undefined,
+		color = 'default',
+		children,
+		...rest
+	}: Props = $props();
 </script>
 
 <svelte:element
 	this={href ? 'a' : 'span'}
 	{href}
 	class={cn('whitespace-nowrap', badgeVariants({ variant: color, className }))}
-	{...$$restProps}
+	{...rest}
 >
-	<slot />
+	{@render children?.()}
 </svelte:element>

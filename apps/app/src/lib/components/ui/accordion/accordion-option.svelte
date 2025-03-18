@@ -1,16 +1,27 @@
 <script lang="ts">
+	import { createBubbler } from 'svelte/legacy';
+
+	const bubble = createBubbler();
 	import { cn } from '$lib/utils.js';
 	import { location } from '$lib/utils/store';
 	import { Dot } from 'lucide-svelte';
 	import { fade, scale } from 'svelte/transition';
 
-	let className = '';
-	export { className as class };
-	export let href = '';
-	$: active = href === $location;
+	interface Props {
+		class?: string;
+		href?: string;
+		children?: import('svelte').Snippet;
+	}
+
+	let { class: className = '', href = '', children }: Props = $props();
+	let active = $derived(href === $location);
 </script>
 
-<a {href} class={cn(' relative flex h-[34px] items-center py-[1px] text-sm', className)} on:click>
+<a
+	{href}
+	class={cn(' relative flex h-[34px] items-center py-[1px] text-sm', className)}
+	onclick={bubble('click')}
+>
 	<div class="absolute left-0 top-0 size-8">
 		<svg width="32" height="34" xmlns="http://www.w3.org/2000/svg" class="absolute -top-3.5 left-0">
 			<line x1="16" y1="0" x2="16" y2="34" stroke="#bcbeb3" stroke-width="1" />
@@ -33,6 +44,6 @@
 			active ? 'bg-muted' : ''
 		)}
 	>
-		<slot />
+		{@render children?.()}
 	</span>
 </a>

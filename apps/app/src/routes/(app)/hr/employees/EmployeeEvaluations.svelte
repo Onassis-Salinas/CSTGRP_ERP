@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import {
 		DropdownMenu,
 		DropdownMenuContent,
@@ -22,13 +24,17 @@
 	import { cn } from '$lib/utils';
 	import { format } from 'date-fns';
 
-	export let employee: any;
-	let docs: any[] = [];
-	let newDoc = {
+	interface Props {
+		employee: any;
+	}
+
+	let { employee }: Props = $props();
+	let docs: any[] = $state([]);
+	let newDoc = $state({
 		file: null,
 		score: 0,
 		date: ''
-	};
+	});
 
 	async function fetchData() {
 		docs = (await api.get('/employees/evaluations/' + employee.id)).data || [];
@@ -74,7 +80,9 @@
 		fetchData();
 	}
 
-	$: if (employee.id) fetchData();
+	run(() => {
+		if (employee.id) fetchData();
+	});
 </script>
 
 <Table>

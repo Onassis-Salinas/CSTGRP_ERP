@@ -20,37 +20,38 @@
 	import Select from '$lib/components/basic/Select.svelte';
 	import MenuBar from '$lib/components/basic/MenuBar.svelte';
 
-	let employeeTemplate: any;
-	let activeEmployees: any;
-	let dailyIncidences: any[] = [];
-	let areaIncidences: any[] = [];
-	let assistance: any[] = [];
-	let selectedDate = new Date().toISOString().split('T')[0];
-	let areaSelected = '1';
-	let areas: any[] = [];
-	let dailyIncidencesList: any[] = [];
-	let birthDays: any[] = [];
-	let rotation: number = 0;
+	let employeeTemplate: any = $state();
+	let activeEmployees: any = $state();
+	let dailyIncidences: any[] = $state([]);
+	let areaIncidences: any[] = $state([]);
+	let assistance: any[] = $state([]);
+	let selectedDate = $state(new Date().toISOString().split('T')[0]);
+	let areaSelected = $state('1');
+	let areas: any[] = $state([]);
+	let dailyIncidencesList: any[] = $state([]);
+	let birthDays: any[] = $state([]);
+	let rotation: number = $state(0);
 
-	$: textDate =
+	let textDate = $derived(
 		['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes'][getDayNumber(selectedDate)] +
-		' ' +
-		selectedDate.split('-')[2] +
-		' de ' +
-		[
-			'Enero',
-			'Febrero',
-			'Marzo',
-			'Abril',
-			'Mayo',
-			'Junio',
-			'Julio',
-			'Agosto',
-			'Septiembre',
-			'Octubre',
-			'Noviembre',
-			'Diciembre'
-		][parseInt(selectedDate.split('-')[1])];
+			' ' +
+			selectedDate.split('-')[2] +
+			' de ' +
+			[
+				'Enero',
+				'Febrero',
+				'Marzo',
+				'Abril',
+				'Mayo',
+				'Junio',
+				'Julio',
+				'Agosto',
+				'Septiembre',
+				'Octubre',
+				'Noviembre',
+				'Diciembre'
+			][parseInt(selectedDate.split('-')[1])]
+	);
 
 	async function fetchConstData() {
 		areas = (await api.get('/hrvarious/areas')).data;

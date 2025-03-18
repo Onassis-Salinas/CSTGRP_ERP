@@ -6,16 +6,19 @@
 	type $$Props = AlertDialogPrimitive.ActionProps;
 	type $$Events = AlertDialogPrimitive.ActionEvents;
 
-	let className: $$Props['class'] = undefined;
-	export { className as class };
+	interface Props {
+		class?: $$Props['class'];
+		children?: import('svelte').Snippet<[any]>;
+		[key: string]: any;
+	}
+
+	let { class: className = undefined, children, ...rest }: Props = $props();
+
+	const children_render = $derived(children);
 </script>
 
-<AlertDialogPrimitive.Action
-	class={cn(buttonVariants(), className)}
-	{...$$restProps}
-	on:click
-	on:keydown
-	let:builder
->
-	<slot {builder} />
+<AlertDialogPrimitive.Action class={cn(buttonVariants(), className)} {...rest} on:click on:keydown>
+	{#snippet children({ builder })}
+		{@render children_render?.({ builder })}
+	{/snippet}
 </AlertDialogPrimitive.Action>

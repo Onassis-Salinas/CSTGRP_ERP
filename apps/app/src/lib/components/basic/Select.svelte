@@ -1,28 +1,49 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import * as Select from '../ui/select/index';
 	import { cn } from '$lib/utils.js';
-	let className = '';
-	export { className as class };
-	export let items: { value: string | number | boolean; name: string; label?: string }[];
-	export let placeholder = 'Selecciona una opción';
-	export let value: string | number;
-	export let onSelectedChange = () => {};
-	export let cell = false;
-	export let menu = false;
-	export let chevron: boolean = true;
-	export let disabled: boolean = false;
 
-	$: newItems = items?.map((item) => ({
-		value: item.value,
-		label: item.name
-	}));
+	interface Props {
+		class?: string;
+		items: { value: string | number | boolean; name: string; label?: string }[];
+		placeholder?: string;
+		value: string | number;
+		onSelectedChange?: any;
+		cell?: boolean;
+		menu?: boolean;
+		chevron?: boolean;
+		disabled?: boolean;
+		children?: import('svelte').Snippet;
+	}
 
-	let selected: any = {};
-	$: if (newItems && value) setSelected();
+	let {
+		class: className = '',
+		items,
+		placeholder = 'Selecciona una opción',
+		value = $bindable(),
+		onSelectedChange = () => {},
+		cell = false,
+		menu = false,
+		chevron = true,
+		disabled = false,
+		children
+	}: Props = $props();
+
+	let selected: any = $state({});
 
 	const setSelected = () => {
 		selected = newItems.find((item) => item.value === value);
 	};
+	let newItems = $derived(
+		items?.map((item) => ({
+			value: item.value,
+			label: item.name
+		}))
+	);
+	run(() => {
+		if (newItems && value) setSelected();
+	});
 </script>
 
 <Select.Root
@@ -37,9 +58,9 @@
 		{disabled}
 		class={cn(className, cell ? 'h-full w-full border-none' : '', menu ? 'h-[28px]' : '')}
 	>
-		<slot>
+		{#if children}{@render children()}{:else}
 			<Select.Value {placeholder}></Select.Value>
-		</slot>
+		{/if}
 	</Select.Trigger>
 	<Select.Content>
 		<Select.Group>

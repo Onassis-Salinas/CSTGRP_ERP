@@ -3,9 +3,13 @@
 	import { Dialog, DialogBody, DialogContent } from '$lib/components/ui/dialog';
 	import { MessageCircleQuestion } from 'lucide-svelte';
 
-	export let show = false;
-	export let action;
-	export let text;
+	interface Props {
+		show?: boolean;
+		action: any;
+		text: any;
+	}
+
+	let { show = $bindable(false), action, text }: Props = $props();
 </script>
 
 <Dialog bind:open={show}>

@@ -12,15 +12,15 @@
 	import MenuBar from '$lib/components/basic/MenuBar.svelte';
 
 	let productivity: any[] = [];
-	let separatedProductivity: any = {};
-	let show = false;
-	let areas: any = {};
-	let positions: any = {};
-	let incidences: any = {};
+	let separatedProductivity: any = $state({});
+	let show = $state(false);
+	let areas: any = $state({});
+	let positions: any = $state({});
+	let incidences: any = $state({});
 	let incidencesList: any = [];
-	let dateSelected: any = new Date().toISOString().split('T')[0];
-	let viewComplete = false;
-	let weekDays: string[] = [];
+	let dateSelected: any = $state(new Date().toISOString().split('T')[0]);
+	let viewComplete = $state(false);
+	let weekDays: string[] = $state([]);
 
 	async function getProductivity() {
 		productivity = (await api.get('/productivity/' + dateSelected)).data;
@@ -118,7 +118,7 @@
 </script>
 
 <MenuBar>
-	<svelte:fragment slot="left">
+	{#snippet left()}
 		<Input type="date" bind:value={dateSelected} on:change={getProductivity} />
 		{#if viewComplete}
 			<Button class="flex-none" on:click={() => (viewComplete = !viewComplete)}
@@ -129,11 +129,11 @@
 				><BookOpen class="mr-1.5 size-3.5" />Ver todo</Button
 			>
 		{/if}
-	</svelte:fragment>
-	<svelte:fragment slot="right">
+	{/snippet}
+	{#snippet right()}
 		<Button on:click={() => (show = true)}><Pen class="mr-1.5 size-3.5" />Capturar</Button>
 		<!-- <ExportProductivity productivity={separatedProductivity} {areas} {positions} {weekDays} /> -->
-	</svelte:fragment>
+	{/snippet}
 </MenuBar>
 
 <CusTable>
