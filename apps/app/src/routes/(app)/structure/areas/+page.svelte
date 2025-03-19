@@ -44,7 +44,7 @@
 
 <MenuBar>
 	{#snippet right()}
-		<Button on:click={createArea}><PlusCircle class="mr-1.5 size-3.5" />Añadir area</Button>
+		<Button onclick={createArea}><PlusCircle class=" size-3.5" />Añadir area</Button>
 	{/snippet}
 </MenuBar>
 

@@ -20,8 +20,8 @@
 				<h3 class=" text-lg font-normal text-gray-500 dark:text-gray-400">{text}</h3>
 			</div>
 			<div class="text-center">
-				<Button on:click={action} class="me-2">Confirmar</Button>
-				<Button on:click={() => (show = false)} color="alternative">Cancelar</Button>
+				<Button onclick={action} class="me-2">Confirmar</Button>
+				<Button onclick={() => (show = false)} color="alternative">Cancelar</Button>
 			</div>
 		</DialogBody>
 	</DialogContent>

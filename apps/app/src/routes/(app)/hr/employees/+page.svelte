@@ -119,23 +119,23 @@
 
 <MenuBar>
 	{#snippet left()}
-		<Input bind:value={searchParams.noEmpleado} placeholder="No. Empleado" />
-		<Input bind:value={searchParams.name} placeholder="Nombre" />
+		<Input menu bind:value={searchParams.noEmpleado} placeholder="No. Empleado" />
+		<Input menu bind:value={searchParams.name} placeholder="Nombre" />
 
-		<Button on:click={() => (searchActive = true)} value={'active'}>Activos</Button>
-		<Button on:click={() => (searchActive = false)} value={'inactive'}>Inactivos</Button>
+		<Button onclick={() => (searchActive = true)} value={'active'}>Activos</Button>
+		<Button onclick={() => (searchActive = false)} value={'inactive'}>Inactivos</Button>
 	{/snippet}
 	{#snippet right()}
 		<DropdownMenu>
 			<DropdownMenuTrigger class="h-7">
 				<Button><FileDown class="size-3.5" /></Button>
 				<DropdownMenuContent>
-					<DropdownMenuItem on:click={() => exportList()}>Basico</DropdownMenuItem>
-					<DropdownMenuItem on:click={() => exportList('full')}>Completo</DropdownMenuItem>
+					<DropdownMenuItem onclick={() => exportList()}>Basico</DropdownMenuItem>
+					<DropdownMenuItem onclick={() => exportList('full')}>Completo</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenuTrigger>
 		</DropdownMenu>
-		<Button on:click={createEmployee}><PlusCircle class="mr-1.5 size-3.5" />Añadir empleado</Button>
+		<Button onclick={createEmployee}><PlusCircle class=" size-3.5" />Añadir empleado</Button>
 	{/snippet}
 </MenuBar>
 
@@ -159,13 +159,13 @@
 					deleteFunc={employee.active ? () => deleteEmployee(i) : undefined}
 				>
 					{#if !employee.active}
-						<DropdownMenuItem on:click={() => reactivateEmployee(i)}>
+						<DropdownMenuItem onclick={() => reactivateEmployee(i)}>
 							<RotateCcw class="size-3.5" /> Recontratar
 						</DropdownMenuItem>
 					{/if}
 				</OptionsCell>
 				<TableCell>{employee.noEmpleado || ''}</TableCell>
-				<TableCell class="cursor-pointer whitespace-nowrap" on:click={() => previewEmployee(i)}
+				<TableCell class="cursor-pointer whitespace-nowrap" onclick={() => previewEmployee(i)}
 					>{employee.name || ''}</TableCell
 				>
 				<TableCell>{employee.paternalLastName || ''}</TableCell>

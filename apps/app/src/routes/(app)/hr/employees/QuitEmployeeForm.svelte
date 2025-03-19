@@ -81,8 +81,8 @@
 					<Input bind:value={formData.quitNotes} />
 				</b>
 				<div class="text-center">
-					<Button on:click={handleSubmmit} class="me-2" variant="destructive">Dar de baja</Button>
-					<Button on:click={() => (show = false)} variant="outline">Cancelar</Button>
+					<Button onclick={handleSubmmit} class="me-2" variant="destructive">Dar de baja</Button>
+					<Button onclick={() => (show = false)} variant="outline">Cancelar</Button>
 				</div>
 			</form>
 		</DialogBody>

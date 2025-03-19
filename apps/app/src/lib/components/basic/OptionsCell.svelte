@@ -35,24 +35,24 @@
 
 		<DropdownMenuContent>
 			{#each extraButtons as button}
-				<DropdownMenuItem on:click={button.fn}>
+				<DropdownMenuItem onclick={button.fn}>
 					<button.icon class="size-3.5" />
 					{button.name}
 				</DropdownMenuItem>
 			{/each}
 
 			{#if viewFunc}
-				<DropdownMenuItem on:click={viewFunc}>
+				<DropdownMenuItem onclick={viewFunc}>
 					<Eye class="size-3.5" /> Ver
 				</DropdownMenuItem>
 			{/if}
 			{#if editFunc}
-				<DropdownMenuItem on:click={editFunc}>
+				<DropdownMenuItem onclick={editFunc}>
 					<Pen class="size-3.5" /> Editar
 				</DropdownMenuItem>
 			{/if}
 			{#if deleteFunc}
-				<DropdownMenuItem on:click={deleteFunc}>
+				<DropdownMenuItem onclick={deleteFunc}>
 					<Trash class="size-3.5" /> Eliminar
 				</DropdownMenuItem>
 			{/if}

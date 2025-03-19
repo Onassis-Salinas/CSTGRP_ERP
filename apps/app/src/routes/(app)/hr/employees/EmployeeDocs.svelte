@@ -140,7 +140,7 @@
 			<TableRow>
 				<TableCell
 					class={cn('border-l', !row.url && 'text-muted-foreground')}
-					on:click={() => openPreview(row.url, row.name)}>{row.name}</TableCell
+					onclick={() => openPreview(row.url, row.name)}>{row.name}</TableCell
 				>
 
 				<TableCell class="p-0">
@@ -158,7 +158,7 @@
 				<TableCell class="p-0">
 					{#if row.url}
 						<Button
-							on:click={() => downloadDoc(row.url, row.name)}
+							onclick={() => downloadDoc(row.url, row.name)}
 							class="aspect-square h-full rounded-none"
 							variant="ghost"
 						>
@@ -174,7 +174,7 @@
 									><Trash class="size-4" /></Button
 								>
 								<DropdownMenuContent>
-									<DropdownMenuItem on:click={() => deleteDocument(row.id)}
+									<DropdownMenuItem onclick={() => deleteDocument(row.id)}
 										>Eliminar</DropdownMenuItem
 									>
 								</DropdownMenuContent>
@@ -196,7 +196,7 @@
 				</label>
 			</TableCell>
 			<TableCell colspan={2} class="p-0"
-				><Button on:click={uploadNewDocument} class="h-full w-full rounded-none" variant="ghost"
+				><Button onclick={uploadNewDocument} class="h-full w-full rounded-none" variant="ghost"
 					><Check class="size-4" /></Button
 				></TableCell
 			>

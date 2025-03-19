@@ -1,33 +1,23 @@
 <script lang="ts">
+	import type { WithElementRef } from 'bits-ui';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import { cn } from '$lib/utils.js';
 
-	type $$Props = HTMLAttributes<HTMLSpanElement> & {
-		el?: HTMLSpanElement;
-	};
-
-	interface Props {
-		el?: $$Props['el'];
-		class?: $$Props['class'];
-		children?: import('svelte').Snippet;
-		[key: string]: any;
-	}
-
 	let {
-		el = $bindable(undefined),
-		class: className = undefined,
+		ref = $bindable(null),
+		class: className,
 		children,
-		...rest
-	}: Props = $props();
+		...restProps
+	}: WithElementRef<HTMLAttributes<HTMLSpanElement>> = $props();
 </script>
 
 <span
-	bind:this={el}
+	bind:this={ref}
 	role="link"
 	aria-disabled="true"
 	aria-current="page"
 	class={cn('font-normal text-foreground', className)}
-	{...rest}
+	{...restProps}
 >
 	{@render children?.()}
 </span>

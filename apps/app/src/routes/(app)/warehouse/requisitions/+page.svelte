@@ -80,12 +80,12 @@
 		<Input menu bind:value={filters.programation} placeholder="Programacion" />
 		<Input menu bind:value={filters.jobpo} placeholder="Job" />
 		<Input menu bind:value={filters.code} placeholder="Material" />
-		<Button type="submit"><Search class="mr-1.5 size-3.5" />Buscar</Button>
+		<Button type="submit"><Search class=" size-3.5" />Buscar</Button>
 	</form>
 
 	{#snippet right()}
-		<Button on:click={exportUncheckedMovements}><FileDown class="size-3.5" /></Button>
-		<Button on:click={() => (show2 = true)}><FilePlus2 class="mr-1.5 size-3.5" />Insumos</Button>
+		<Button onclick={exportUncheckedMovements}><FileDown class="size-3.5" /></Button>
+		<Button onclick={() => (show2 = true)}><FilePlus2 class=" size-3.5" />Insumos</Button>
 	{/snippet}
 </MenuBar>
 

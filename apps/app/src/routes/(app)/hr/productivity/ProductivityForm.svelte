@@ -261,7 +261,7 @@
 						)}%</Badge
 					>
 
-					<Button on:click={handleSubmit} type="submit" class="mt-4 w-full">Guardar</Button>
+					<Button onclick={handleSubmit} type="submit" class="mt-4 w-full">Guardar</Button>
 				</form>
 			</div>
 		</DialogBody>

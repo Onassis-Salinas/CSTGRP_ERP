@@ -96,16 +96,16 @@
 	{#snippet right()}
 		<DropdownMenu>
 			<DropdownMenuTrigger>
-				<Button><Pen class="mr-1.5 size-3.5" />Registrar</Button>
+				<Button><Pen class=" size-3.5" />Registrar</Button>
 				<DropdownMenuContent>
 					<DropdownMenuItem
-						on:click={() => {
+						onclick={() => {
 							selectedMovement = {};
 							show4 = true;
 						}}>Importacion</DropdownMenuItem
 					>
 					<DropdownMenuItem
-						on:click={() => {
+						onclick={() => {
 							selectedMovement = {};
 							show5 = true;
 						}}>Job - PO</DropdownMenuItem

@@ -1,13 +1,9 @@
 <script lang="ts">
 	import { run } from 'svelte/legacy';
-
 	import Cookies from 'js-cookie';
 	import { sidebarOpen } from '../../utils/store';
-	import AccordionItem from '../ui/accordion/accordion-item.svelte';
-	import { Accordion, AccordionOption } from '../ui/accordion';
-	import AccordionTrigger from '../ui/accordion/accordion-trigger.svelte';
-	import AccordionContent from '../ui/accordion/accordion-content.svelte';
-	import { Card } from '../ui/card';
+	import * as Accordion from '$lib/components/ui/accordion/index.js';
+	import { Card } from '$lib/components/ui/card';
 	import Package from 'lucide-svelte/icons/package';
 	import {
 		GitMerge,
@@ -56,142 +52,142 @@
 		CST Group
 	</a>
 
-	<Accordion class="space-y-1 px-2 pt-2">
+	<Accordion.Root class="space-y-1 px-2 pt-2">
 		{#if hasAccess('inventory') || hasAccess('materialmovements') || hasAccess('requisitions') || hasAccess('poimp')}
-			<AccordionItem value="1" class="border-none">
-				<AccordionTrigger class="rounded-md p-2 text-sm hover:bg-muted hover:no-underline">
+			<Accordion.Item value="item-1" class="border-none">
+				<Accordion.Trigger class="rounded-md p-2 text-sm hover:bg-muted hover:no-underline">
 					<span class="flex items-center gap-2">
 						<Package class="size-3.5 text-[#5c5e63]" />
 						Almacen
 					</span>
-				</AccordionTrigger>
-				<AccordionContent>
+				</Accordion.Trigger>
+				<Accordion.Content>
 					{#if hasAccess('inventorystats')}
-						<AccordionOption href="/warehouse/dashboard">Resumenes</AccordionOption>
+						<Accordion.Option href="/warehouse/dashboard">Resumenes</Accordion.Option>
 					{/if}
 					{#if hasAccess('inventory')}
-						<AccordionOption href="/warehouse/inventory">Inventario</AccordionOption>
+						<Accordion.Option href="/warehouse/inventory">Inventario</Accordion.Option>
 					{/if}
 					{#if hasAccess('materialmovements')}
-						<AccordionOption href="/warehouse/movements">Movimientos</AccordionOption>
+						<Accordion.Option href="/warehouse/movements">Movimientos</Accordion.Option>
 					{/if}
 					{#if hasAccess('poimp')}
-						<AccordionOption href="/warehouse/po-imp">Po-Imp</AccordionOption>
+						<Accordion.Option href="/warehouse/po-imp">Po-Imp</Accordion.Option>
 					{/if}
 					{#if hasAccess('requisitions')}
-						<AccordionOption href="/warehouse/requisitions">Requisiciones</AccordionOption>
+						<Accordion.Option href="/warehouse/requisitions">Requisiciones</Accordion.Option>
 					{/if}
 					{#if hasAccess('petitions')}
-						<AccordionOption href="/warehouse/petitions">Peticiones</AccordionOption>
+						<Accordion.Option href="/warehouse/petitions">Peticiones</Accordion.Option>
 					{/if}
-				</AccordionContent>
-			</AccordionItem>
+				</Accordion.Content>
+			</Accordion.Item>
 		{/if}
 		{#if hasAccess('employees') || hasAccess('assistance') || hasAccess('productivity')}
-			<AccordionItem value="2" class="border-none">
-				<AccordionTrigger class="rounded-md p-2 text-sm hover:bg-muted hover:no-underline">
+			<Accordion.Item value="2" class="border-none">
+				<Accordion.Trigger class="rounded-md p-2 text-sm hover:bg-muted hover:no-underline">
 					<span class="flex items-center gap-2">
 						<Users class="size-3.5 text-[#5c5e63]" />
 						RRHH
 					</span>
-				</AccordionTrigger>
-				<AccordionContent>
+				</Accordion.Trigger>
+				<Accordion.Content>
 					{#if hasAccess('employees')}
-						<AccordionOption href="/hr/dashboard">Dashboard</AccordionOption>
+						<Accordion.Option href="/hr/dashboard">Dashboard</Accordion.Option>
 					{/if}
 					{#if hasAccess('employees')}
-						<AccordionOption href="/hr/employees">Empleados</AccordionOption>
+						<Accordion.Option href="/hr/employees">Empleados</Accordion.Option>
 					{/if}
 					{#if hasAccess('assistance')}
-						<AccordionOption href="/hr/assistance">Asistencia</AccordionOption>
+						<Accordion.Option href="/hr/assistance">Asistencia</Accordion.Option>
 					{/if}
 					{#if hasAccess('productivity')}
-						<AccordionOption href="/hr/productivity">Productividad</AccordionOption>
+						<Accordion.Option href="/hr/productivity">Productividad</Accordion.Option>
 					{/if}
-				</AccordionContent>
-			</AccordionItem>
+				</Accordion.Content>
+			</Accordion.Item>
 		{/if}
 		{#if hasAccess('it')}
-			<AccordionItem value="3" class="border-none">
-				<AccordionTrigger class="rounded-md p-2 text-sm hover:bg-muted hover:no-underline">
+			<Accordion.Item value="3" class="border-none">
+				<Accordion.Trigger class="rounded-md p-2 text-sm hover:bg-muted hover:no-underline">
 					<span class="flex items-center gap-2">
 						<Monitor class="size-3.5 text-[#5c5e63]" />
 						Sistemas
 					</span>
-				</AccordionTrigger>
+				</Accordion.Trigger>
 
-				<AccordionContent>
-					<AccordionOption href="/it/devices">Dispositivos</AccordionOption>
-					<AccordionOption href="/it/emails">Correos</AccordionOption>
-					<AccordionOption href="/it/computers">Computadoras</AccordionOption>
-					<AccordionOption href="/it/docs">Documentación</AccordionOption>
-				</AccordionContent>
-			</AccordionItem>
+				<Accordion.Content>
+					<Accordion.Option href="/it/devices">Dispositivos</Accordion.Option>
+					<Accordion.Option href="/it/emails">Correos</Accordion.Option>
+					<Accordion.Option href="/it/computers">Computadoras</Accordion.Option>
+					<Accordion.Option href="/it/docs">Documentación</Accordion.Option>
+				</Accordion.Content>
+			</Accordion.Item>
 		{/if}
 		{#if hasAccess('structure')}
-			<AccordionItem value="7" class="border-none">
-				<AccordionTrigger class="rounded-md p-2 text-sm hover:bg-muted hover:no-underline">
+			<Accordion.Item value="7" class="border-none">
+				<Accordion.Trigger class="rounded-md p-2 text-sm hover:bg-muted hover:no-underline">
 					<span class="flex items-center gap-2">
 						<GitMerge class="size-3.5 text-[#5c5e63]" />
 						Estructura
 					</span>
-				</AccordionTrigger>
+				</Accordion.Trigger>
 
-				<AccordionContent>
-					<AccordionOption href="/structure/areas">Areas</AccordionOption>
-					<AccordionOption href="/structure/positions">Posiciones</AccordionOption>
-				</AccordionContent>
-			</AccordionItem>
+				<Accordion.Content>
+					<Accordion.Option href="/structure/areas">Areas</Accordion.Option>
+					<Accordion.Option href="/structure/positions">Posiciones</Accordion.Option>
+				</Accordion.Content>
+			</Accordion.Item>
 		{/if}
 		{#if !hasAccess('inventory') && !hasAccess('users') && !hasAccess('structure') && !hasAccess('it') && !hasAccess('assistance') && !hasAccess('productivity') && !hasAccess('employees') && !hasAccess('materialmovements') && !hasAccess('poimp')}
-			<AccordionItem value="9" class="border-none">
-				<AccordionTrigger class="rounded-md p-2 text-sm hover:bg-muted hover:no-underline">
+			<Accordion.Item value="9" class="border-none">
+				<Accordion.Trigger class="rounded-md p-2 text-sm hover:bg-muted hover:no-underline">
 					<span class="flex items-center gap-2">
 						<ShoppingBag class="size-3.5 text-[#5c5e63]" />
 						Clients
 					</span>
-				</AccordionTrigger>
+				</Accordion.Trigger>
 
-				<AccordionContent>
-					<AccordionOption href="/clients/inventory">Inventory</AccordionOption>
-					<AccordionOption href="/clients/jobs">Jobs</AccordionOption>
-				</AccordionContent>
-			</AccordionItem>
+				<Accordion.Content>
+					<Accordion.Option href="/clients/inventory">Inventory</Accordion.Option>
+					<Accordion.Option href="/clients/jobs">Jobs</Accordion.Option>
+				</Accordion.Content>
+			</Accordion.Item>
 		{/if}
 		{#if hasAccess('users')}
-			<AccordionItem value="6" class="border-none">
-				<AccordionTrigger class="rounded-md p-2 text-sm hover:bg-muted hover:no-underline">
+			<Accordion.Item value="6" class="border-none">
+				<Accordion.Trigger class="rounded-md p-2 text-sm hover:bg-muted hover:no-underline">
 					<span class="flex items-center gap-2">
 						<Shield class="size-3.5 text-[#5c5e63]" />
 						Admin
 					</span>
-				</AccordionTrigger>
+				</Accordion.Trigger>
 
-				<AccordionContent>
-					<AccordionOption href="/admin/users">Usuarios</AccordionOption>
-					<AccordionOption href="/admin/records">Historial</AccordionOption>
-				</AccordionContent>
-			</AccordionItem>
+				<Accordion.Content>
+					<Accordion.Option href="/admin/users">Usuarios</Accordion.Option>
+					<Accordion.Option href="/admin/records">Historial</Accordion.Option>
+				</Accordion.Content>
+			</Accordion.Item>
 		{/if}
 		<!-- 
-		<AccordionItem value="4" class="border-none">
-			<AccordionTrigger class="hover:bg-muted rounded-md p-2 text-sm hover:no-underline">
+		<Accordion.Item value="4" class="border-none">
+			<Accordion.Trigger class="hover:bg-muted rounded-md p-2 text-sm hover:no-underline">
 				<span class="flex items-center gap-2">
 					<File class="size-3.5 text-[#5c5e63]" />
 					Recursos
 				</span>
-			</AccordionTrigger>
+			</Accordion.Trigger>
 
-			<AccordionContent>
-				<AccordionOption href="/resources/directory">Directorio</AccordionOption>
-				<AccordionOption
+			<Accordion.Content>
+				<Accordion.Option href="/resources/directory">Directorio</Accordion.Option>
+				<Accordion.Option
 					href="/resources/formats"
 					
 					><Dot  class="text=[#5c5e63]"/>Formatos</
 				>
-			</AccordionContent>
-		</AccordionItem> -->
-	</Accordion>
+			</Accordion.Content>
+		</Accordion.Item> -->
+	</Accordion.Root>
 
 	<div class="mt-auto space-y-1 px-2 pb-2">
 		<p class="block rounded-md p-2 hover:bg-muted">
@@ -220,13 +216,13 @@
 				<Button
 					variant="destructive"
 					class="me-2"
-					on:click={() => {
+					onclick={() => {
 						showModal = false;
 						goto('/login');
 					}}>Salir</Button
 				>
 
-				<Button on:click={() => (showModal = false)} variant="outline">Cancelar</Button>
+				<Button onclick={() => (showModal = false)} variant="outline">Cancelar</Button>
 			</div>
 		</DialogBody>
 	</DialogContent>

@@ -119,9 +119,9 @@
 		<Button type="submit"><Search class="size-3.5" /></Button>
 	</form>
 	{#snippet right()}
-		<Button on:click={exportUncheckedMovements}><FileDown class="size-3.5" /></Button>
+		<Button onclick={exportUncheckedMovements}><FileDown class="size-3.5" /></Button>
 
-		<Button on:click={() => (show3 = true)}><Pen class="mr-1.5 size-3.5" />Registrar</Button>
+		<Button onclick={() => (show3 = true)}><Pen class=" size-3.5" />Registrar</Button>
 	{/snippet}
 </MenuBar>
 

@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { run } from 'svelte/legacy';
-
 	import Label from '$lib/components/basic/Label.svelte';
 	import Select from '$lib/components/basic/Select.svelte';
 	import { Button } from '$lib/components/ui/button';
@@ -18,7 +17,7 @@
 		DropdownMenuContent
 	} from '$lib/components/ui/dropdown-menu';
 	import { Input } from '$lib/components/ui/input';
-	import { LabelBase } from '$lib/components/ui/label';
+	import { Label as LabelBase } from '$lib/components/ui/label';
 	import api from '$lib/utils/server';
 	import { showSuccess } from '$lib/utils/showToast';
 	import { ChevronDown } from 'lucide-svelte';
@@ -161,7 +160,7 @@
 					<DropdownMenu>
 						<DropdownMenuTrigger>
 							<Button variant="outline" class="w-full"
-								>Seleccionar<ChevronDown class="text-primary ms-2 size-4" /></Button
+								>Seleccionar<ChevronDown class="ms-2 size-4 text-primary" /></Button
 							>
 						</DropdownMenuTrigger>
 						<DropdownMenuContent>
@@ -196,7 +195,7 @@
 				</Label>
 			</div>
 
-			<Button type="submit" class="mt-4 w-full" on:click={handleSubmit}>Guardar cambios</Button>
+			<Button type="submit" class="mt-4 w-full" onclick={handleSubmit}>Guardar cambios</Button>
 		</DialogBody>
 	</DialogContent>
 </Dialog>

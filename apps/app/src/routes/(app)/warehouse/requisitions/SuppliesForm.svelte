@@ -130,7 +130,7 @@
 							<TableCell class="w-5">{materials[i].measurement}</TableCell>
 							<TableCell class="flex h-8 justify-center p-0 px-[1px]"
 								><Button
-									on:click={() => deleteMaterial(i)}
+									onclick={() => deleteMaterial(i)}
 									variant="ghost"
 									class="aspect-square p-1 text-destructive-foreground"
 									><Trash class="size-5" /></Button
@@ -140,7 +140,7 @@
 					{/each}
 					<TableRow>
 						<TableCell class="border-l" colspan={4}
-							><Button on:click={addMaterial} class="w-full max-w-40" color="light"
+							><Button onclick={addMaterial} class="w-full max-w-40" color="light"
 								>Anadir material</Button
 							></TableCell
 						>
@@ -148,7 +148,7 @@
 				</TableBody>
 			</Table>
 
-			<Button on:click={handleSubmit} type="submit" class="mt-4 w-full">Guardar cambios</Button>
+			<Button onclick={handleSubmit} type="submit" class="mt-4 w-full">Guardar cambios</Button>
 		</DialogBody>
 	</DialogContent>
 </Dialog>

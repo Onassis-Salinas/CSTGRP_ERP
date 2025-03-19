@@ -133,8 +133,8 @@
 		<Input menu bind:value={filters.code} placeholder="Codigo" />
 	{/snippet}
 	{#snippet right()}
-		<Button on:click={exportInventory}><FileDown class="size-3.5" /></Button>
-		<Button on:click={createMaterial}><PlusCircle class="mr-1.5 size-3.5" />Añadir Material</Button>
+		<Button onclick={exportInventory}><FileDown class="size-3.5" /></Button>
+		<Button onclick={createMaterial}><PlusCircle class=" size-3.5" />Añadir Material</Button>
 	{/snippet}
 </MenuBar>
 

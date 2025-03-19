@@ -119,19 +119,19 @@
 
 <MenuBar>
 	{#snippet left()}
-		<Input type="date" bind:value={dateSelected} on:change={getProductivity} />
+		<Input menu type="date" bind:value={dateSelected} onchange={getProductivity} />
 		{#if viewComplete}
-			<Button class="flex-none" on:click={() => (viewComplete = !viewComplete)}
-				><Book class="mr-1.5 size-3.5" />Ver resumen</Button
+			<Button class="flex-none" onclick={() => (viewComplete = !viewComplete)}
+				><Book class=" size-3.5" />Ver resumen</Button
 			>
 		{:else}
-			<Button class="flex-none" on:click={() => (viewComplete = !viewComplete)}
-				><BookOpen class="mr-1.5 size-3.5" />Ver todo</Button
+			<Button class="flex-none" onclick={() => (viewComplete = !viewComplete)}
+				><BookOpen class=" size-3.5" />Ver todo</Button
 			>
 		{/if}
 	{/snippet}
 	{#snippet right()}
-		<Button on:click={() => (show = true)}><Pen class="mr-1.5 size-3.5" />Capturar</Button>
+		<Button onclick={() => (show = true)}><Pen class=" size-3.5" />Capturar</Button>
 		<!-- <ExportProductivity productivity={separatedProductivity} {areas} {positions} {weekDays} /> -->
 	{/snippet}
 </MenuBar>
@@ -139,7 +139,7 @@
 <CusTable>
 	{#each Object.keys(separatedProductivity) as areaId, i}
 		<TableHeader class=" text-md sticky top-0 z-30 text-left uppercase ">
-			<TableHead colspan={100} class="bg-foreground font-semibold text-background"
+			<TableHead colspan={100} class="bg-foreground text-background font-semibold"
 				>{areas[areaId]}</TableHead
 			>
 		</TableHeader>

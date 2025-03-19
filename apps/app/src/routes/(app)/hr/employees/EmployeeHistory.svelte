@@ -91,7 +91,7 @@
 			>
 
 			<TableCell colspan={2} class="p-0"
-				><Button on:click={uploadNewDocument} class="h-full w-full rounded-none" variant="ghost"
+				><Button onclick={uploadNewDocument} class="h-full w-full rounded-none" variant="ghost"
 					><Check class="size-4" /></Button
 				></TableCell
 			>

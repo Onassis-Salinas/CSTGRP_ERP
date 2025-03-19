@@ -107,7 +107,13 @@
 </script>
 
 <MenuBar>
-	<Input class="w-fit shadow-sm" type="date" bind:value={selectedDate} on:change={getDailyData} />
+	<Input
+		menu
+		class="w-fit shadow-sm"
+		type="date"
+		bind:value={selectedDate}
+		onchange={getDailyData}
+	/>
 </MenuBar>
 
 <div class="grid flex-1 grid-cols-3 place-items-stretch gap-4 overflow-auto p-4">
@@ -155,7 +161,7 @@
 			<CardContent>
 				<p class="flex h-10 items-center text-base font-normal text-gray-500 dark:text-gray-400">
 					{activeEmployees} / <Input
-						on:blur={updateTemplate}
+						onblur={updateTemplate}
 						bind:value={employeeTemplate}
 						class="ml-1 w-10 p-0 text-center !text-base font-normal text-gray-500 dark:text-gray-400"
 					/>
@@ -226,7 +232,7 @@
 					{#each birthDays as row}
 						<TableRow>
 							<TableCell>
-								<!-- <Button class="sm px-3 py-1.5" on:click={() => getBirthdayPhoto(row.noEmpleado)}>
+								<!-- <Button class="sm px-3 py-1.5" onclick={() => getBirthdayPhoto(row.noEmpleado)}>
 									<Image />
 								</Button> -->
 							</TableCell>

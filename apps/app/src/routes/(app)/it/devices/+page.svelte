@@ -50,8 +50,7 @@
 
 <MenuBar>
 	{#snippet right()}
-		<Button on:click={createDevice}><PlusCircle class="mr-1.5 size-3.5" />Añadir dispositivo</Button
-		>
+		<Button onclick={createDevice}><PlusCircle class=" size-3.5" />Añadir dispositivo</Button>
 	{/snippet}
 </MenuBar>
 

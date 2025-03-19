@@ -60,7 +60,7 @@
 				</Label>
 			</div>
 
-			<Button on:click={submit} variant="default" class="mt-4 w-full">Guardar cambios</Button>
+			<Button onclick={submit} variant="default" class="mt-4 w-full">Guardar cambios</Button>
 		</DialogBody>
 	</DialogContent>
 </Dialog>

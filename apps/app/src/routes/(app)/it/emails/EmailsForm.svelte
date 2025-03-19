@@ -20,7 +20,7 @@
 		selectedDevice: any;
 	}
 
-	let { show = $bindable(false), reload, selectedDevice }: Props = $props();
+	let { show = $bindable(false), reload, selectedDevice = $bindable({}) }: Props = $props();
 	let formData: any = $state();
 
 	function setFormData() {

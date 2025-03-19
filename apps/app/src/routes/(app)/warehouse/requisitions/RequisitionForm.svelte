@@ -139,7 +139,7 @@
 				</TableBody>
 			</Table>
 
-			<Button on:click={handleSubmit} class="mt-4 w-full">Guardar cambios</Button>
+			<Button onclick={handleSubmit} class="mt-4 w-full">Guardar cambios</Button>
 		</DialogBody>
 	</DialogContent>
 </Dialog>

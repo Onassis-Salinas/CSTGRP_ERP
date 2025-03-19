@@ -105,14 +105,20 @@
 
 <MenuBar>
 	{#snippet left()}
-		<Select class="w-72" placeholder="Eligir Area" items={areasList} bind:value={areaSelected} />
-		<Input type="date" bind:value={dateSelected} on:change={getAssistance} />
+		<Select
+			menu
+			class="w-72"
+			placeholder="Eligir Area"
+			items={areasList}
+			bind:value={areaSelected}
+		/>
+		<Input menu type="date" bind:value={dateSelected} onchange={getAssistance} />
 	{/snippet}
 	{#snippet right()}
 		{#if Cookies.get('perm_assistance_areas') === 'Todas'}
 			<!-- <ExportAssistance date={dateSelected} /> -->
-			<Button on:click={exportList}><FileDown class="size-3.5" /></Button>
-			<Button on:click={createWeek}><PlusCircle class="mr-1.5 size-3.5" />Generar semana</Button>
+			<Button onclick={exportList}><FileDown class="size-3.5" /></Button>
+			<Button onclick={createWeek}><PlusCircle class=" size-3.5" />Generar semana</Button>
 		{/if}
 	{/snippet}
 </MenuBar>

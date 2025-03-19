@@ -126,8 +126,7 @@
 
 <MenuBar>
 	{#snippet right()}
-		<Button on:click={createUser}><PlusCircle class="ml-auto mr-1.5 size-4" />Añadir Usuario</Button
-		>
+		<Button onclick={createUser}><PlusCircle class="ml-auto  size-4" />Añadir Usuario</Button>
 	{/snippet}
 </MenuBar>
 

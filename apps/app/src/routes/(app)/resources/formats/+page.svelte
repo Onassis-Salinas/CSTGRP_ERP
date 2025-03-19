@@ -33,7 +33,7 @@
 		</TableHeader>
 		<TableBody>
 			{#each folders as folder}
-				<TableRow class="cursor-pointer" on:click={() => fetchFiles(folder.name)}>
+				<TableRow class="cursor-pointer" onclick={() => fetchFiles(folder.name)}>
 					<TableCell class="px-4 py-1">{folder.name}</TableCell>
 				</TableRow>
 			{/each}

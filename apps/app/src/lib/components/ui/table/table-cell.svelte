@@ -1,26 +1,23 @@
 <script lang="ts">
-	import { createBubbler } from 'svelte/legacy';
-
-	const bubble = createBubbler();
 	import type { HTMLTdAttributes } from 'svelte/elements';
+	import type { WithElementRef } from 'bits-ui';
 	import { cn } from '$lib/utils.js';
 
-	type $$Props = HTMLTdAttributes;
-
-	interface Props {
-		class?: $$Props['class'];
-		children?: import('svelte').Snippet;
-		[key: string]: any;
-	}
-
-	let { class: className = undefined, children, ...rest }: Props = $props();
+	let {
+		ref = $bindable(null),
+		class: className,
+		children,
+		...restProps
+	}: WithElementRef<HTMLTdAttributes> = $props();
 </script>
 
 <td
-	class={cn('h-[35px] whitespace-nowrap border-r px-3 py-0 align-middle', className)}
-	{...rest}
-	onclick={bubble('click')}
-	onkeydown={bubble('keydown')}
+	bind:this={ref}
+	class={cn(
+		'h-[35px] whitespace-nowrap border-r px-3 py-0 align-middle [&:has([role=checkbox])]:pr-0',
+		className
+	)}
+	{...restProps}
 >
 	{@render children?.()}
 </td>

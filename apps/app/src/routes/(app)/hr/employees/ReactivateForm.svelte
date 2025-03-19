@@ -83,8 +83,8 @@
 					/>
 				</b>
 				<div class="text-center">
-					<Button on:click={handleSubmmit} class="me-2">Recontratar</Button>
-					<Button on:click={() => (show = false)} variant="outline">Cancelar</Button>
+					<Button onclick={handleSubmmit} class="me-2">Recontratar</Button>
+					<Button onclick={() => (show = false)} variant="outline">Cancelar</Button>
 				</div>
 			</form>
 		</DialogBody>

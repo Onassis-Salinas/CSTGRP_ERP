@@ -1,23 +1,23 @@
 <script lang="ts">
 	import type { HTMLTableAttributes } from 'svelte/elements';
+	import type { WithElementRef } from 'bits-ui';
 	import { cn } from '$lib/utils.js';
 
-	type $$Props = HTMLTableAttributes & {
-		divClass?: string;
-	};
-
-	interface Props {
-		class?: $$Props['class'];
-		divClass?: string;
-		children?: import('svelte').Snippet;
-		[key: string]: any;
-	}
-
-	let { class: className = undefined, divClass = '', children, ...rest }: Props = $props();
+	let {
+		ref = $bindable(null),
+		class: className,
+		children,
+		divClass,
+		...restProps
+	}: WithElementRef<HTMLTableAttributes> & { divClass?: string } = $props();
 </script>
 
 <div class={cn('relative w-full overflow-auto', divClass)}>
-	<table class={cn('w-full caption-bottom text-sm', className)} {...rest}>
+	<table
+		bind:this={ref}
+		class={cn('w-full caption-bottom border-b text-sm', className)}
+		{...restProps}
+	>
 		{@render children?.()}
 	</table>
 </div>

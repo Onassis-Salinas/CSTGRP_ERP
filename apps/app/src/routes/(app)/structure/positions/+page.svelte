@@ -43,7 +43,7 @@
 
 <MenuBar>
 	{#snippet right()}
-		<Button on:click={createPosition}><PlusCircle class="mr-1.5 size-3.5" />Añadir posicion</Button>
+		<Button onclick={createPosition}><PlusCircle class=" size-3.5" />Añadir posicion</Button>
 	{/snippet}
 </MenuBar>
 

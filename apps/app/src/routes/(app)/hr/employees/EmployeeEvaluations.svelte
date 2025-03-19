@@ -105,7 +105,7 @@
 					<Button
 						class="aspect-square rounded-none"
 						variant="ghost"
-						on:click={() => openPreview(row.url, row.name)}><Download class="size-4" /></Button
+						onclick={() => openPreview(row.url, row.name)}><Download class="size-4" /></Button
 					>
 				</TableCell>
 				<TableCell class="p-0">
@@ -116,7 +116,7 @@
 									><Trash class="size-4" /></Button
 								>
 								<DropdownMenuContent>
-									<DropdownMenuItem on:click={() => deleteDocument(row.id)}
+									<DropdownMenuItem onclick={() => deleteDocument(row.id)}
 										>Eliminar</DropdownMenuItem
 									>
 								</DropdownMenuContent>
@@ -145,7 +145,7 @@
 				</label>
 			</TableCell>
 			<TableCell class="p-0"
-				><Button on:click={uploadNewDocument} class="h-full w-full rounded-none" variant="ghost"
+				><Button onclick={uploadNewDocument} class="h-full w-full rounded-none" variant="ghost"
 					><Check class="size-4" /></Button
 				></TableCell
 			>

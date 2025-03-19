@@ -194,14 +194,14 @@
 									size="icon"
 									variant="ghost"
 									class="size-7 border bg-background"
-									on:click={handleSubmit}><Check class="size-3.5" /></Button
+									onclick={handleSubmit}><Check class="size-3.5" /></Button
 								>
 							{:else}
 								<Button
 									size="icon"
 									variant="ghost"
 									class="size-7 border bg-background"
-									on:click={() => {
+									onclick={() => {
 										edit = true;
 										tab = 'info';
 									}}><Edit2Icon class="size-3.5" /></Button

@@ -13,8 +13,8 @@
 	import MenuBar from '$lib/components/basic/MenuBar.svelte';
 	import OptionsCell from '$lib/components/basic/OptionsCell.svelte';
 
-	let show: boolean = $state();
-	let show1: boolean = $state();
+	let show: boolean = $state(false);
+	let show1: boolean = $state(false);
 	let selectedDevice: any = $state({});
 
 	let devices: any[] = $state([]);
@@ -44,7 +44,7 @@
 
 <MenuBar>
 	{#snippet right()}
-		<Button on:click={createDevice}><PlusCircle class="mr-1.5 size-3.5" />Añadir correo</Button>
+		<Button onclick={createDevice}><PlusCircle class=" size-3.5" />Añadir correo</Button>
 	{/snippet}
 </MenuBar>
 
