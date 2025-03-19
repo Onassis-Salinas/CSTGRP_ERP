@@ -334,7 +334,7 @@
 							<DisplayInput bind:value={formData.sons} {edit} />
 						</div>
 						<div>
-							<p class="text-muted-foreground text-xs">Lugar de Nacimpetiento:</p>
+							<p class="text-muted-foreground text-xs">Lugar de Nacimiento:</p>
 							<DisplayInput bind:value={formData.bornLocation} {edit} />
 						</div>
 						<div>
