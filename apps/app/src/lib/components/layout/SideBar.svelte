@@ -43,23 +43,21 @@
 
 <Card
 	class={cn(
-		'md: fixed -left-64 bottom-0 top-0 z-40 flex w-64 flex-col rounded-none bg-[#fbfbfb] shadow-none transition-all duration-300 xl:left-0',
+		'md: fixed -left-64 bottom-0 top-0 z-40 flex w-60 flex-col rounded-none bg-[#fbfbfb] shadow-none transition-all duration-300 xl:left-0',
 		$sidebarOpen ? 'left-0' : ''
 	)}
 >
-	<a href="/" class="flex h-12 w-full items-center gap-2 border-b px-4 pt-0 font-semibold">
+	<a href="/" class="flex h-12 w-full items-center gap-3 border-b px-4 pt-0 font-semibold">
 		<img src="/logo.png" alt="logo" class="h-6 w-6" />
 		CST Group
 	</a>
 
-	<Accordion.Root class="space-y-1 px-2 pt-2">
+	<Accordion.Root class="space-y-1 px-2 pt-2" type="single">
 		{#if hasAccess('inventory') || hasAccess('materialmovements') || hasAccess('requisitions') || hasAccess('poimp')}
 			<Accordion.Item value="item-1" class="border-none">
-				<Accordion.Trigger class="rounded-md p-2 text-sm hover:bg-muted hover:no-underline">
-					<span class="flex items-center gap-2">
-						<Package class="size-3.5 text-[#5c5e63]" />
-						Almacen
-					</span>
+				<Accordion.Trigger class="hover:bg-muted h-8 rounded-md p-2 text-sm hover:no-underline">
+					<Package class="size-3.5 text-[#5c5e63]" />
+					Almacen
 				</Accordion.Trigger>
 				<Accordion.Content>
 					{#if hasAccess('inventorystats')}
@@ -85,11 +83,9 @@
 		{/if}
 		{#if hasAccess('employees') || hasAccess('assistance') || hasAccess('productivity')}
 			<Accordion.Item value="2" class="border-none">
-				<Accordion.Trigger class="rounded-md p-2 text-sm hover:bg-muted hover:no-underline">
-					<span class="flex items-center gap-2">
-						<Users class="size-3.5 text-[#5c5e63]" />
-						RRHH
-					</span>
+				<Accordion.Trigger class="hover:bg-muted h-8 rounded-md p-2 text-sm hover:no-underline">
+					<Users class="size-3.5 text-[#5c5e63]" />
+					RRHH
 				</Accordion.Trigger>
 				<Accordion.Content>
 					{#if hasAccess('employees')}
@@ -109,11 +105,9 @@
 		{/if}
 		{#if hasAccess('it')}
 			<Accordion.Item value="3" class="border-none">
-				<Accordion.Trigger class="rounded-md p-2 text-sm hover:bg-muted hover:no-underline">
-					<span class="flex items-center gap-2">
-						<Monitor class="size-3.5 text-[#5c5e63]" />
-						Sistemas
-					</span>
+				<Accordion.Trigger class="hover:bg-muted h-8 rounded-md p-2 text-sm hover:no-underline">
+					<Monitor class="size-3.5 text-[#5c5e63]" />
+					Sistemas
 				</Accordion.Trigger>
 
 				<Accordion.Content>
@@ -126,11 +120,9 @@
 		{/if}
 		{#if hasAccess('structure')}
 			<Accordion.Item value="7" class="border-none">
-				<Accordion.Trigger class="rounded-md p-2 text-sm hover:bg-muted hover:no-underline">
-					<span class="flex items-center gap-2">
-						<GitMerge class="size-3.5 text-[#5c5e63]" />
-						Estructura
-					</span>
+				<Accordion.Trigger class="hover:bg-muted h-8 rounded-md p-2 text-sm hover:no-underline">
+					<GitMerge class="size-3.5 text-[#5c5e63]" />
+					Estructura
 				</Accordion.Trigger>
 
 				<Accordion.Content>
@@ -141,11 +133,9 @@
 		{/if}
 		{#if !hasAccess('inventory') && !hasAccess('users') && !hasAccess('structure') && !hasAccess('it') && !hasAccess('assistance') && !hasAccess('productivity') && !hasAccess('employees') && !hasAccess('materialmovements') && !hasAccess('poimp')}
 			<Accordion.Item value="9" class="border-none">
-				<Accordion.Trigger class="rounded-md p-2 text-sm hover:bg-muted hover:no-underline">
-					<span class="flex items-center gap-2">
-						<ShoppingBag class="size-3.5 text-[#5c5e63]" />
-						Clients
-					</span>
+				<Accordion.Trigger class="hover:bg-muted h-8 rounded-md p-2 text-sm hover:no-underline">
+					<ShoppingBag class="size-3.5 text-[#5c5e63]" />
+					Clients
 				</Accordion.Trigger>
 
 				<Accordion.Content>
@@ -156,11 +146,9 @@
 		{/if}
 		{#if hasAccess('users')}
 			<Accordion.Item value="6" class="border-none">
-				<Accordion.Trigger class="rounded-md p-2 text-sm hover:bg-muted hover:no-underline">
-					<span class="flex items-center gap-2">
-						<Shield class="size-3.5 text-[#5c5e63]" />
-						Admin
-					</span>
+				<Accordion.Trigger class="hover:bg-muted h-8 rounded-md p-2 text-sm hover:no-underline">
+					<Shield class="size-3.5 text-[#5c5e63]" />
+					Admin
 				</Accordion.Trigger>
 
 				<Accordion.Content>
@@ -171,11 +159,10 @@
 		{/if}
 		<!-- 
 		<Accordion.Item value="4" class="border-none">
-			<Accordion.Trigger class="hover:bg-muted rounded-md p-2 text-sm hover:no-underline">
-				<span class="flex items-center gap-2">
+			<Accordion.Trigger class="hover:bg-muted rounded-md p-2 text-sm hover:no-underline h-8">
+				
 					<File class="size-3.5 text-[#5c5e63]" />
 					Recursos
-				</span>
 			</Accordion.Trigger>
 
 			<Accordion.Content>
@@ -190,17 +177,16 @@
 	</Accordion.Root>
 
 	<div class="mt-auto space-y-1 px-2 pb-2">
-		<p class="block rounded-md p-2 hover:bg-muted">
-			<span class="flex items-center gap-2 text-sm">
-				<UserCircle class="size-3.5 text-[#5c5e63]" />
-				{username}
-			</span>
+		<p class="hover:bg-muted flex h-8 items-center gap-1.5 rounded-md px-2 text-sm">
+			<UserCircle class="size-3.5 text-[#5c5e63]" />
+			{username}
 		</p>
-		<button class="block w-full rounded-md p-2 hover:bg-muted" onclick={() => (showModal = true)}>
-			<span class="flex items-center gap-2 text-sm">
-				<LogOut class="size-3.5 text-[#5c5e63]" />
-				Salir
-			</span>
+		<button
+			class="hover:bg-muted flex h-8 w-full items-center gap-1.5 rounded-md p-2 text-sm"
+			onclick={() => (showModal = true)}
+		>
+			<LogOut class="size-3.5 text-[#5c5e63]" />
+			Salir
 		</button>
 	</div>
 </Card>

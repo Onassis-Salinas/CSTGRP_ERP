@@ -30,7 +30,7 @@
 
 <div class="app flex">
 	<SideBar></SideBar>
-	<main class="flex h-[100lvh] w-full flex-col bg-white xl:ml-64 xl:w-[calc(100%-256px)]">
+	<main class="flex h-[100lvh] w-full flex-col bg-white xl:ml-60 xl:w-[calc(100%-240px)]">
 		<Header></Header>
 		{@render children?.()}
 	</main>

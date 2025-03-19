@@ -121,7 +121,6 @@
 	{#snippet left()}
 		<Input menu bind:value={searchParams.noEmpleado} placeholder="No. Empleado" />
 		<Input menu bind:value={searchParams.name} placeholder="Nombre" />
-
 		<Button onclick={() => (searchActive = true)} value={'active'}>Activos</Button>
 		<Button onclick={() => (searchActive = false)} value={'inactive'}>Inactivos</Button>
 	{/snippet}

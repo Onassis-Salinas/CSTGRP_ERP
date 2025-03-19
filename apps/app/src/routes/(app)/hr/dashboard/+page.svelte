@@ -107,13 +107,7 @@
 </script>
 
 <MenuBar>
-	<Input
-		menu
-		class="w-fit shadow-sm"
-		type="date"
-		bind:value={selectedDate}
-		onchange={getDailyData}
-	/>
+	<Input menu class="w-fit" type="date" bind:value={selectedDate} onchange={getDailyData} />
 </MenuBar>
 
 <div class="grid flex-1 grid-cols-3 place-items-stretch gap-4 overflow-auto p-4">

@@ -7,8 +7,9 @@
 		ref = $bindable(null),
 		class: className,
 		children,
+		chevron = true,
 		...restProps
-	}: WithoutChild<SelectPrimitive.TriggerProps> = $props();
+	}: WithoutChild<SelectPrimitive.TriggerProps> & { chevron?: boolean } = $props();
 </script>
 
 <SelectPrimitive.Trigger
@@ -20,5 +21,7 @@
 	{...restProps}
 >
 	{@render children?.()}
-	<ChevronDown class="size-4 opacity-50" />
+	{#if chevron}
+		<ChevronDown class="size-4 opacity-50" />
+	{/if}
 </SelectPrimitive.Trigger>

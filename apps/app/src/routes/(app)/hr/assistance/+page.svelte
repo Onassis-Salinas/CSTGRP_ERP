@@ -112,7 +112,7 @@
 			items={areasList}
 			bind:value={areaSelected}
 		/>
-		<Input menu type="date" bind:value={dateSelected} onchange={getAssistance} />
+		<Input menu type="date" bind:value={dateSelected} onchange={getAssistance} class="max-w-36" />
 	{/snippet}
 	{#snippet right()}
 		{#if Cookies.get('perm_assistance_areas') === 'Todas'}

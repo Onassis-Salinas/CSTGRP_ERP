@@ -119,7 +119,9 @@
 		<Button type="submit"><Search class="size-3.5" /></Button>
 	</form>
 	{#snippet right()}
-		<Button onclick={exportUncheckedMovements}><FileDown class="size-3.5" /></Button>
+		<Button variant="outline" size="icon" onclick={exportUncheckedMovements}
+			><FileDown class="size-3.5" /></Button
+		>
 
 		<Button onclick={() => (show3 = true)}><Pen class=" size-3.5" />Registrar</Button>
 	{/snippet}

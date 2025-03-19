@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { preventDefault } from 'svelte/legacy';
-
 	import ExportMovementsForm from './ExportMovementsForm.svelte';
 	import CusTable from '$lib/components/basic/CusTable.svelte';
 	import Select from '$lib/components/basic/Select.svelte';
@@ -23,6 +21,7 @@
 	} from '$lib/components/ui/dropdown-menu';
 	import { Button } from '$lib/components/ui/button';
 	import ImportMovementsForm from './ImportMovementsForm.svelte';
+	import { preventDefault } from 'svelte/legacy';
 
 	let show2 = $state(false);
 	let show3 = $state(false);
@@ -85,8 +84,8 @@
 <MenuBar>
 	<form class="flex flex-col gap-2 lg:flex-row" onsubmit={preventDefault(getMovements)} action={''}>
 		<Select
-			class="min-w-36"
 			menu
+			class="min-w-36"
 			items={options}
 			bind:value={filters.type}
 			onSelectedChange={getMovements}

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import * as Select from '$lib/components/ui/select/index';
 	import { cn } from '$lib/utils.js';
+	import { ChevronDown } from 'lucide-svelte';
 
 	interface Item {
 		value: string | number;
@@ -17,6 +18,7 @@
 		menu?: boolean;
 		disabled?: boolean;
 		children?: import('svelte').Snippet;
+		chevron?: boolean;
 	}
 
 	let {
@@ -27,7 +29,8 @@
 		cell = false,
 		menu = false,
 		disabled = false,
-		children
+		children,
+		chevron = true
 	}: Props = $props();
 
 	const triggerContent = $derived(items.find((f) => f.value === value)?.name ?? placeholder);
@@ -35,6 +38,7 @@
 
 <Select.Root type="single" bind:value>
 	<Select.Trigger
+		{chevron}
 		{disabled}
 		class={cn(className, cell ? 'h-full w-full border-none' : '', menu ? 'h-[28px]' : '')}
 	>
