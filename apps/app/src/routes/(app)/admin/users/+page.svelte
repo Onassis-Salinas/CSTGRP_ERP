@@ -18,8 +18,8 @@
 	import MenuBar from '$lib/components/basic/MenuBar.svelte';
 	import OptionsCell from '$lib/components/basic/OptionsCell.svelte';
 
-	let show: boolean = $state();
-	let show1: boolean = $state();
+	let show: boolean = $state(false);
+	let show1: boolean = $state(false);
 	let selectedUser = $state({
 		id: '',
 		username: '',

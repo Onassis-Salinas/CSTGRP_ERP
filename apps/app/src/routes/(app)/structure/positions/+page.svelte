@@ -1,7 +1,6 @@
 <script lang="ts">
 	import CusTable from '$lib/components/basic/CusTable.svelte';
 	import { Button } from '$lib/components/ui/button';
-
 	import { TableBody, TableCell, TableHead, TableHeader, TableRow } from '$lib/components/ui/table';
 	import { PlusCircle } from 'lucide-svelte';
 	import PositionsForm from './PositionsForm.svelte';
@@ -13,8 +12,8 @@
 	import OptionsCell from '$lib/components/basic/OptionsCell.svelte';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 
-	let show: boolean = $state();
-	let show1: boolean = $state();
+	let show: boolean = $state(false);
+	let show1: boolean = $state(false);
 	let selectedPosition: any = $state({});
 
 	let positions: any[] = $state([]);

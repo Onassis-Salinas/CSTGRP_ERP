@@ -22,12 +22,12 @@
 	import MenuBar from '$lib/components/basic/MenuBar.svelte';
 	import OptionsCell from '$lib/components/basic/OptionsCell.svelte';
 
-	let show1: boolean = $state();
-	let show2: boolean = $state();
-	let show3: boolean = $state();
+	let show1: boolean = $state(false);
+	let show2: boolean = $state(false);
+	let show3: boolean = $state(false);
 	let selectedEmployee: any = $state({});
 	let employees: any[] = $state([]);
-	let filteredEmployees: any[] = $state();
+	let filteredEmployees: any[] = $state([]);
 	let searchParams = $state({
 		noEmpleado: '',
 		name: ''

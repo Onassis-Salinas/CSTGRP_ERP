@@ -13,8 +13,8 @@
 	import OptionsCell from '$lib/components/basic/OptionsCell.svelte';
 	import { Badge } from '$lib/components/ui/badge';
 
-	let show: boolean = $state();
-	let show1: boolean = $state();
+	let show: boolean = $state(false);
+	let show1: boolean = $state(false);
 	let selectedArea: any = $state({});
 
 	let areas: any[] = $state([]);

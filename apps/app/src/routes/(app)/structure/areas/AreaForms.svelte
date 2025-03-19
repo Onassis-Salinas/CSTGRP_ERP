@@ -22,7 +22,7 @@
 		selectedArea: any;
 	}
 
-	let { show = $bindable(false), reload, selectedArea }: Props = $props();
+	let { show = $bindable(false), reload, selectedArea = $bindable({}) }: Props = $props();
 	let formData: any = $state();
 
 	function setFormData() {

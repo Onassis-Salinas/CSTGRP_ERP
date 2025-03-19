@@ -30,7 +30,7 @@
 		selectedUser: any;
 	}
 
-	let { show = $bindable(false), reload, selectedUser }: Props = $props();
+	let { show = $bindable(false), reload, selectedUser = $bindable({}) }: Props = $props();
 	let formData: any = $state();
 
 	function setFormData() {
@@ -161,7 +161,7 @@
 					<DropdownMenu>
 						<DropdownMenuTrigger>
 							<Button variant="outline" class="w-full"
-								>Seleccionar<ChevronDown class="ms-2 size-4 text-primary" /></Button
+								>Seleccionar<ChevronDown class="text-primary ms-2 size-4" /></Button
 							>
 						</DropdownMenuTrigger>
 						<DropdownMenuContent>
