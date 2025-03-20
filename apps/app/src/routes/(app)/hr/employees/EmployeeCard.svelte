@@ -44,35 +44,35 @@
 		preview = (await getPreview(files?.[0])) || getImage(formData.photo) || '';
 	}
 
-	let banks = [
+	const banks = [
 		{ value: 'SCOTIABANK', name: 'SCOTIABANK' },
 		{ value: 'HSBC', name: 'HSBC' },
 		{ value: 'BBVA', name: 'BBVA' }
 	];
-	let status = [
+	const status = [
 		{ value: 'Recontratable', name: 'Recontratable' },
 		{ value: 'No recontratable', name: 'No recontratable' },
 		{ value: 'A considerar', name: 'A considerar' }
 	];
 
-	let positionTypes = [
+	const positionTypes = [
 		{ value: 'Tiempo completo', name: 'Tiempo completo' },
 		{ value: 'Medio tiempo', name: 'Medio tiempo' },
 		{ value: 'Practicante', name: 'Practicante' }
 	];
 
-	let shifts = [
+	const shifts = [
 		{ value: 'Diurno', name: 'Diurno' },
 		{ value: 'Nocturno', name: 'Nocturno' }
 	];
 
-	let genres = [
+	const genres = [
 		{ value: 'F', name: 'Femenino' },
 		{ value: 'M', name: 'Masculino' },
 		{ value: 'O', name: 'Otro' }
 	];
 
-	let civilStatus = [
+	const civilStatus = [
 		{ value: 'Casado(a)', name: 'Casado(a)' },
 		{ value: 'Soltero(a)', name: 'Soltero(a)' },
 		{ value: 'Divorciado(a)', name: 'Divorciado(a)' },
@@ -81,6 +81,18 @@
 		{ value: 'Concubinato', name: 'Concubinato' },
 		{ value: 'Unión Libre', name: 'Unión Libre' },
 		{ value: 'Sociedad de Convivencia', name: 'Sociedad de Convivencia' }
+	];
+
+	const routes = [
+		{ value: 'Ruta 1', name: 'Ruta 1' },
+		{ value: 'Ruta 2', name: 'Ruta 2' },
+		{ value: 'Ruta 3', name: 'Ruta 3' }
+	];
+
+	const contracts = [
+		{ value: 'Contrato 1', name: 'Contrato 1' },
+		{ value: 'Contrato 2', name: 'Contrato 2' },
+		{ value: 'Contrato 3', name: 'Contrato 3' }
 	];
 
 	let areas: any = $state();
@@ -449,6 +461,18 @@
 							<p class="text-muted-foreground text-xs">Turno:</p>
 							<DisplayInput value={formData.shift} {edit}>
 								<Select items={shifts} bind:value={formData.shift} />
+							</DisplayInput>
+						</div>
+						<div>
+							<p class="text-muted-foreground text-xs">Ruta de camión:</p>
+							<DisplayInput value={formData.route} {edit}>
+								<Select items={routes} bind:value={formData.route} />
+							</DisplayInput>
+						</div>
+						<div>
+							<p class="text-muted-foreground text-xs">Tipo de contrato:</p>
+							<DisplayInput value={formData.contract} {edit}>
+								<Select items={contracts} bind:value={formData.contract} />
 							</DisplayInput>
 						</div>
 						<!-- <div>

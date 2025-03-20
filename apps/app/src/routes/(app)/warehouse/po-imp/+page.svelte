@@ -44,7 +44,7 @@
 	let movements: any[] = $state([]);
 
 	async function getMovements() {
-		const result = (await api.get(`/materialmovements/ie`, { params: filters })).data;
+		const result = (await api.get(`/po-imp`, { params: filters })).data;
 
 		movements = result.map((e: any) => {
 			return { ...e, realAmount: e.realAmount?.toString() };
@@ -69,7 +69,7 @@
 	}
 
 	async function handleDelete() {
-		await api.delete('/materialmovements/ie/' + selectedMovement.id);
+		await api.delete('/po-imp/' + selectedMovement.id);
 		selectedMovement = {};
 		showSuccess('Movimiento eliminado');
 		await getMovements();

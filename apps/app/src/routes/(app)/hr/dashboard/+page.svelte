@@ -21,6 +21,8 @@
 	import MenuBar from '$lib/components/basic/MenuBar.svelte';
 	import DashboardHeader from '$lib/components/basic/DashboardHeader.svelte';
 	import DashboardBody from '$lib/components/basic/DashboardBody.svelte';
+	import Button from '$lib/components/ui/button/button.svelte';
+	import { Image } from 'lucide-svelte';
 
 	let employeeTemplate: any = $state();
 	let activeEmployees: any = $state();
@@ -102,6 +104,10 @@
 		link.click();
 		document.body.removeChild(link);
 	}
+
+	$effect(() => {
+		if (areaSelected) refetchAreaIncidences();
+	});
 
 	onMount(() => {
 		fetchConstData();
@@ -197,11 +203,11 @@
 		<CardContent>
 			<PieChart label="Incidencias" data={areaIncidences}></PieChart>
 
-			<Select items={areas} bind:value={areaSelected} onSelectedChange={refetchAreaIncidences} />
+			<Select items={areas} bind:value={areaSelected} />
 		</CardContent>
 	</Card>
 
-	<Card class="min-h-96 w-full max-w-full">
+	<Card class="min-h-48 w-full max-w-full">
 		<CardHeader>
 			<CardTitle>Rotacion</CardTitle>
 		</CardHeader>
@@ -212,30 +218,34 @@
 		</CardContent>
 	</Card>
 
-	<Card class="col-span-2 min-h-96 w-full max-w-full">
+	<Card class="col-span-2 w-full max-w-full">
 		<CardHeader>
 			<CardTitle>Cumpleaños del mes</CardTitle>
 		</CardHeader>
-		<CardContent>
+		<CardContent class="px-0 pb-0" card>
 			<Table>
-				<TableHeader class="sticky top-0">
-					<TableHead></TableHead>
+				<TableHeader class="sticky top-0 border-t">
+					<TableHead class="w-0 p-0"></TableHead>
 					<TableHead>No. Empleado</TableHead>
 					<TableHead>Nombre</TableHead>
-					<TableHead>Cumpleaños</TableHead>
+					<TableHead class="border-r-0">Cumpleaños</TableHead>
 				</TableHeader>
 				<TableBody>
 					{#each birthDays as row}
 						<TableRow>
-							<TableCell>
-								<!-- <Button class="sm px-3 py-1.5" onclick={() => getBirthdayPhoto(row.noEmpleado)}>
-									<Image />
-								</Button> -->
+							<TableCell class="p-0">
+								<Button
+									size="icon"
+									variant="ghost"
+									onclick={() => getBirthdayPhoto(row.noEmpleado)}
+								>
+									<Image class="size-3.5" />
+								</Button>
 							</TableCell>
 
 							<TableCell>{row.noEmpleado}</TableCell>
 							<TableCell>{row.name}</TableCell>
-							<TableCell>{formatDate(row.bornDate)}</TableCell>
+							<TableCell class="border-r-0">{formatDate(row.bornDate)}</TableCell>
 						</TableRow>
 					{/each}
 				</TableBody>

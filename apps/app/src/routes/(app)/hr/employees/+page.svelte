@@ -14,10 +14,9 @@
 	import ReactivateForm from './ReactivateForm.svelte';
 	import { Button } from '$lib/components/ui/button';
 	import CusTable from '$lib/components/basic/CusTable.svelte';
-	import { RotateCcw, FileDown, PlusCircle, File, Grid3x3, Grid2X2 } from 'lucide-svelte';
+	import { RotateCcw, FileDown, PlusCircle, Grid3x3, Grid2X2 } from 'lucide-svelte';
 	import { TableBody, TableCell, TableHead, TableHeader, TableRow } from '$lib/components/ui/table';
 	import { Badge } from '$lib/components/ui/badge';
-	import { browser } from '$app/environment';
 	import MenuBar from '$lib/components/basic/MenuBar.svelte';
 	import OptionsCell from '$lib/components/basic/OptionsCell.svelte';
 	import Select from '$lib/components/basic/Select.svelte';
@@ -27,23 +26,26 @@
 	let show3: boolean = $state(false);
 	let selectedEmployee: any = $state({});
 	let employees: any[] = $state([]);
-	let filteredEmployees: any[] = $state([]);
 	let searchParams = $state({
 		noEmpleado: '',
-		name: ''
+		name: '',
+		areaId: '',
+		positionId: ''
 	});
 
 	let areas: any = $state({});
 	let positions: any = $state({});
+	let areasOptions: any = $state([]);
+	let positionsOptions: any = $state([]);
 	let searchActive: string = $state('active');
 
 	async function fetchOptions() {
-		const areasArray = (await api.get('/hrvarious/areas')).data;
-		areasArray.forEach((area: any) => {
+		areasOptions = (await api.get('/hrvarious/areas')).data;
+		areasOptions.forEach((area: any) => {
 			areas[area.value] = { name: area.name, color: area.color };
 		});
-		const positionsArray = (await api.get('/hrvarious/positions')).data;
-		positionsArray.forEach((position: any) => {
+		positionsOptions = (await api.get('/hrvarious/positions')).data;
+		positionsOptions.forEach((position: any) => {
 			positions[position.value] = { name: position.name, color: position.color };
 		});
 	}
@@ -100,28 +102,54 @@
 		await fetchOptions();
 		getEmployees();
 	});
+
 	$effect(() => {
 		if (searchActive) getEmployees();
 	});
-	run(() => {
-		filteredEmployees = employees.filter((e) => {
-			if (searchParams.noEmpleado) return e.noEmpleado === searchParams.noEmpleado;
-			if (searchParams.name)
-				return (
-					e.name?.toUpperCase()?.includes(searchParams.name.toUpperCase()) ||
+
+	let filteredEmployees = $derived(
+		employees.filter((e) => {
+			const noMatch = searchParams.noEmpleado
+				? e.noEmpleado.toString().includes(searchParams.noEmpleado)
+				: true;
+			const nameMatch = searchParams.name
+				? e.name?.toUpperCase()?.includes(searchParams.name.toUpperCase()) ||
 					e.paternalLastName?.toUpperCase()?.includes(searchParams.name.toUpperCase()) ||
 					e.maternalLastName?.toUpperCase()?.includes(searchParams.name.toUpperCase())
-				);
-			return true;
-		});
-	});
+				: true;
+			const areaMatch = searchParams.areaId ? e.areaId === searchParams.areaId : true;
+			const positionMatch = searchParams.positionId
+				? e.positionId === searchParams.positionId
+				: true;
+			return nameMatch && areaMatch && positionMatch && noMatch;
+		})
+	);
 </script>
 
 <MenuBar>
 	{#snippet left()}
-		<Input menu bind:value={searchParams.noEmpleado} placeholder="No. Empleado" />
-		<Input menu bind:value={searchParams.name} placeholder="Nombre" />
+		<Input menu bind:value={searchParams.noEmpleado} placeholder="No." class="w-20" />
+		<Input menu bind:value={searchParams.name} placeholder="Nombre" class="w-32" />
+
 		<Select
+			menu
+			allowDeselect
+			bind:value={searchParams.areaId}
+			items={areasOptions}
+			placeholder="Área"
+			class="min-w-48"
+		></Select>
+		<Select
+			menu
+			allowDeselect
+			bind:value={searchParams.positionId}
+			items={positionsOptions}
+			placeholder="Posición"
+			class="min-w-72"
+		></Select>
+
+		<Select
+			class="min-w-28"
 			menu
 			bind:value={searchActive}
 			items={[

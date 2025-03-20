@@ -43,12 +43,12 @@
 
 	async function handleSubmit() {
 		if (selectedMovement.id) {
-			await api.put('/materialmovements/import', {
+			await api.put('/po-imp/import', {
 				...formData,
 				materials
 			});
 		} else {
-			await api.post('/materialmovements/import', {
+			await api.post('/po-imp/import', {
 				...formData,
 				materials
 			});
@@ -88,7 +88,7 @@
 
 	async function getData() {
 		cleanData();
-		const { data } = await api.get('/materialmovements/ie/' + selectedMovement.id);
+		const { data } = await api.get('/po-imp/' + selectedMovement.id);
 		materials = data.materials;
 		formData = { id: data.id, import: data.import, location: data.location, due: data.due };
 		files = null;
@@ -171,7 +171,7 @@
 								><Button
 									onclick={() => deleteMaterial(i)}
 									variant="ghost"
-									class="aspect-square p-1 text-destructive-foreground"
+									class="text-destructive-foreground aspect-square p-1"
 									><Trash class="size-5" /></Button
 								></TableCell
 							>
