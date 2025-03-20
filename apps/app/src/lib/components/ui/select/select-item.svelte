@@ -25,7 +25,7 @@
 	{#snippet children({ selected, highlighted })}
 		<span class="absolute left-2 flex size-3.5 items-center justify-center">
 			{#if selected}
-				<Check class="size-4" />
+				<Check class="size-3.5" />
 			{/if}
 		</span>
 		{#if childrenProp}

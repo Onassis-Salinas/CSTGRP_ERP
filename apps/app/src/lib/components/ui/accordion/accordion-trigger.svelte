@@ -27,7 +27,7 @@
 			{@render children?.()}
 		</span>
 		<ChevronDown
-			class="size-4 shrink-0 text-[#5c5e63] transition-transform duration-200"
+			class="size-3.5 shrink-0 text-[#5c5e63] transition-transform duration-200"
 			strokeWidth={1.2}
 		/>
 	</AccordionPrimitive.Trigger>

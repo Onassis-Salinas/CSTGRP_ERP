@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { run } from 'svelte/legacy';
-
 	import { Input } from '$lib/components/ui/input';
 	import {
 		DropdownMenu,
@@ -15,12 +14,13 @@
 	import ReactivateForm from './ReactivateForm.svelte';
 	import { Button } from '$lib/components/ui/button';
 	import CusTable from '$lib/components/basic/CusTable.svelte';
-	import { RotateCcw, FileDown, PlusCircle } from 'lucide-svelte';
+	import { RotateCcw, FileDown, PlusCircle, File, Grid3x3, Grid2X2 } from 'lucide-svelte';
 	import { TableBody, TableCell, TableHead, TableHeader, TableRow } from '$lib/components/ui/table';
 	import { Badge } from '$lib/components/ui/badge';
 	import { browser } from '$app/environment';
 	import MenuBar from '$lib/components/basic/MenuBar.svelte';
 	import OptionsCell from '$lib/components/basic/OptionsCell.svelte';
+	import Select from '$lib/components/basic/Select.svelte';
 
 	let show1: boolean = $state(false);
 	let show2: boolean = $state(false);
@@ -35,7 +35,7 @@
 
 	let areas: any = $state({});
 	let positions: any = $state({});
-	let searchActive: boolean = $state(true);
+	let searchActive: string = $state('active');
 
 	async function fetchOptions() {
 		const areasArray = (await api.get('/hrvarious/areas')).data;
@@ -49,7 +49,7 @@
 	}
 
 	async function getEmployees() {
-		if (searchActive) {
+		if (searchActive === 'active') {
 			const result = await api.get('/employees');
 			employees = result.data;
 		} else {
@@ -100,8 +100,8 @@
 		await fetchOptions();
 		getEmployees();
 	});
-	run(() => {
-		if (searchActive || true) if (browser) getEmployees();
+	$effect(() => {
+		if (searchActive) getEmployees();
 	});
 	run(() => {
 		filteredEmployees = employees.filter((e) => {
@@ -121,16 +121,26 @@
 	{#snippet left()}
 		<Input menu bind:value={searchParams.noEmpleado} placeholder="No. Empleado" />
 		<Input menu bind:value={searchParams.name} placeholder="Nombre" />
-		<Button onclick={() => (searchActive = true)} value={'active'}>Activos</Button>
-		<Button onclick={() => (searchActive = false)} value={'inactive'}>Inactivos</Button>
+		<Select
+			menu
+			bind:value={searchActive}
+			items={[
+				{ name: 'Activos', value: 'active' },
+				{ name: 'Inactivos', value: 'inactive' }
+			]}
+		></Select>
 	{/snippet}
 	{#snippet right()}
 		<DropdownMenu>
 			<DropdownMenuTrigger class="h-7">
-				<Button><FileDown class="size-3.5" /></Button>
-				<DropdownMenuContent>
-					<DropdownMenuItem onclick={() => exportList()}>Basico</DropdownMenuItem>
-					<DropdownMenuItem onclick={() => exportList('full')}>Completo</DropdownMenuItem>
+				<Button size="icon" variant="outline"><FileDown class="size-3.5" /></Button>
+				<DropdownMenuContent align="end">
+					<DropdownMenuItem onclick={() => exportList()}
+						><Grid2X2 class="size-3.5 " strokeWidth={1.6} /> Basico</DropdownMenuItem
+					>
+					<DropdownMenuItem onclick={() => exportList('full')}
+						><Grid3x3 class="size-3.5 " strokeWidth={1.6} />Completo</DropdownMenuItem
+					>
 				</DropdownMenuContent>
 			</DropdownMenuTrigger>
 		</DropdownMenu>

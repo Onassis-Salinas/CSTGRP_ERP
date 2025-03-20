@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { preventDefault } from 'svelte/legacy';
-
 	import { goto } from '$app/navigation';
 	import { Button } from '$lib/components/ui/button';
 	import { Card, CardHeader, CardContent, CardTitle } from '$lib/components/ui/card';
@@ -18,7 +16,8 @@
 		await api.get('/auth/logout');
 	}
 
-	async function login() {
+	async function login(e: Event) {
+		e.preventDefault();
 		await api.post('/auth/login', credentials);
 		goto('/');
 		showSuccess('Sesión iniciada');
@@ -34,7 +33,7 @@
 			<CardTitle>Ingresar</CardTitle>
 		</CardHeader>
 		<CardContent>
-			<form onsubmit={preventDefault(login)}>
+			<form onsubmit={login}>
 				<div class="mb-6 grid gap-6">
 					<div class="mb-6">
 						<p class="mb-2">Nombre de usuario</p>

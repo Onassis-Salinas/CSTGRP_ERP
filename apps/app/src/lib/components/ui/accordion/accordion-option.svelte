@@ -1,15 +1,17 @@
 <script lang="ts">
+	import { getTraduction } from '$lib/components/layout/traduction';
 	import { cn } from '$lib/utils.js';
 	import { location } from '$lib/utils/store';
 
 	interface Props {
 		class?: string;
 		href?: string;
-		children?: import('svelte').Snippet;
 	}
 
-	let { class: className = '', href = '', children }: Props = $props();
+	let { class: className = '', href = '' }: Props = $props();
 	let active = $derived(href === $location);
+
+	let traduction = getTraduction(href);
 </script>
 
 <a {href} class={cn(' relative flex h-7 items-center text-sm', className)}>
@@ -19,8 +21,8 @@
 			active ? 'bg-muted' : ''
 		)}
 	>
-		<span class="flex items-center gap-1.5">
-			{@render children?.()}
+		<span class="flex items-center gap-2">
+			{traduction.text}
 		</span>
 	</span>
 </a>

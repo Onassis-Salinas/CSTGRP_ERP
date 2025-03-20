@@ -61,7 +61,7 @@
 <MenuBar>
 	<form class="flex flex-col gap-1 lg:flex-row" onsubmit={preventDefault(getPetitions)} action={''}>
 		<Input menu bind:value={filters.folio} placeholder="Folio" />
-		<Button type="submit"><Search class=" size-3.5" />Buscar</Button>
+		<Button type="submit" variant="outline" size="icon"><Search class="size-3.5" /></Button>
 	</form>
 </MenuBar>
 

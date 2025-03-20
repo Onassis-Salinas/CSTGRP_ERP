@@ -7,10 +7,15 @@
 		ref = $bindable(null),
 		class: className,
 		children,
+		card = false,
 		...restProps
-	}: WithElementRef<HTMLAttributes<HTMLDivElement>> = $props();
+	}: WithElementRef<HTMLAttributes<HTMLDivElement> & { card?: boolean }> = $props();
 </script>
 
-<div bind:this={ref} class={cn('p-6', className)} {...restProps}>
+<div
+	bind:this={ref}
+	class={cn('px-4 py-3', card ? '[&_tr:last-child]:border-0' : '', className)}
+	{...restProps}
+>
 	{@render children?.()}
 </div>

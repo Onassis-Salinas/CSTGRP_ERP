@@ -15,5 +15,5 @@
 	class={cn('flex cursor-default items-center justify-center py-1', className)}
 	{...restProps}
 >
-	<ChevronUp class="size-4" />
+	<ChevronUp class="size-3.5" />
 </SelectPrimitive.ScrollUpButton>

@@ -121,11 +121,11 @@
 	{#snippet left()}
 		<Input menu type="date" bind:value={dateSelected} onchange={getProductivity} />
 		{#if viewComplete}
-			<Button class="flex-none" onclick={() => (viewComplete = !viewComplete)}
+			<Button class="flex-none" variant="outline" onclick={() => (viewComplete = !viewComplete)}
 				><Book class=" size-3.5" />Ver resumen</Button
 			>
 		{:else}
-			<Button class="flex-none" onclick={() => (viewComplete = !viewComplete)}
+			<Button class="flex-none" variant="outline" onclick={() => (viewComplete = !viewComplete)}
 				><BookOpen class=" size-3.5" />Ver todo</Button
 			>
 		{/if}

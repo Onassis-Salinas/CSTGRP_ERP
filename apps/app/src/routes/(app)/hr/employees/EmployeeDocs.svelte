@@ -27,7 +27,7 @@
 		employee: any;
 	}
 
-	let { employee }: Props = $props();
+	let { employee = $bindable() }: Props = $props();
 	let docs: any[] = $state([]);
 	let newDoc = $state({
 		name: '',
@@ -147,7 +147,7 @@
 					<label
 						class="flex aspect-square h-full w-auto cursor-pointer items-center justify-center"
 					>
-						<Upload class="size-4" />
+						<Upload class="size-3.5" />
 						<input
 							type="file"
 							onchange={(e) => uploadDocument(e?.target?.files?.[0], row.name, row.id)}
@@ -162,7 +162,7 @@
 							class="aspect-square h-full rounded-none"
 							variant="ghost"
 						>
-							<FileDown class="size-4" />
+							<FileDown class="size-3.5" />
 						</Button>
 					{/if}
 				</TableCell>
@@ -171,7 +171,7 @@
 						<DropdownMenu>
 							<DropdownMenuTrigger>
 								<Button class="aspect-square h-full rounded-none" variant="ghost"
-									><Trash class="size-4" /></Button
+									><Trash class="size-3.5" /></Button
 								>
 								<DropdownMenuContent>
 									<DropdownMenuItem onclick={() => deleteDocument(row.id)}
@@ -191,13 +191,13 @@
 
 			<TableCell class="p-0">
 				<label class="flex aspect-square h-full w-auto cursor-pointer items-center justify-center">
-					<Upload class={cn('size-4', newDoc?.file?.[0] && 'text-green-foreground')} />
+					<Upload class={cn('size-3.5', newDoc?.file?.[0] && 'text-green-foreground')} />
 					<input bind:files={newDoc.file} type="file" class="hidden" />
 				</label>
 			</TableCell>
 			<TableCell colspan={2} class="p-0"
 				><Button onclick={uploadNewDocument} class="h-full w-full rounded-none" variant="ghost"
-					><Check class="size-4" /></Button
+					><Check class="size-3.5" /></Button
 				></TableCell
 			>
 		</TableRow>

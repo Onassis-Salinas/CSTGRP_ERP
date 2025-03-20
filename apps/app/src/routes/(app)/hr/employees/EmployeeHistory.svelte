@@ -20,7 +20,7 @@
 		employee: any;
 	}
 
-	let { employee }: Props = $props();
+	let { employee = $bindable() }: Props = $props();
 	let docs: any[] = $state([]);
 
 	let newDoc = $state({
@@ -92,7 +92,7 @@
 
 			<TableCell colspan={2} class="p-0"
 				><Button onclick={uploadNewDocument} class="h-full w-full rounded-none" variant="ghost"
-					><Check class="size-4" /></Button
+					><Check class="size-3.5" /></Button
 				></TableCell
 			>
 		</TableRow>

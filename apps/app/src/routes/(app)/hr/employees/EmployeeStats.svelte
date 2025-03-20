@@ -11,7 +11,7 @@
 		employee: any;
 	}
 
-	let { employee }: Props = $props();
+	let { employee = $bindable() }: Props = $props();
 
 	let assistance: any[] = $state([]);
 	let productivity: any[] = $state([]);

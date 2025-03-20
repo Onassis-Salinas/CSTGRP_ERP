@@ -160,7 +160,7 @@
 					<DropdownMenu>
 						<DropdownMenuTrigger>
 							<Button variant="outline" class="w-full"
-								>Seleccionar<ChevronDown class="ms-2 size-4 text-primary" /></Button
+								>Seleccionar<ChevronDown class="text-primary ms-2 size-3.5" /></Button
 							>
 						</DropdownMenuTrigger>
 						<DropdownMenuContent>

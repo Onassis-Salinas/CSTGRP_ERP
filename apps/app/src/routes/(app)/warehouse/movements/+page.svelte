@@ -109,14 +109,14 @@
 </script>
 
 <MenuBar>
-	<form class="flex flex-col gap-1 lg:flex-row" onsubmit={preventDefault(getMovements)} action={''}>
+	<form class="flex flex-col gap-1.5 lg:flex-row" onsubmit={preventDefault(getMovements)}>
 		<Input menu bind:value={filters.import} placeholder="Importacion" class="max-w-32" />
 		<Input menu bind:value={filters.programation} placeholder="Programacion" class="max-w-32" />
 		<Input menu bind:value={filters.jobpo} placeholder="Job" class="max-w-32" />
 		<Input menu bind:value={filters.code} placeholder="Material" class="max-w-32" />
 		<Input menu bind:value={filters.req} placeholder="Req" class="max-w-32" />
 		<Select menu items={checkStatus} bind:value={filters.checked} class="min-w-32 max-w-32" />
-		<Button type="submit"><Search class="size-3.5" /></Button>
+		<Button type="submit" variant="outline" size="icon"><Search class="size-3.5" /></Button>
 	</form>
 	{#snippet right()}
 		<Button variant="outline" size="icon" onclick={exportUncheckedMovements}

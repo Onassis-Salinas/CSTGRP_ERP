@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { run, preventDefault } from 'svelte/legacy';
+	import { preventDefault } from 'svelte/legacy';
 
 	import Label from '$lib/components/basic/Label.svelte';
 	import Select from '$lib/components/basic/Select.svelte';
@@ -15,6 +15,7 @@
 	import { Input } from '$lib/components/ui/input';
 	import api from '$lib/utils/server';
 	import { showSuccess } from '$lib/utils/showToast';
+	import { untrack } from 'svelte';
 
 	interface Props {
 		show?: boolean;
@@ -23,11 +24,11 @@
 	}
 
 	let { show = $bindable(false), reload, selectedArea = $bindable({}) }: Props = $props();
-	let formData: any = $state();
-
-	function setFormData() {
-		formData = { ...selectedArea };
-	}
+	let formData: any = $state({
+		name: '',
+		captured: false,
+		color: ''
+	});
 
 	async function handleSubmit() {
 		if (selectedArea.id) {
@@ -57,8 +58,8 @@
 		{ value: 'yellow', name: 'Amarillo' },
 		{ value: 'pink', name: 'Rosa' }
 	];
-	run(() => {
-		if (show || true) setFormData();
+	$effect(() => {
+		if (show || true) formData = untrack(() => ({ ...formData, ...selectedArea }));
 	});
 </script>
 

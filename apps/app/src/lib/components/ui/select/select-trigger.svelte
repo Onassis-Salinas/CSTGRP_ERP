@@ -22,6 +22,6 @@
 >
 	{@render children?.()}
 	{#if chevron}
-		<ChevronDown class="size-4 opacity-50" />
+		<ChevronDown class="size-3.5 opacity-50" />
 	{/if}
 </SelectPrimitive.Trigger>

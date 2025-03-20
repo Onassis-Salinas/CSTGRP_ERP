@@ -117,8 +117,10 @@
 	{#snippet right()}
 		{#if Cookies.get('perm_assistance_areas') === 'Todas'}
 			<!-- <ExportAssistance date={dateSelected} /> -->
-			<Button onclick={exportList}><FileDown class="size-3.5" /></Button>
-			<Button onclick={createWeek}><PlusCircle class=" size-3.5" />Generar semana</Button>
+			<Button onclick={exportList} size="icon" variant="outline"
+				><FileDown class="size-3.5" /></Button
+			>
+			<Button onclick={createWeek}><PlusCircle class="size-3.5" />Generar semana</Button>
 		{/if}
 	{/snippet}
 </MenuBar>

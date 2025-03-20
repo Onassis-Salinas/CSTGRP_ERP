@@ -76,15 +76,17 @@
 </script>
 
 <MenuBar>
-	<form class="flex flex-col gap-1 lg:flex-row" onsubmit={preventDefault(getMovements)} action={''}>
+	<form class="flex flex-col gap-1.5 lg:flex-row" onsubmit={preventDefault(getMovements)}>
 		<Input menu bind:value={filters.programation} placeholder="Programacion" />
 		<Input menu bind:value={filters.jobpo} placeholder="Job" />
 		<Input menu bind:value={filters.code} placeholder="Material" />
-		<Button type="submit"><Search class=" size-3.5" />Buscar</Button>
+		<Button type="submit" variant="outline" size="icon"><Search class="size-3.5" /></Button>
 	</form>
 
 	{#snippet right()}
-		<Button onclick={exportUncheckedMovements}><FileDown class="size-3.5" /></Button>
+		<Button onclick={exportUncheckedMovements} variant="outline" size="icon"
+			><FileDown class="size-3.5" /></Button
+		>
 		<Button onclick={() => (show2 = true)}><FilePlus2 class=" size-3.5" />Insumos</Button>
 	{/snippet}
 </MenuBar>

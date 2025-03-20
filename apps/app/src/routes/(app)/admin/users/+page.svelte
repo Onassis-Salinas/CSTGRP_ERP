@@ -126,7 +126,7 @@
 
 <MenuBar>
 	{#snippet right()}
-		<Button onclick={createUser}><PlusCircle class="ml-auto  size-4" />Añadir Usuario</Button>
+		<Button onclick={createUser}><PlusCircle class="ml-auto  size-3.5" />Añadir Usuario</Button>
 	{/snippet}
 </MenuBar>
 
@@ -169,7 +169,7 @@
 						color={getBadgeColor(user.perm_users)}
 					>
 						{@const SvelteComponent = badgeTexts[user.perm_users]}
-						<SvelteComponent class="size-4" />
+						<SvelteComponent class="size-3.5" />
 					</Badge></TableCell
 				>
 
@@ -179,7 +179,7 @@
 						color={getBadgeColor(user.perm_structure)}
 					>
 						{@const SvelteComponent_1 = badgeTexts[user.perm_structure]}
-						<SvelteComponent_1 class="size-4" />
+						<SvelteComponent_1 class="size-3.5" />
 					</Badge></TableCell
 				>
 
@@ -189,7 +189,7 @@
 						color={getBadgeColor(user.perm_assistance)}
 					>
 						{@const SvelteComponent_2 = badgeTexts[user.perm_assistance]}
-						<SvelteComponent_2 class="size-4" />
+						<SvelteComponent_2 class="size-3.5" />
 					</Badge></TableCell
 				>
 				<TableCell class="p-1.5 text-center"
@@ -198,7 +198,7 @@
 						color={getBadgeColor(user.perm_employees)}
 					>
 						{@const SvelteComponent_3 = badgeTexts[user.perm_employees]}
-						<SvelteComponent_3 class="size-4" />
+						<SvelteComponent_3 class="size-3.5" />
 					</Badge></TableCell
 				>
 
@@ -208,7 +208,7 @@
 						color={getBadgeColor(user.perm_productivity)}
 					>
 						{@const SvelteComponent_4 = badgeTexts[user.perm_productivity]}
-						<SvelteComponent_4 class="size-4" />
+						<SvelteComponent_4 class="size-3.5" />
 					</Badge></TableCell
 				>
 
@@ -218,7 +218,7 @@
 						color={getBadgeColor(user.perm_inventorystats)}
 					>
 						{@const SvelteComponent_5 = badgeTexts[user.perm_inventorystats]}
-						<SvelteComponent_5 class="size-4" />
+						<SvelteComponent_5 class="size-3.5" />
 					</Badge></TableCell
 				>
 				<TableCell class="p-1.5 text-center"
@@ -227,7 +227,7 @@
 						color={getBadgeColor(user.perm_inventory)}
 					>
 						{@const SvelteComponent_6 = badgeTexts[user.perm_inventory]}
-						<SvelteComponent_6 class="size-4" />
+						<SvelteComponent_6 class="size-3.5" />
 					</Badge></TableCell
 				>
 				<TableCell class="p-1.5 text-center"
@@ -236,7 +236,7 @@
 						color={getBadgeColor(user.perm_materialmovements)}
 					>
 						{@const SvelteComponent_7 = badgeTexts[user.perm_materialmovements]}
-						<SvelteComponent_7 class="size-4" />
+						<SvelteComponent_7 class="size-3.5" />
 					</Badge></TableCell
 				>
 				<TableCell class="p-1.5 text-center"
@@ -245,7 +245,7 @@
 						color={getBadgeColor(user.perm_requisitions)}
 					>
 						{@const SvelteComponent_8 = badgeTexts[user.perm_requisitions]}
-						<SvelteComponent_8 class="size-4" />
+						<SvelteComponent_8 class="size-3.5" />
 					</Badge></TableCell
 				>
 				<TableCell class="p-1.5 text-center"
@@ -254,7 +254,7 @@
 						color={getBadgeColor(user.perm_petitions)}
 					>
 						{@const SvelteComponent_9 = badgeTexts[user.perm_petitions]}
-						<SvelteComponent_9 class="size-4" />
+						<SvelteComponent_9 class="size-3.5" />
 					</Badge></TableCell
 				>
 				<TableCell class="p-1.5 text-center"
@@ -263,7 +263,7 @@
 						color={getBadgeColor(user.perm_poimp)}
 					>
 						{@const SvelteComponent_10 = badgeTexts[user.perm_poimp]}
-						<SvelteComponent_10 class="size-4" />
+						<SvelteComponent_10 class="size-3.5" />
 					</Badge></TableCell
 				>
 
@@ -273,14 +273,14 @@
 						color={getBadgeColor(user.perm_it)}
 					>
 						{@const SvelteComponent_11 = badgeTexts[user.perm_it]}
-						<SvelteComponent_11 class="size-4" />
+						<SvelteComponent_11 class="size-3.5" />
 					</Badge></TableCell
 				>
 				<TableCell class="px-2 py-0">
 					<DropdownMenu>
 						<DropdownMenuTrigger class="h-full w-full">
 							<Button class="border-none" variant="outline"
-								>Areas<ChevronDown class="ms-2 size-4" /></Button
+								>Areas<ChevronDown class="ms-2 size-3.5" /></Button
 							>
 						</DropdownMenuTrigger>
 						<DropdownMenuContent>
@@ -298,7 +298,7 @@
 						color={getBadgeColor(user.maintance ? 3 : 0)}
 					>
 						{@const SvelteComponent_12 = badgeTexts[user.maintance ? 3 : 0]}
-						<SvelteComponent_12 class="size-4" />
+						<SvelteComponent_12 class="size-3.5" />
 					</Badge></TableCell
 				>
 			</TableRow>

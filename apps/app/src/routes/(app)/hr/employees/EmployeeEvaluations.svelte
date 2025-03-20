@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { run } from 'svelte/legacy';
-
 	import {
 		DropdownMenu,
 		DropdownMenuContent,
@@ -28,7 +27,7 @@
 		employee: any;
 	}
 
-	let { employee }: Props = $props();
+	let { employee = $bindable() }: Props = $props();
 	let docs: any[] = $state([]);
 	let newDoc = $state({
 		file: null,
@@ -105,7 +104,7 @@
 					<Button
 						class="aspect-square rounded-none"
 						variant="ghost"
-						onclick={() => openPreview(row.url, row.name)}><Download class="size-4" /></Button
+						onclick={() => openPreview(row.url, row.name)}><Download class="size-3.5" /></Button
 					>
 				</TableCell>
 				<TableCell class="p-0">
@@ -113,7 +112,7 @@
 						<DropdownMenu>
 							<DropdownMenuTrigger>
 								<Button class="aspect-square rounded-none" variant="ghost"
-									><Trash class="size-4" /></Button
+									><Trash class="size-3.5" /></Button
 								>
 								<DropdownMenuContent>
 									<DropdownMenuItem onclick={() => deleteDocument(row.id)}
@@ -140,13 +139,13 @@
 
 			<TableCell class="w-min p-0">
 				<label class="flex aspect-square h-8 cursor-pointer items-center justify-center">
-					<Upload class={cn('size-4', newDoc?.file?.[0] && 'text-green-foreground')} />
+					<Upload class={cn('size-3.5', newDoc?.file?.[0] && 'text-green-foreground')} />
 					<input bind:files={newDoc.file} type="file" class="hidden" />
 				</label>
 			</TableCell>
 			<TableCell class="p-0"
 				><Button onclick={uploadNewDocument} class="h-full w-full rounded-none" variant="ghost"
-					><Check class="size-4" /></Button
+					><Check class="size-3.5" /></Button
 				></TableCell
 			>
 		</TableRow>

@@ -18,7 +18,7 @@
 	)}
 	{...restProps}
 >
-	<div class="mb-4 ml-3 border-l pl-1.5 pt-0">
+	<div class="mb-4 ml-3.5 flex flex-col gap-[1px] border-l pl-1.5 pt-0">
 		{@render children?.()}
 	</div>
 </AccordionPrimitive.Content>

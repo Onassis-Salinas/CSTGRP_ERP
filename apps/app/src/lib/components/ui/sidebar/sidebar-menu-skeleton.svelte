@@ -25,7 +25,7 @@
 	{...restProps}
 >
 	{#if showIcon}
-		<Skeleton class="size-4 rounded-md" data-sidebar="menu-skeleton-icon" />
+		<Skeleton class="size-3.5 rounded-md" data-sidebar="menu-skeleton-icon" />
 	{/if}
 	<Skeleton
 		class="h-4 max-w-[var(--skeleton-width)] flex-1"

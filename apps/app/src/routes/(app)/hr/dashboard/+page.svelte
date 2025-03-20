@@ -19,6 +19,8 @@
 	import { onMount } from 'svelte';
 	import Select from '$lib/components/basic/Select.svelte';
 	import MenuBar from '$lib/components/basic/MenuBar.svelte';
+	import DashboardHeader from '$lib/components/basic/DashboardHeader.svelte';
+	import DashboardBody from '$lib/components/basic/DashboardBody.svelte';
 
 	let employeeTemplate: any = $state();
 	let activeEmployees: any = $state();
@@ -110,10 +112,10 @@
 	<Input menu class="w-fit" type="date" bind:value={selectedDate} onchange={getDailyData} />
 </MenuBar>
 
-<div class="grid flex-1 grid-cols-3 place-items-stretch gap-4 overflow-auto p-4">
+<DashboardBody title="Recursos Humanos" class="grid grid-cols-3 place-items-stretch gap-4 ">
 	<Card class="col-span-2 min-h-96 w-full max-w-full">
 		<CardHeader>
-			<CardTitle>Asistencia</CardTitle>
+			<CardTitle>Asistencia semanal</CardTitle>
 		</CardHeader>
 		<CardContent>
 			{#if assistance}
@@ -240,4 +242,4 @@
 			</Table>
 		</CardContent>
 	</Card>
-</div>
+</DashboardBody>

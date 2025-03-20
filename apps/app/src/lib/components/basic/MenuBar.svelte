@@ -15,7 +15,7 @@
 	let { left, children, right }: Props = $props();
 </script>
 
-<div class="flex h-[48px] items-center justify-between border-b px-2.5">
+<div class="flex h-[49px] items-center justify-between border-b px-2.5">
 	<div class="flex w-full justify-between lg:hidden">
 		<DropdownMenu>
 			<DropdownMenuTrigger>
@@ -35,11 +35,11 @@
 		</div>
 	</div>
 	<div class="hidden w-full justify-between gap-2 lg:flex">
-		<div class="flex gap-1">
+		<div class="flex gap-1.5">
 			{@render left?.()}
 			{@render children?.()}
 		</div>
-		<div class="flex gap-1">
+		<div class="flex gap-1.5">
 			{@render right?.()}
 		</div>
 	</div>

@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { run, createBubbler, preventDefault } from 'svelte/legacy';
-
 	const bubble = createBubbler();
 	import Select from '$lib/components/basic/Select.svelte';
 	import { Badge } from '$lib/components/ui/badge';
@@ -25,12 +24,12 @@
 	}
 
 	let { show = $bindable(), productivity, areas, reload }: Props = $props();
-	let selectedRowId: string = $state();
-	let selectedAreaId: string = $state();
+	let selectedRowId: string = $state('');
+	let selectedAreaId: string = $state('');
 	let selectedRow: any;
 	let selectedDate = $state(new Date().toISOString().split('T')[0]);
 	let areasList: any[] = $state([]);
-	let employees: any[] = $state();
+	let employees: any[] = $state([]);
 	let dayNumber: number = getDayNumber(selectedDate);
 
 	let formData = $state({
@@ -183,7 +182,7 @@
 				</div>
 				<div class="flex items-center justify-end gap-2">
 					<span class="w-[20%] text-right">No.Empleado</span>
-					<Input class="xxx w-[80%]" type="number" on:change={handleNoEmpleado}></Input>
+					<Input class="xxx w-[80%]" type="number" onchange={handleNoEmpleado}></Input>
 				</div>
 				<div class="flex items-center justify-end gap-2">
 					<span class="w-[20%] text-right">Nombre</span>
