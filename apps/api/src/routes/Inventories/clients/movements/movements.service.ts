@@ -53,13 +53,15 @@ export class MovementsService {
             GROUP BY "movementId"
         )
         AND "clientId" = ${clientId}
-        AND due <> '2024-01-01'
 
     ORDER BY
         materialmovements."activeDate" DESC,
         materialmovements.id DESC;`;
 
-    return movements;
+    const result = movements.filter(
+      (movement) => movement.due.toISOString() !== '2024-01-01T00:00:00.000Z',
+    );
+    return result;
   }
 
   async getInventory(token: string, query: z.infer<typeof clientSchema>) {
