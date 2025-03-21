@@ -8,18 +8,20 @@
 	let { incidence }: Props = $props();
 </script>
 
-<Tooltip.Root>
-	<Tooltip.Trigger>
-		<div
-			class={cn(
-				'aspect-square w-full rounded-[4px]',
-				incidence ? (incidence === '✔' ? 'bg-green-500' : 'bg-rose-500') : 'bg-gray'
-			)}
-		></div>
-	</Tooltip.Trigger>
-	{#if incidence && incidence !== '✔'}
-		<Tooltip.Content>
-			<p>{incidence}</p>
-		</Tooltip.Content>
-	{/if}
-</Tooltip.Root>
+<Tooltip.Provider>
+	<Tooltip.Root>
+		<Tooltip.Trigger>
+			<div
+				class={cn(
+					'aspect-square w-full rounded-[4px]',
+					incidence ? (incidence === '✔' ? 'bg-green-500' : 'bg-rose-500') : 'bg-gray'
+				)}
+			></div>
+		</Tooltip.Trigger>
+		{#if incidence && incidence !== '✔'}
+			<Tooltip.Content>
+				<p>{incidence}</p>
+			</Tooltip.Content>
+		{/if}
+	</Tooltip.Root>
+</Tooltip.Provider>

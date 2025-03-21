@@ -12,11 +12,14 @@ import { z } from 'zod';
 import sql from 'src/utils/db';
 import { getWeekDays } from 'src/utils/functions';
 import exceljs from 'exceljs';
-import { deleteFile, saveFile } from 'src/utils/storage';
+import { saveFile } from 'src/utils/storage';
 import { createRecord } from './employees.utils';
+import { ContextProvider } from 'src/interceptors/context.provider';
 
 @Injectable()
 export class EmployeesService {
+  constructor(private readonly req: ContextProvider) {}
+
   async getAssistance(body) {
     const [firstDate] = getWeekDays(new Date());
 
@@ -115,6 +118,10 @@ export class EmployeesService {
       )[0];
 
       //Create record
+      await this.req.record(
+        `Registró al empleado ${employee.name} ${employee.paternalLastName} ${employee.maternalLastName} - ${employee.noEmpleado}`,
+        sql,
+      );
       await sql`insert into employeeRecords ("employeeId", date, type, text) values (${employee.id}, now(), 'alta', 'Empleado dado de alta')`;
       await createRecord({ previous: null, current: employee }, sql);
 
@@ -152,6 +159,10 @@ export class EmployeesService {
         await sql`update "employees" SET ${sql({ ...body, photo: image })} where id = ${body.id} returning *`;
 
       //Create record
+      await this.req.record(
+        `Editó al empleado ${newEmployee.name} ${newEmployee.paternalLastName} ${newEmployee.maternalLastName} - ${newEmployee.noEmpleado}`,
+        sql,
+      );
       await createRecord({ previous: previousObj, current: newEmployee }, sql);
     });
 
@@ -170,10 +181,14 @@ export class EmployeesService {
 
     await sql.begin(async (sql) => {
       const employee = (
-        await sql`update "employees" SET ${sql(data)} where id = ${data.id} returning id, "areaId", "positionId", "admissionDate", (select name from areas where id = "areaId") as "area", (select name from positions where id = "positionId") as "position"`
+        await sql`update "employees" SET ${sql(data)} where id = ${data.id} returning id, name, "paternalLastName", "maternalLastName", "noEmpleado", "areaId", "positionId", "admissionDate", (select name from areas where id = "areaId") as "area", (select name from positions where id = "positionId") as "position"`
       )[0];
 
       //Create record
+      await this.req.record(
+        `Reactivó al empleado ${employee.name} ${employee.paternalLastName} ${employee.maternalLastName} - ${employee.noEmpleado}`,
+        sql,
+      );
       await sql`insert into employeeRecords ("employeeId", date, type, text) values (${employee.id}, now(), 'alta', ${'Empleado reactivado en el area ' + employee.area + ', en el puesto ' + employee.position})`;
 
       //Generate assistance for the week
@@ -200,27 +215,25 @@ export class EmployeesService {
 
   async quitEmployee(body: z.infer<typeof quitSchema>) {
     await sql.begin(async (sql) => {
-      await sql`update employees set active = false, "quitDate" = ${body.quitDate}, "quitStatus" = ${body.quitStatus}, "quitReason" = ${body.quitReason}, "quitNotes" = ${body.quitNotes}  where id = ${body.id}`;
+      const [employee] =
+        await sql`update employees set active = false, "quitDate" = ${body.quitDate}, "quitStatus" = ${body.quitStatus}, "quitReason" = ${body.quitReason}, "quitNotes" = ${body.quitNotes}  where id = ${body.id} returning *`;
       await sql`insert into employeeRecords ("employeeId", date, type, text) values (${body.id}, now(), 'baja', 'Empleado dado de baja')`;
+      await this.req.record(
+        `Dio de baja al empleado ${employee.name} ${employee.paternalLastName} ${employee.maternalLastName} - ${employee.noEmpleado}`,
+        sql,
+      );
     });
     return;
   }
 
-  async deleteDocument(body: z.infer<typeof idSchema>) {
-    const [prevDoc] =
-      await sql`delete from documents where id = ${body.id} returning url`;
-    await deleteFile(prevDoc.url);
-  }
-
-  async deleteEvaluation(body: z.infer<typeof idSchema>) {
-    const [prevEval] =
-      await sql`delete from evaluations where id = ${body.id} returning url`;
-    await deleteFile(prevEval.url);
-  }
-
   async updateTemplate(body: z.infer<typeof templateSchema>) {
-    await sql`update general set value = ${body.template} where name = 'Plantilla'`;
-    return;
+    await sql.begin(async (sql) => {
+      await sql`update general set value = ${body.template} where name = 'Plantilla'`;
+      await this.req.record(
+        `Actualizó la plantilla de empleados a ${body.template}`,
+        sql,
+      );
+    });
   }
 
   async export() {

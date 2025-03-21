@@ -2,9 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { createRecordSchema, getEmployeeHistorySchema } from './records.schema';
 import { z } from 'zod';
 import sql from 'src/utils/db';
+import { ContextProvider } from 'src/interceptors/context.provider';
 
 @Injectable()
 export class RecordsService {
+  constructor(private readonly req: ContextProvider) {}
+
   async getEmployeeHistory(body: z.infer<typeof getEmployeeHistorySchema>) {
     return await sql`
       SELECT 
@@ -23,10 +26,18 @@ export class RecordsService {
   }
 
   async uploadRecord(body: z.infer<typeof createRecordSchema>) {
-    await sql`
+    await sql.begin(async (sql) => {
+      await sql`
       INSERT INTO employeeRecords ("employeeId", date, type, text) 
       VALUES (${body.employeeId}, ${body.date}, ${body.type}, ${body.text})
     `;
-    return;
+
+      const [employee] =
+        await sql`select name, "paternalLastName", "maternalLastName" from employees where id = ${body.employeeId}`;
+      await this.req.record(
+        `Creó un registro de ${employee.name} ${employee.paternalLastName} ${employee.maternalLastName} el ${body.date}`,
+        sql,
+      );
+    });
   }
 }

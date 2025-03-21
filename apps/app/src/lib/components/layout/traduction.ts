@@ -12,7 +12,6 @@ import {
 	Building,
 	Clipboard,
 	Network,
-	Folder,
 	FileSpreadsheet,
 	Truck,
 	Gauge,
@@ -22,7 +21,8 @@ import {
 	CalendarCheck,
 	LaptopMinimal,
 	Server,
-	GitFork
+	GitFork,
+	BookUser
 } from 'lucide-svelte';
 
 export interface Traduction {
@@ -44,7 +44,7 @@ export const traductions: Record<string, Traduction> = {
 	admin: { text: 'Administración', icon: Settings },
 	movements: { text: 'Movimientos', icon: ArrowRightLeft },
 	login: { text: 'Iniciar sesión', icon: Home },
-	directory: { text: 'Directorio', icon: Folder },
+	directory: { text: 'Directorio', icon: BookUser },
 	formats: { text: 'Formatos', icon: FileSpreadsheet },
 	assistance: { text: 'Asistencia', icon: CalendarCheck },
 	productivity: { text: 'Productividad', icon: Gauge },

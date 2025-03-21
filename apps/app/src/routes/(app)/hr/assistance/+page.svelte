@@ -152,7 +152,7 @@
 						cell={true}
 						items={incidencesList}
 						bind:value={filteredAssistances[i].incidenceId0}
-						onSelectedChange={() => editAssistance(i)}
+						onValueChange={() => editAssistance(i)}
 					/>
 				</TableCell>
 				<TableCell class="px-1">
@@ -160,7 +160,7 @@
 						cell={true}
 						items={incidencesList}
 						bind:value={filteredAssistances[i].incidenceId1}
-						onSelectedChange={() => editAssistance(i)}
+						onValueChange={() => editAssistance(i)}
 					/>
 				</TableCell>
 				<TableCell class="px-1">
@@ -168,7 +168,7 @@
 						cell={true}
 						items={incidencesList}
 						bind:value={filteredAssistances[i].incidenceId2}
-						onSelectedChange={() => editAssistance(i)}
+						onValueChange={() => editAssistance(i)}
 					/>
 				</TableCell>
 				<TableCell class="px-1">
@@ -176,7 +176,7 @@
 						cell={true}
 						items={incidencesList}
 						bind:value={filteredAssistances[i].incidenceId3}
-						onSelectedChange={() => editAssistance(i)}
+						onValueChange={() => editAssistance(i)}
 					/>
 				</TableCell>
 				<TableCell class="px-1">
@@ -184,7 +184,7 @@
 						cell={true}
 						items={incidencesList}
 						bind:value={filteredAssistances[i].incidenceId4}
-						onSelectedChange={() => editAssistance(i)}
+						onValueChange={() => editAssistance(i)}
 					/>
 				</TableCell>
 			</TableRow>

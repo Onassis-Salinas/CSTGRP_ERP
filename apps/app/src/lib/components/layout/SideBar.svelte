@@ -13,7 +13,8 @@
 		Shield,
 		UserCircle,
 		Users,
-		ShoppingBag
+		ShoppingBag,
+		Folders
 	} from 'lucide-svelte';
 	import { Dialog, DialogBody, DialogContent } from '$lib/components/ui/dialog';
 	import { Button } from '$lib/components/ui/button';
@@ -139,7 +140,7 @@
 				</Accordion.Content>
 			</Accordion.Item>
 		{/if}
-		{#if !hasAccess('inventory') && !hasAccess('users') && !hasAccess('structure') && !hasAccess('it') && !hasAccess('assistance') && !hasAccess('productivity') && !hasAccess('employees') && !hasAccess('materialmovements') && !hasAccess('poimp')}
+		{#if !hasAccess('inventory') && !hasAccess('users') && !hasAccess('structure') && !hasAccess('it') && !hasAccess('assistance') && !hasAccess('productivity') && !hasAccess('employees') && !hasAccess('materialmovements') && !hasAccess('poimp') && !hasAccess('resources')}
 			<Accordion.Item value="9" class="border-none">
 				<Accordion.Trigger
 					class="hover:bg-muted mb-[1px] h-8 rounded-md p-2 text-sm hover:no-underline"
@@ -169,23 +170,20 @@
 				</Accordion.Content>
 			</Accordion.Item>
 		{/if}
-		<!-- 
-		<Accordion.Item value="4" class="border-none">
-			<Accordion.Trigger class="hover:bg-muted rounded-md p-2 text-sm hover:no-underline h-8">
-				
-					<File class="size-3.5 text-[#5c5e63]" />
-					Recursos
-			</Accordion.Trigger>
-
-			<Accordion.Content>
-				<Accordion.Option href="/resources/directory" />
-				<Accordion.Option
-					href="/resources/formats"
-					
-					><Dot  class="text=[#5c5e63]"/>Formatos</
+		{#if hasAccess('resources')}
+			<Accordion.Item value="8" class="border-none">
+				<Accordion.Trigger
+					class="hover:bg-muted mb-[1px] h-8 rounded-md p-2 text-sm hover:no-underline"
 				>
-			</Accordion.Content>
-		</Accordion.Item> -->
+					<Folders class="size-3.5 text-[#5c5e63]" />
+					Recursos
+				</Accordion.Trigger>
+
+				<Accordion.Content>
+					<Accordion.Option href="/resources/directory" />
+				</Accordion.Content>
+			</Accordion.Item>
+		{/if}
 	</Accordion.Root>
 
 	<div class="mt-auto space-y-1 px-2 pb-2">

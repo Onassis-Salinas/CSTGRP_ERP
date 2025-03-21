@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { run } from 'svelte/legacy';
-
 	import Chart from 'chart.js/auto';
 	import { type ColorKeys, colors } from '../../utils/colors';
 	import { browser } from '$app/environment';
@@ -19,8 +18,6 @@
 		if (Chart.getChart(canvas)) {
 			Chart.getChart(canvas)?.destroy();
 		}
-
-		console.log(data);
 
 		new Chart(canvas, {
 			type: 'doughnut',
@@ -69,4 +66,4 @@
 	});
 </script>
 
-<canvas bind:this={canvas} class="h-full max-h-96 w-full"></canvas>
+<canvas bind:this={canvas} class="max-h-[calc(100%-1.5rem)] w-full"></canvas>

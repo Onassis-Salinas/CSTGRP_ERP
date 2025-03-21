@@ -90,9 +90,9 @@
 	];
 
 	const contracts = [
-		{ value: 'Contrato 1', name: 'Contrato 1' },
-		{ value: 'Contrato 2', name: 'Contrato 2' },
-		{ value: 'Contrato 3', name: 'Contrato 3' }
+		{ value: 'Primer contrato', name: 'Primer contrato' },
+		{ value: 'Segundo contrato', name: 'Segundo contrato' },
+		{ value: 'Contrato indefinido', name: 'Contrato indefinido' }
 	];
 
 	let areas: any = $state();

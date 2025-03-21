@@ -83,23 +83,30 @@
 						grid: {
 							display: false
 						},
+						border: {
+							display: false
+						},
 						ticks: {
-							color: '#333',
-							display: false,
-							font: {
-								size: 12
-							}
+							display: false
 						}
 					},
 					y: {
 						suggestedMax: maxValue ? maxValue + 1 : null,
 						suggestedMin: minValue,
 						grid: {
-							color: '#eee'
+							color: '#eee',
+							drawTicks: false
+						},
+						border: {
+							display: false
 						},
 						ticks: {
 							stepSize: stepSize,
-							color: '#6b7280'
+							color: '#6b7280',
+							font: {
+								size: 12,
+								family: 'Inter'
+							}
 						}
 					}
 				}
@@ -112,4 +119,4 @@
 	});
 </script>
 
-<canvas bind:this={canvas} class="h-full max-h-96 w-full"></canvas>
+<canvas bind:this={canvas} class="max-h-[calc(100%-1.5rem)] w-full"></canvas>

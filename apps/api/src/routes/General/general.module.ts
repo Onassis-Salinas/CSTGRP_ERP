@@ -4,7 +4,7 @@ import { FunctionsModule } from './functions/functions.module';
 import { RecordsModule } from './records/records.module';
 import { FilesModule } from './files/files.module';
 import { AuthModule } from './auth/auth.module';
-
+import { ResourcesModule } from './resources/resources.module';
 @Module({
   imports: [
     UsersModule,
@@ -12,6 +12,7 @@ import { AuthModule } from './auth/auth.module';
     RecordsModule,
     FilesModule,
     AuthModule,
+    ResourcesModule,
   ],
 })
 export class GeneralModule {}

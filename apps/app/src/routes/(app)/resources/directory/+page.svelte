@@ -13,9 +13,9 @@
 	import MenuBar from '$lib/components/basic/MenuBar.svelte';
 	import OptionsCell from '$lib/components/basic/OptionsCell.svelte';
 
-	let show: boolean = $state();
-	let show1: boolean = $state();
-	let selectedDevice: any = $state({});
+	let show = $state(false);
+	let show1 = $state(false);
+	let selectedDevice = $state({});
 
 	let devices: any[] = $state([]);
 
@@ -80,7 +80,7 @@
 		bind:show={show1}
 		text="Borrar fila"
 		deleteFunc={async () => {
-			await api.delete('/directory', { data: { id: parseInt(selectedDevice.id || '') } });
+			await api.delete('/directory', { data: { id: parseInt((selectedDevice as any).id || '') } });
 			showSuccess('Fila eliminada');
 			await getDevices();
 			show1 = false;

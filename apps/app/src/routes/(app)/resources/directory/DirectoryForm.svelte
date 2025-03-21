@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { run, preventDefault } from 'svelte/legacy';
-
 	import Label from '$lib/components/basic/Label.svelte';
 	import Select from '$lib/components/basic/Select.svelte';
 	import { Button } from '$lib/components/ui/button';
@@ -22,7 +21,7 @@
 		selectedDevice: any;
 	}
 
-	let { show = $bindable(false), reload, selectedDevice }: Props = $props();
+	let { show = $bindable(false), reload, selectedDevice = $bindable({}) }: Props = $props();
 	let formData: any = $state();
 
 	function setFormData() {

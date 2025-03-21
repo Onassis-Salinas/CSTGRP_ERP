@@ -18,6 +18,7 @@
 		children?: import('svelte').Snippet;
 		chevron?: boolean;
 		allowDeselect?: boolean;
+		onValueChange?: () => void;
 	}
 
 	let {
@@ -30,13 +31,14 @@
 		disabled = false,
 		children,
 		chevron = true,
-		allowDeselect = false
+		allowDeselect = false,
+		onValueChange
 	}: Props = $props();
 
 	const triggerContent = $derived(items.find((f) => f.value === value)?.name ?? placeholder);
 </script>
 
-<Select.Root type="single" bind:value {allowDeselect}>
+<Select.Root type="single" bind:value {allowDeselect} {onValueChange}>
 	<Select.Trigger
 		{chevron}
 		{disabled}

@@ -34,7 +34,7 @@
 
 	let { show = $bindable(false), selectedMovement }: Props = $props();
 	let areas: any[] = $state([]);
-	let formData: any = $state();
+	let formData: any = $state({});
 	let jobs: any[] = $state([]);
 
 	function setFormData() {
@@ -89,7 +89,7 @@
 </script>
 
 <Dialog bind:open={show}>
-	<DialogContent class="max-w-4xl">
+	<DialogContent class="grid h-[90%] max-w-4xl grid-rows-[auto_1fr] gap-4">
 		<DialogHeader>
 			<DialogTitle>Requerir {selectedMovement?.code}</DialogTitle>
 		</DialogHeader>

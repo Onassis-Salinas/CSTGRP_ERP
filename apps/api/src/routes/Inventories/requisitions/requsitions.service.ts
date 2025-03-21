@@ -34,7 +34,7 @@ export class RequisitionsService {
 
   async getPendingJobs(body: z.infer<typeof jobsSchema>) {
     const movements = await sql`SELECT
-      -materialmovements.amount as amount, materialie.due, materialie.jobpo, materialie.programation, materialmovements.id
+      -materialmovements.amount as amount, materialie.due, materialie.jobpo, materialie.programation, materialmovements.id, false as selected
       FROM materialmovements
       JOIN materials on materials.id = materialmovements."materialId"
       JOIN materialie on materialie.id = materialmovements."movementId"
