@@ -447,8 +447,8 @@ export class MovementsService {
           await sql`insert into materialmovements ("materialId", "movementId", amount, "realAmount", active, "activeDate", extra) values
           ((select id from materials where code = ${body.code}),
           (select id from materialie where import = 'Retorno'),
-          ${Math.abs(parseFloat(body.amount))},
-          ${Math.abs(parseFloat(body.amount))},
+          ${0},
+          ${-Math.abs(parseFloat(body.amount))},
           true,
           ${new Date()},
           true)`;
